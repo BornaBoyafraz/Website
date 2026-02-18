@@ -1,12 +1,13 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ExternalLink, Github } from "lucide-react";
 import { Card } from "./ui/Card";
 import { cn } from "@/lib/cn";
 import { getCategory } from "@/lib/projectCategory";
-import { getProjectImage } from "@/lib/projectImages";
+import { slugifyRepoName } from "@/lib/slug";
 
 export interface ProjectData {
   name: string;
@@ -28,6 +29,14 @@ export function ProjectCard({
   reduceMotion = false,
 }: ProjectCardProps) {
   const category = getCategory(project.name);
+  // To add a thumbnail: place /public/projects/<slug>.png (AI-Search-Agent -> ai-search-agent.png, Flappy-bird -> flappy-bird.png, Calory Tracker -> calory-tracker.png).
+  const primarySrc = `/projects/${slugifyRepoName(project.name)}.png`;
+  const [imgSrc, setImgSrc] = useState(primarySrc);
+
+  useEffect(() => {
+    setImgSrc(primarySrc);
+  }, [primarySrc]);
+
   const homepageUrl = project.homepage
     ? project.homepage.startsWith("http")
       ? project.homepage
@@ -48,10 +57,15 @@ export function ProjectCard({
       <Card className="h-full flex flex-col overflow-hidden transition-shadow hover:shadow-lg dark:hover:shadow-neutral-900/50">
         <div className="p-6 flex flex-col flex-1 min-h-0">
           <Image
-            src={getProjectImage(project.name)}
+            src={imgSrc}
             alt={project.name}
             width={1200}
             height={800}
+            onError={() => {
+              if (imgSrc !== "/projects/default.png") {
+                setImgSrc("/projects/default.png");
+              }
+            }}
             className="w-full h-48 object-cover rounded-lg mb-3 border border-black/10 dark:border-white/10"
           />
           <div className="flex items-start justify-between gap-3 mb-3">

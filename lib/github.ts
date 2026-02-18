@@ -21,6 +21,12 @@ export interface ProjectData {
 }
 
 const GITHUB_API_BASE = "https://api.github.com";
+const HIDDEN_REPOS = new Set([
+  "website",
+  "portfolio",
+  "borna-portfolio",
+  "bornaba",
+]);
 const EXCLUDED_PROJECT_NAMES = new Set([
   "ticktacktoe",
   "ticktacktow",
@@ -76,6 +82,7 @@ export async function fetchAllRepos(username: string): Promise<ProjectData[]> {
       const normalizedName = normalizeRepoName(repo.name);
       if (repo.private) return false;
       if (repo.fork) return false;
+      if (HIDDEN_REPOS.has(name)) return false;
       if (name === "readme" || name.includes("readme")) return false;
       if (name === usernameLower || name === `${usernameLower}.github.io`) {
         return false;
