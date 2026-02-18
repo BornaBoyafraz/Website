@@ -8,6 +8,11 @@ import AlwaysMovingBackground from "@/components/AlwaysMovingBackground";
 import ParticleNetworkBackground from "@/components/ParticleNetworkBackground";
 import "./globals.css";
 
+const SITE_URL = "https://bornaba.com";
+const SITE_TITLE = "Hi, I am Borna";
+const SITE_DESCRIPTION =
+  "Python Developer specializing in Machine Learning, Game Development, and Algorithms. Building practical software with a VibeCoding approach.";
+
 const themeInitScript = `
 (() => {
   try {
@@ -22,14 +27,44 @@ const themeInitScript = `
 `;
 
 export const metadata: Metadata = {
-  title: "Hi, I am Borna",
-  icons: {
-    icon: [{ url: "/favicon-ba.svg?v=3", type: "image/svg+xml" }],
-    shortcut: "/favicon-ba.svg?v=3",
-    apple: "/favicon-ba.svg?v=3",
+  metadataBase: new URL(SITE_URL),
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    type: "website",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: "Borna Portfolio",
+    images: [
+      {
+        url: `${SITE_URL}/og.png`,
+        width: 1200,
+        height: 630,
+        alt: "Borna portfolio brand image with <BA/> logo",
+      },
+    ],
   },
-  description:
-    "Python Developer specializing in Machine Learning, Game Development, and Algorithms. Building practical software with a VibeCoding approach.",
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [`${SITE_URL}/og.png`],
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", type: "image/x-icon" },
+      { url: "/favicon.png", type: "image/png", sizes: "512x512" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [
+      {
+        url: "/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
