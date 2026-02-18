@@ -11,8 +11,7 @@ const socialLinks = [
   {
     href: SITE.mailto,
     icon: Mail,
-    label: "Send email to Borna via Gmail",
-    display: "Gmail",
+    label: "Email me",
   },
 ];
 
@@ -29,7 +28,7 @@ export default function Footer() {
           © {year} Borna B. Afraz
         </p>
         <div className="flex gap-2">
-          {socialLinks.map(({ href, icon: Icon, label, display }) => (
+          {socialLinks.map(({ href, icon: Icon, label }) => (
             <a
               key={label}
               href={href}
@@ -38,12 +37,12 @@ export default function Footer() {
                 : { target: "_blank", rel: "noopener noreferrer" })}
               className={cn(
                 "p-2.5 rounded-lg text-neutral-500 dark:text-neutral-400",
-                "hover:text-neutral-900 dark:hover:text-white hover:underline hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors",
+                "hover:text-red-500 dark:hover:text-red-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-transform duration-200 hover:scale-110",
                 "focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-950"
               )}
               aria-label={label}
             >
-              {display ?? <Icon size={18} />}
+              <Icon className="h-5 w-5" />
             </a>
           ))}
         </div>

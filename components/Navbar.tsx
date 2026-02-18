@@ -5,14 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Menu,
   X,
-  Sun,
-  Moon,
   Github,
   Linkedin,
   Instagram,
   Mail,
 } from "lucide-react";
-import { useTheme } from "./ThemeProvider";
+import ThemeToggle from "./ThemeToggle";
 import { SITE } from "@/lib/constants";
 import { cn } from "@/lib/cn";
 
@@ -30,15 +28,13 @@ const socialLinks = [
   {
     href: SITE.mailto,
     icon: Mail,
-    label: "Send email to Borna via Gmail",
-    display: "Gmail",
+    label: "Email me",
   },
 ];
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("#home");
-  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const sections = navLinks.map((l) => l.href.slice(1));
@@ -96,36 +92,24 @@ export default function Navbar() {
           </div>
 
           <div className="hidden md:flex items-center gap-1">
-            {socialLinks.map(({ href, icon: Icon, label, display }) => (
+            {socialLinks.map(({ href, icon: Icon, label }) => (
               <a
                 key={label}
                 href={href}
                 {...(href.startsWith("mailto")
                   ? {}
                   : { target: "_blank", rel: "noopener noreferrer" })}
-                className="p-2.5 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:underline hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-950"
+                className="p-2.5 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-transform duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-950"
                 aria-label={label}
               >
-                {display ?? <Icon size={18} />}
+                <Icon className="h-5 w-5" />
               </a>
             ))}
-            <button
-              onClick={toggleTheme}
-              className="p-2.5 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-950"
-              aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
-            >
-              {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
-            </button>
+            <ThemeToggle />
           </div>
 
           <div className="flex md:hidden items-center gap-1">
-            <button
-              onClick={toggleTheme}
-              className="p-2.5 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-              aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
-            >
-              {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
-            </button>
+            <ThemeToggle />
             <button
               onClick={() => setOpen(!open)}
               className="p-2.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
@@ -160,17 +144,17 @@ export default function Navbar() {
                   </a>
                 ))}
                 <div className="flex gap-2 pt-2 mt-2 border-t border-neutral-200/60 dark:border-neutral-800/60">
-                  {socialLinks.map(({ href, icon: Icon, label, display }) => (
+                  {socialLinks.map(({ href, icon: Icon, label }) => (
                     <a
                       key={label}
                       href={href}
                       {...(href.startsWith("mailto")
                         ? {}
                         : { target: "_blank", rel: "noopener noreferrer" })}
-                      className="p-2.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:underline"
+                      className="p-2.5 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-transform duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
                       aria-label={label}
                     >
-                      {display ?? <Icon size={20} />}
+                      <Icon className="h-5 w-5" />
                     </a>
                   ))}
                 </div>
