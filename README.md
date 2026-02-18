@@ -1,64 +1,88 @@
-# Borna B. Afraz – Personal Portfolio
+# Borna B. Afraz Portfolio
 
-A professional, minimal portfolio website built with Next.js, TypeScript, Tailwind CSS, and Framer Motion. Projects are automatically fetched from GitHub.
+## Live Demo
+https://bornaba.com
 
-## Run Locally
+## Overview
+This repository contains a production-ready personal developer portfolio built with Next.js App Router, TypeScript, and Tailwind CSS. The site renders key profile sections and dynamically displays public GitHub repositories through a server-side data pipeline. It is deployed on Vercel and served through the custom domain `https://bornaba.com`.
+
+## Features
+- Dynamic project listing from the GitHub API.
+- Data-layer filtering for private, forked, and explicitly hidden repositories.
+- Consistent project-card presentation with thumbnail support.
+- Server-side fetch with revalidation for predictable performance.
+- Responsive UI and dark mode support.
+
+## Tech Stack
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- Lucide React
+- Vercel (hosting and deployment)
+
+## Architecture Overview
+- `app/`: App Router entrypoints, layout, and API routes.
+- `app/api/projects/route.ts`: Server endpoint used by the frontend to retrieve repositories.
+- `lib/github.ts`: GitHub API integration, pagination, and repository filtering logic.
+- `lib/projects.ts`: Project retrieval orchestration and GitHub username binding.
+- `components/`: UI sections and reusable components, including project cards.
+- `lib/projectImages.ts`: Thumbnail path resolution for repository names.
+- `public/`: Static assets, including project thumbnail images.
+
+## Adding New Project Thumbnails
+Project thumbnails are served from `public/projects` using a slug-based naming convention.
+
+1. Add a PNG file to `public/projects`.
+2. Name the file using a lowercase slug derived from the repository name.
+3. Ensure the mapping/resolution in `lib/projectImages.ts` can resolve that repository name.
+
+Examples:
+- `AI-Search-Agent` -> `ai-search-agent.png`
+- `Calory Tracker` -> `calory-tracker.png`
+
+Expected path format:
+- `/public/projects/<slug>.png`
+
+## Local Development
+Install dependencies:
 
 ```bash
-# Install dependencies
 npm install
+```
 
-# Start development server
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-Open [www.bornaba.com](https://www.bornaba.com/).
-
-## Build
+Build for production:
 
 ```bash
 npm run build
 ```
 
-## Deploy on Vercel
+## Deployment
+This project is deployed on Vercel.
 
-1. Push this repo to GitHub.
-2. Go to [vercel.com](https://vercel.com) and sign in.
-3. Click **Add New** → **Project** and import your repo.
-4. Configure build: 
-   - Framework Preset: **Next.js**
-   - Build Command: `npm run build`
-   - Output Directory: `.next`
-5. Click **Deploy**.
+1. Connect the repository in Vercel.
+2. Use the default Next.js build settings.
+3. Configure required environment variables if needed.
+4. Attach the custom domain `bornaba.com`.
 
-Vercel will assign a public URL (e.g. `your-project.vercel.app`).
+## Customization
+- Profile text and section content: update files in `components/`.
+- Contact and social metadata: update `lib/constants.ts`.
+- GitHub source account: update the username in `lib/projects.ts`.
+- Repository filtering rules: update `lib/github.ts`.
+- Thumbnail mappings: update `lib/projectImages.ts`.
 
-## Personal Information
+## Future Improvements
+- Add automated tests for repository filtering and mapping rules.
+- Add CI checks for linting and production build validation.
+- Add structured SEO metadata per section/project.
+- Add observability (analytics and error monitoring) for production diagnostics.
 
-Edit these files to update your details:
-
-| What | Where |
-|------|-------|
-| Name, headline, bio | `components/Hero.tsx`, `components/About.tsx`, `components/Navbar.tsx` |
-| **Email, social links** | `lib/constants.ts` (single source of truth) |
-| GitHub username | `lib/github.ts`, `lib/projects.ts`, `app/api/projects/route.ts` |
-| Profile image | Replace `public/profile.jpg` with your photo (placeholder included) |
-
-**LinkedIn:** Set your LinkedIn URL in `lib/constants.ts` (replace `ADD_PROFILE_LINK_HERE`).
-
-## How Projects Auto-Update
-
-- Projects come from the GitHub API:  
-  `https://api.github.com/users/BornaBoyafraz/repos?per_page=100&sort=updated`
-- Fetching happens server-side in `lib/github.ts` and `lib/projects.ts`.
-- Responses are cached for 1 hour (`revalidate: 3600`).
-- Pagination is handled if you have more than 100 repositories.
-- No manual updates needed; new repos appear after cache expiry or redeploy.
-
-## Tech Stack
-
-- Next.js 14 (App Router)
-- TypeScript
-- Tailwind CSS
-- Framer Motion
-- lucide-react
+## License
+No license file is currently defined in this repository. Add a `LICENSE` file to specify distribution and usage terms.
