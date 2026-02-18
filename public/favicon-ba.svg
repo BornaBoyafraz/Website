@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="10" fill="#e3e3e3" />
+  <text
+    x="50%"
+    y="55%"
+    dominant-baseline="middle"
+    text-anchor="middle"
+    font-family="Impact, Arial Black, Arial, sans-serif"
+    font-size="36"
+    font-weight="900"
+    letter-spacing="1"
+    fill="#000000"
+  >
+    BA
+  </text>
+</svg>
