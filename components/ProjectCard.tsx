@@ -14,7 +14,7 @@ const DESCRIPTION_TOGGLE_CHAR_THRESHOLD = 140;
 export interface ProjectData {
   id?: string;
   name: string;
-  description: string | null;
+  description: string;
   html_url: string;
   homepage: string | null;
   pushed_at?: string;
@@ -63,7 +63,7 @@ export function ProjectCard({
   const category = project.category ?? getCategory(project.name);
   const primaryCtaLabel = project.primaryCtaLabel ?? "Source Code";
   const PrimaryCtaIcon = project.isVideo ? ExternalLink : Github;
-  const description = project.description ?? "No description available.";
+  const description = project.description;
   const projectDateLabel = getProjectDateLabel(project);
   const canToggleDescription =
     description.length > DESCRIPTION_TOGGLE_CHAR_THRESHOLD;

@@ -15,7 +15,7 @@ export interface GitHubRepo {
 
 export interface ProjectData {
   name: string;
-  description: string | null;
+  description: string;
   html_url: string;
   homepage: string | null;
   pushed_at: string;
@@ -45,7 +45,7 @@ async function fetchReposPage(
 ): Promise<GitHubRepo[]> {
   const url = `${GITHUB_API_BASE}/users/${username}/repos?per_page=${perPage}&page=${page}&sort=pushed`;
   const res = await fetch(url, {
-    next: { revalidate: 3600 },
+    cache: "no-store",
     headers: {
       Accept: "application/vnd.github.v3+json",
     },
@@ -96,7 +96,7 @@ export async function fetchAllRepos(username: string): Promise<ProjectData[]> {
     })
     .map((repo) => ({
       name: repo.name,
-      description: repo.description,
+      description: repo.description ?? "No description provided on GitHub.",
       html_url: repo.html_url,
       homepage: repo.homepage || null,
       pushed_at: repo.pushed_at,

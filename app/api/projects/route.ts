@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { fetchAllRepos } from "@/lib/github";
 
 const GITHUB_USERNAME = "BornaBoyafraz";
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
