@@ -5,15 +5,20 @@ import Image from "next/image";
 import { ExternalLink, Github } from "lucide-react";
 import { Card } from "./ui/Card";
 import { cn } from "@/lib/cn";
-import { getCategory } from "@/lib/projectCategory";
+import { getCategory, type Category } from "@/lib/projectCategory";
 import { getProjectImage } from "@/lib/projectImages";
 
 export interface ProjectData {
+  id?: string;
   name: string;
   description: string | null;
   html_url: string;
   homepage: string | null;
   updated_at: string;
+  category?: Category;
+  thumbnail?: string;
+  primaryCtaLabel?: string;
+  isVideo?: boolean;
 }
 
 interface ProjectCardProps {
@@ -27,7 +32,15 @@ export function ProjectCard({
   index,
   reduceMotion = false,
 }: ProjectCardProps) {
-  const category = getCategory(project.name);
+  const category = project.category ?? getCategory(project.name);
+  const primaryCtaLabel = project.primaryCtaLabel ?? "Source Code";
+  const PrimaryCtaIcon = project.isVideo ? ExternalLink : Github;
+  const categoryBadgeClass =
+    category === "Project"
+      ? "bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-200 dark:border-indigo-500/30"
+      : category === "Pitch"
+        ? "bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-500/20 dark:text-cyan-200 dark:border-cyan-500/30"
+        : "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-500/20 dark:text-purple-200 dark:border-purple-500/30";
 
   const homepageUrl = project.homepage
     ? project.homepage.startsWith("http")
@@ -48,13 +61,15 @@ export function ProjectCard({
     >
       <Card className="h-full flex flex-col overflow-hidden transition-shadow hover:shadow-lg dark:hover:shadow-neutral-900/50">
         <div className="p-6 flex flex-col flex-1 min-h-0">
-          <Image
-            src={getProjectImage(project.name)}
-            alt={project.name}
-            width={1200}
-            height={800}
-            className="w-full h-48 object-cover rounded-lg mb-3 border border-black/10 dark:border-white/10"
-          />
+          <div className="mb-3">
+            <Image
+              src={project.thumbnail ?? getProjectImage(project.name)}
+              alt={project.name}
+              width={1200}
+              height={800}
+              className="w-full h-48 object-cover rounded-lg border border-black/10 dark:border-white/10"
+            />
+          </div>
           <div className="flex items-start justify-between gap-3 mb-3">
             <h3 className="text-lg font-semibold text-neutral-900 dark:text-white leading-tight">
               {project.name}
@@ -62,9 +77,7 @@ export function ProjectCard({
             <span
               className={cn(
                 "inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold shrink-0",
-                category === "Project"
-                  ? "bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-200 dark:border-indigo-500/30"
-                  : "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-500/20 dark:text-purple-200 dark:border-purple-500/30"
+                categoryBadgeClass
               )}
             >
               {category}
@@ -87,8 +100,11 @@ export function ProjectCard({
                 "focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
               )}
             >
-              <Github size={16} />
-              Source Code
+              <PrimaryCtaIcon
+                size={16}
+                className={project.isVideo ? "fill-current" : undefined}
+              />
+              {primaryCtaLabel}
             </a>
 
             {homepageUrl && (

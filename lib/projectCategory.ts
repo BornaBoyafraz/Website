@@ -1,4 +1,4 @@
-export type Category = "Project" | "Fun";
+export type Category = "Project" | "Fun" | "Pitch";
 
 export const CATEGORY_BY_REPO: Record<string, Category> = {
   "AI-Search-Agent": "Project",

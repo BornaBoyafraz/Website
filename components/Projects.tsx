@@ -3,24 +3,55 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Search, RefreshCw } from "lucide-react";
-import { ProjectCard } from "./ProjectCard";
+import { ProjectCard, type ProjectData } from "./ProjectCard";
 import { Input } from "./ui/Input";
 import { Button } from "./ui/Button";
 import { Card } from "./ui/Card";
 import { cn } from "@/lib/cn";
 import { getCategory, type Category } from "@/lib/projectCategory";
 
-export interface ProjectData {
-  name: string;
-  description: string | null;
-  html_url: string;
-  homepage: string | null;
-  updated_at: string;
+type ManualProject = {
+  id: string;
+  title: string;
+  description: string;
+  href: string;
+  category: Category;
+  date?: string;
+  thumbnail?: string;
+};
+
+const manualProjects: ManualProject[] = [
+  {
+    id: "loveable-ai-user-growth-pitch",
+    title: "Loveable.ai User Growth Pitch",
+    description: "A pitch focused on increasing Loveable.ai users.",
+    href: "https://www.loom.com/share/e0d66f81e0784b3896f6cb886a029657",
+    category: "Pitch",
+    date: "2026-02-19T00:00:00.000Z",
+    thumbnail: "/pictures/Loveable.png",
+  },
+];
+
+const manualProjectCards: ProjectData[] = manualProjects.map((project) => ({
+  id: project.id,
+  name: project.title,
+  description: project.description,
+  html_url: project.href,
+  homepage: null,
+  updated_at: project.date ?? "1970-01-01T00:00:00.000Z",
+  category: project.category,
+  thumbnail: project.thumbnail,
+  primaryCtaLabel: "Watch on Loom",
+  isVideo: true,
+}));
+
+function resolveProjectCategory(project: ProjectData): Category {
+  return project.category ?? getCategory(project.name);
 }
 
 type ProjectFilter = "All" | Category;
 
-const FILTER_OPTIONS: ProjectFilter[] = ["All", "Fun", "Project"];
+const FILTER_OPTIONS: ProjectFilter[] = ["All", "Project", "Pitch", "Fun"];
 
 interface ProjectsProps {
   initialProjects: ProjectData[];
@@ -31,12 +62,18 @@ export default function Projects({
   initialProjects,
   error: initialError,
 }: ProjectsProps) {
-  const [projects, setProjects] = useState<ProjectData[]>(initialProjects);
+  const [githubProjects, setGithubProjects] =
+    useState<ProjectData[]>(initialProjects);
   const [error, setError] = useState<string | null>(initialError ?? null);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<ProjectFilter>("All");
   const [reduceMotion, setReduceMotion] = useState(false);
+
+  const projects = useMemo(
+    () => [...manualProjectCards, ...githubProjects],
+    [githubProjects]
+  );
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -56,7 +93,7 @@ export default function Projects({
       })
       .filter((project) => {
         if (categoryFilter === "All") return true;
-        return getCategory(project.name) === categoryFilter;
+        return resolveProjectCategory(project) === categoryFilter;
       })
       .sort(
         (a, b) =>
@@ -71,7 +108,7 @@ export default function Projects({
       const res = await fetch("/api/projects");
       if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
-      setProjects(data);
+      setGithubProjects(data);
     } catch {
       setError("Failed to load projects. Please try again.");
     } finally {
@@ -199,7 +236,7 @@ export default function Projects({
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredAndSorted.map((project, i) => (
               <ProjectCard
-                key={project.html_url}
+                key={project.id ?? project.html_url}
                 project={project}
                 index={i}
                 reduceMotion={reduceMotion}
