@@ -19,6 +19,8 @@ export interface ProjectData {
   homepage: string | null;
   updated_at: string;
   category?: Category;
+  startDate?: string;
+  endDate?: string;
   thumbnail?: string;
   primaryCtaLabel?: string;
   isVideo?: boolean;
@@ -28,6 +30,26 @@ interface ProjectCardProps {
   project: ProjectData;
   index: number;
   reduceMotion?: boolean;
+}
+
+function formatMonthYear(date: string): string {
+  const parsedDate = /^\d{4}-\d{2}-\d{2}$/.test(date)
+    ? new Date(`${date}T12:00:00`)
+    : new Date(date);
+
+  return parsedDate.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+  });
+}
+
+function getProjectDateLabel(project: ProjectData): string | null {
+  const startDate = project.startDate ?? project.updated_at;
+  if (!startDate) return null;
+  if (project.endDate) {
+    return `${formatMonthYear(startDate)} – ${formatMonthYear(project.endDate)}`;
+  }
+  return formatMonthYear(startDate);
 }
 
 export function ProjectCard({
@@ -41,6 +63,7 @@ export function ProjectCard({
   const primaryCtaLabel = project.primaryCtaLabel ?? "Source Code";
   const PrimaryCtaIcon = project.isVideo ? ExternalLink : Github;
   const description = project.description ?? "No description available.";
+  const projectDateLabel = getProjectDateLabel(project);
   const canToggleDescription =
     description.length > DESCRIPTION_TOGGLE_CHAR_THRESHOLD;
   const categoryBadgeClass =
@@ -80,9 +103,14 @@ export function ProjectCard({
         </div>
         <div className="p-6 flex flex-col flex-1 min-h-0">
           <div className="flex items-start justify-between gap-3 mb-3">
-            <h3 className="text-lg font-semibold text-neutral-900 dark:text-white leading-tight">
-              {project.name}
-            </h3>
+            <div>
+              <h3 className="text-lg font-semibold text-neutral-900 dark:text-white leading-tight">
+                {project.name}
+              </h3>
+              {projectDateLabel && (
+                <p className="mt-1 text-sm text-muted-foreground">{projectDateLabel}</p>
+              )}
+            </div>
             <span
               className={cn(
                 "inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold shrink-0",
