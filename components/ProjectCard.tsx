@@ -1,5 +1,6 @@
 "use client";
 
+import { useId, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ExternalLink, Github } from "lucide-react";
@@ -7,6 +8,8 @@ import { Card } from "./ui/Card";
 import { cn } from "@/lib/cn";
 import { getCategory, type Category } from "@/lib/projectCategory";
 import { getProjectImage } from "@/lib/projectImages";
+
+const DESCRIPTION_TOGGLE_CHAR_THRESHOLD = 140;
 
 export interface ProjectData {
   id?: string;
@@ -32,9 +35,14 @@ export function ProjectCard({
   index,
   reduceMotion = false,
 }: ProjectCardProps) {
+  const [expanded, setExpanded] = useState(false);
+  const descriptionId = useId();
   const category = project.category ?? getCategory(project.name);
   const primaryCtaLabel = project.primaryCtaLabel ?? "Source Code";
   const PrimaryCtaIcon = project.isVideo ? ExternalLink : Github;
+  const description = project.description ?? "No description available.";
+  const canToggleDescription =
+    description.length > DESCRIPTION_TOGGLE_CHAR_THRESHOLD;
   const categoryBadgeClass =
     category === "Project"
       ? "bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-200 dark:border-indigo-500/30"
@@ -85,9 +93,33 @@ export function ProjectCard({
             </span>
           </div>
 
-          <p className="text-neutral-600 dark:text-neutral-400 text-sm mb-4 flex-1 line-clamp-3 leading-relaxed">
-            {project.description ?? "No description available."}
-          </p>
+          <div className="mb-4 flex-1">
+            <div className="relative">
+              <p
+                id={descriptionId}
+                className={cn(
+                  "text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed overflow-hidden transition-all duration-300",
+                  !expanded && "line-clamp-3"
+                )}
+              >
+                {description}
+              </p>
+              {!expanded && canToggleDescription && (
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-white to-transparent dark:from-neutral-900 dark:to-transparent" />
+              )}
+            </div>
+            {canToggleDescription && (
+              <button
+                type="button"
+                onClick={() => setExpanded((prev) => !prev)}
+                className="mt-1 text-sm font-medium text-indigo-600 dark:text-indigo-300 hover:underline focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-300 focus:ring-offset-2 dark:focus:ring-offset-neutral-900 rounded-sm"
+                aria-expanded={expanded}
+                aria-controls={descriptionId}
+              >
+                {expanded ? "Less" : "More"}
+              </button>
+            )}
+          </div>
 
           <div className="flex flex-wrap gap-2">
             <a
