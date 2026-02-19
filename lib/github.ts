@@ -8,6 +8,7 @@ export interface GitHubRepo {
   stargazers_count: number;
   private: boolean;
   fork: boolean;
+  archived: boolean;
   updated_at: string;
   pushed_at: string;
 }
@@ -17,7 +18,7 @@ export interface ProjectData {
   description: string | null;
   html_url: string;
   homepage: string | null;
-  updated_at: string;
+  pushed_at: string;
 }
 
 const GITHUB_API_BASE = "https://api.github.com";
@@ -42,7 +43,7 @@ async function fetchReposPage(
   page: number = 1,
   perPage: number = 100
 ): Promise<GitHubRepo[]> {
-  const url = `${GITHUB_API_BASE}/users/${username}/repos?per_page=${perPage}&page=${page}&sort=updated`;
+  const url = `${GITHUB_API_BASE}/users/${username}/repos?per_page=${perPage}&page=${page}&sort=pushed`;
   const res = await fetch(url, {
     next: { revalidate: 3600 },
     headers: {
@@ -82,6 +83,7 @@ export async function fetchAllRepos(username: string): Promise<ProjectData[]> {
       const normalizedName = normalizeRepoName(repo.name);
       if (repo.private) return false;
       if (repo.fork) return false;
+      if (repo.archived) return false;
       if (HIDDEN_REPOS.has(name)) return false;
       if (name === "readme" || name.includes("readme")) return false;
       if (name === usernameLower || name === `${usernameLower}.github.io`) {
@@ -97,6 +99,6 @@ export async function fetchAllRepos(username: string): Promise<ProjectData[]> {
       description: repo.description,
       html_url: repo.html_url,
       homepage: repo.homepage || null,
-      updated_at: repo.updated_at,
+      pushed_at: repo.pushed_at,
     }));
 }

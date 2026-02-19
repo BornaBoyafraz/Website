@@ -17,10 +17,11 @@ export interface ProjectData {
   description: string | null;
   html_url: string;
   homepage: string | null;
-  updated_at: string;
-  category?: Category;
+  pushed_at?: string;
+  date?: string;
   startDate?: string;
   endDate?: string;
+  category?: Category;
   thumbnail?: string;
   primaryCtaLabel?: string;
   isVideo?: boolean;
@@ -33,18 +34,18 @@ interface ProjectCardProps {
 }
 
 function formatMonthYear(date: string): string {
-  const parsedDate = /^\d{4}-\d{2}-\d{2}$/.test(date)
-    ? new Date(`${date}T12:00:00`)
-    : new Date(date);
+  const normalizedDate = /^\d{4}-\d{2}-\d{2}$/.test(date)
+    ? `${date}T12:00:00`
+    : date;
 
-  return parsedDate.toLocaleDateString("en-US", {
+  return new Date(normalizedDate).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
   });
 }
 
 function getProjectDateLabel(project: ProjectData): string | null {
-  const startDate = project.startDate ?? project.updated_at;
+  const startDate = project.startDate;
   if (!startDate) return null;
   if (project.endDate) {
     return `${formatMonthYear(startDate)} – ${formatMonthYear(project.endDate)}`;

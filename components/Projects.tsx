@@ -10,21 +10,27 @@ import { Card } from "./ui/Card";
 import { cn } from "@/lib/cn";
 import { getCategory, type Category } from "@/lib/projectCategory";
 
-type Project = {
+type SortOrder = "newest" | "oldest";
+
+type FixedProjectDates = {
+  startDate: string;
+  endDate?: string;
+};
+
+type ManualProject = {
+  id: string;
   title: string;
   description: string;
   href: string;
-  category: "Project" | "Fun" | "Pitch";
+  category: Category;
   startDate: string;
   endDate?: string;
   thumbnail?: string;
+  primaryCtaLabel?: string;
+  isVideo?: boolean;
 };
 
-type SortOrder = "newest" | "oldest";
-
-type ProjectDateOverride = Pick<Project, "startDate" | "endDate">;
-
-const PROJECT_DATE_OVERRIDES: Record<string, ProjectDateOverride> = {
+const FIXED_PROJECT_DATES: Record<string, FixedProjectDates> = {
   cargame: { startDate: "2022-01-01" },
   flappybird: { startDate: "2022-02-01" },
   matchinggame: { startDate: "2022-04-01" },
@@ -39,54 +45,34 @@ const PROJECT_DATE_OVERRIDES: Record<string, ProjectDateOverride> = {
   aisearchagent: { startDate: "2026-01-01" },
 };
 
-const manualProjects: Project[] = [
+const MANUAL_PROJECTS: ManualProject[] = [
   {
+    id: "loveable-ai-user-growth-pitch",
     title: "Loveable.ai User Growth Pitch",
     description: "A pitch focused on increasing Loveable.ai users.",
     href: "https://www.loom.com/share/e0d66f81e0784b3896f6cb886a029657",
     category: "Pitch",
-    startDate: "2026-02-19",
+    startDate: "2026-01-01",
     thumbnail: "/pictures/Loveable.png",
+    primaryCtaLabel: "Watch on Loom",
+    isVideo: true,
   },
 ];
 
-function normalizeProjectKey(value: string): string {
+function normalizeProjectName(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
-function getProjectDateOverride(projectName: string): ProjectDateOverride | null {
-  return PROJECT_DATE_OVERRIDES[normalizeProjectKey(projectName)] ?? null;
+function getFixedProjectDates(projectName: string): FixedProjectDates | null {
+  return FIXED_PROJECT_DATES[normalizeProjectName(projectName)] ?? null;
 }
 
-const getSortDate = (project: Project) =>
-  new Date(project.endDate ?? project.startDate).getTime();
-
-function toSortableProject(project: ProjectData): Project {
-  return {
-    title: project.name,
-    description: project.description ?? "",
-    href: project.html_url,
-    category: resolveProjectCategory(project),
-    startDate: project.startDate ?? project.updated_at,
-    endDate: project.endDate,
-    thumbnail: project.thumbnail,
-  };
+function getSortDate(project: ProjectData): number | null {
+  const sortDate = project.endDate ?? project.startDate;
+  if (!sortDate) return null;
+  const timestamp = new Date(sortDate).getTime();
+  return Number.isNaN(timestamp) ? null : timestamp;
 }
-
-const manualProjectCards: ProjectData[] = manualProjects.map((project) => ({
-  id: project.href,
-  name: project.title,
-  description: project.description,
-  html_url: project.href,
-  homepage: null,
-  updated_at: project.endDate ?? project.startDate,
-  category: project.category,
-  startDate: project.startDate,
-  endDate: project.endDate,
-  thumbnail: project.thumbnail,
-  primaryCtaLabel: "Watch on Loom",
-  isVideo: true,
-}));
 
 function resolveProjectCategory(project: ProjectData): Category {
   return project.category ?? getCategory(project.name);
@@ -120,22 +106,39 @@ export default function Projects({
   const [reduceMotion, setReduceMotion] = useState(false);
   const sortDropdownRef = useRef<HTMLDivElement>(null);
 
-  const projects = useMemo(() => {
-    const githubProjectsWithDates = githubProjects.map((project) => {
-      const dateOverride = getProjectDateOverride(project.name);
-      const startDate = dateOverride?.startDate ?? project.startDate ?? project.updated_at;
-      const endDate = dateOverride?.endDate ?? project.endDate;
+  const manualProjects = useMemo<ProjectData[]>(
+    () =>
+      MANUAL_PROJECTS.map((project) => ({
+        id: project.id,
+        name: project.title,
+        description: project.description,
+        html_url: project.href,
+        homepage: null,
+        category: project.category,
+        startDate: project.startDate,
+        endDate: project.endDate,
+        date: project.endDate ?? project.startDate,
+        thumbnail: project.thumbnail,
+        primaryCtaLabel: project.primaryCtaLabel,
+        isVideo: project.isVideo,
+      })),
+    []
+  );
 
+  const projects = useMemo(() => {
+    const githubReposMapped = githubProjects.map((project) => {
+      const fixedDates = getFixedProjectDates(project.name);
       return {
         ...project,
-        startDate,
-        endDate,
-        updated_at: endDate ?? startDate,
+        startDate: fixedDates?.startDate,
+        endDate: fixedDates?.endDate,
+        date: fixedDates ? fixedDates.endDate ?? fixedDates.startDate : undefined,
       };
     });
 
-    return [...manualProjectCards, ...githubProjectsWithDates];
-  }, [githubProjects]);
+    const combinedItems = [...manualProjects, ...githubReposMapped];
+    return combinedItems;
+  }, [githubProjects, manualProjects]);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -185,8 +188,13 @@ export default function Projects({
         return resolveProjectCategory(project) === categoryFilter;
       })
       .sort((a, b) => {
-        const aDate = getSortDate(toSortableProject(a));
-        const bDate = getSortDate(toSortableProject(b));
+        const aDate = getSortDate(a);
+        const bDate = getSortDate(b);
+
+        if (aDate === null && bDate === null) return 0;
+        if (aDate === null) return 1;
+        if (bDate === null) return -1;
+
         return sortOrder === "newest" ? bDate - aDate : aDate - bDate;
       });
   }, [projects, search, categoryFilter, sortOrder]);
