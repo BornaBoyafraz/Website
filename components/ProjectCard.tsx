@@ -60,16 +60,17 @@ export function ProjectCard({
       }}
     >
       <Card className="h-full flex flex-col overflow-hidden transition-shadow hover:shadow-lg dark:hover:shadow-neutral-900/50">
+        <div className="relative w-full h-48 overflow-hidden">
+          <Image
+            src={project.thumbnail ?? getProjectImage(project.name)}
+            alt={project.name}
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover scale-[1.02]"
+            priority={false}
+          />
+        </div>
         <div className="p-6 flex flex-col flex-1 min-h-0">
-          <div className="mb-3">
-            <Image
-              src={project.thumbnail ?? getProjectImage(project.name)}
-              alt={project.name}
-              width={1200}
-              height={800}
-              className="w-full h-48 object-cover rounded-lg border border-black/10 dark:border-white/10"
-            />
-          </div>
           <div className="flex items-start justify-between gap-3 mb-3">
             <h3 className="text-lg font-semibold text-neutral-900 dark:text-white leading-tight">
               {project.name}
