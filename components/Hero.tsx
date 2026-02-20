@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ChevronDown, Github } from "lucide-react";
+import { ChevronDown, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/cn";
 
-const latestProjectRepoUrl = "https://github.com/BornaBoyafraz/AI-Search-Agent";
-// If this repository slug changes, update `latestProjectRepoUrl`.
+const latestProjectUrl = "https://www.loom.com/share/e0d66f81e0784b3896f6cb886a029657";
+// If this project URL changes, update `latestProjectUrl`.
 
 export default function Hero() {
   const [imgError, setImgError] = useState(false);
@@ -123,14 +123,13 @@ export default function Hero() {
                 Latest
               </p>
               <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-2">
-                AI Search Agent
+                Loveable.ai Growth Strategy
               </h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed mb-5">
-                Semantic search assistant that interprets natural language and
-                returns fast, relevant results.
+                A growth strategy focused on increasing Loveable.ai users.
               </p>
               <a
-                href={latestProjectRepoUrl}
+                href={latestProjectUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
@@ -140,8 +139,8 @@ export default function Hero() {
                   "focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
                 )}
               >
-                <Github size={16} />
-                View on GitHub
+                <ExternalLink size={16} />
+                Watch on Loom
               </a>
             </div>
           </div>
