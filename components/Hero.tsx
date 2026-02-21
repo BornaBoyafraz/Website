@@ -45,18 +45,18 @@ export default function Hero() {
             PORTFOLIO
           </p>
           <div className="flex items-center justify-center lg:justify-start gap-4 mb-5">
-            <div className="relative h-14 w-14 shrink-0 rounded-full border border-white/10 ring-2 ring-indigo-500/30 overflow-hidden bg-neutral-200 dark:bg-neutral-800 shadow-[0_0_28px_rgba(99,102,241,0.28)]">
+            <div className="relative h-[70px] w-[70px] sm:h-[72px] sm:w-[72px] shrink-0 rounded-full border border-white/10 ring-2 ring-indigo-500/30 overflow-hidden bg-neutral-200 dark:bg-neutral-800 shadow-[0_0_28px_rgba(99,102,241,0.28)]">
               {imgError ? (
                 <span className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-neutral-600 dark:text-neutral-300">
                   BA
                 </span>
               ) : (
                 <Image
-                  src="/profile.png"
+                  src="/pictures/portfolio picture.jpeg"
                   alt="Borna B. Afraz"
                   fill
                   className="object-cover"
-                  sizes="56px"
+                  sizes="(max-width: 640px) 70px, 72px"
                   priority
                   onError={() => setImgError(true)}
                 />
