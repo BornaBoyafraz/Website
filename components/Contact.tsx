@@ -5,6 +5,7 @@ export default function Contact() {
     { href: SITE.github, label: "GitHub" },
     { href: SITE.linkedin, label: "LinkedIn" },
     { href: SITE.instagram, label: "Instagram" },
+    { href: SITE.x, label: "X" },
     {
       href: "mailto:bornaboyafraz@gmail.com?subject=Contact%20from%20Portfolio",
       label: "Gmail",

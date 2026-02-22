@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ChevronDown, ExternalLink } from "lucide-react";
@@ -12,11 +12,42 @@ const latestProjectUrl = "https://www.loom.com/share/e0d66f81e0784b3896f6cb886a0
 export default function Hero() {
   const [imgError, setImgError] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
+  const [flipping, setFlipping] = useState(false);
+  const [flipReset, setFlipReset] = useState(false);
+  const flipTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const FLIP_DURATION_MS = 800;
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReduceMotion(mq.matches);
   }, []);
+
+  useEffect(() => {
+    return () => {
+      if (flipTimeoutRef.current) {
+        clearTimeout(flipTimeoutRef.current);
+      }
+      if (resetTimeoutRef.current) {
+        clearTimeout(resetTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const onProfileClick = () => {
+    if (flipping || flipReset) return;
+    setFlipReset(false);
+    setFlipping(true);
+    flipTimeoutRef.current = setTimeout(() => {
+      setFlipReset(true);
+      setFlipping(false);
+      flipTimeoutRef.current = null;
+      resetTimeoutRef.current = setTimeout(() => {
+        setFlipReset(false);
+        resetTimeoutRef.current = null;
+      }, 0);
+    }, FLIP_DURATION_MS);
+  };
 
   return (
     <section
@@ -45,23 +76,48 @@ export default function Hero() {
             PORTFOLIO
           </p>
           <div className="flex items-center justify-center lg:justify-start gap-4 mb-5">
-            <div className="relative h-[70px] w-[70px] sm:h-[72px] sm:w-[72px] shrink-0 rounded-full border border-white/10 ring-2 ring-indigo-500/30 overflow-hidden bg-neutral-200 dark:bg-neutral-800 shadow-[0_0_28px_rgba(99,102,241,0.28)]">
-              {imgError ? (
-                <span className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-neutral-600 dark:text-neutral-300">
-                  BA
-                </span>
-              ) : (
-                <Image
-                  src="/pictures/portfolio picture.jpeg"
-                  alt="Borna B. Afraz"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 640px) 70px, 72px"
-                  priority
-                  onError={() => setImgError(true)}
-                />
+            <button
+              type="button"
+              onClick={onProfileClick}
+              aria-label="Flip profile photo"
+              style={{ perspective: "800px" }}
+              className={cn(
+                "relative h-[70px] w-[70px] sm:h-[72px] sm:w-[72px] shrink-0 rounded-full border border-white/10 ring-2 ring-indigo-500/30 overflow-hidden bg-neutral-200 dark:bg-neutral-800 shadow-[0_0_28px_rgba(99,102,241,0.28)]",
+                "cursor-pointer transition-transform duration-200 ease-out hover:scale-[1.03]",
+                "focus:outline-none focus:ring-2 focus:ring-indigo-500/60 focus:ring-offset-2 dark:focus:ring-offset-neutral-950"
               )}
-            </div>
+            >
+              <div
+                className={cn(
+                  "profile-flip-container relative h-full w-full",
+                  flipping && "profile-flip-active",
+                  flipReset && "profile-flip-reset"
+                )}
+              >
+                <div className="profile-flip-side profile-flip-front">
+                  {imgError ? (
+                    <span className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-neutral-600 dark:text-neutral-300">
+                      BA
+                    </span>
+                  ) : (
+                    <Image
+                      src="/pictures/portfolio picture.jpeg"
+                      alt="Borna B. Afraz"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 70px, 72px"
+                      priority
+                      onError={() => setImgError(true)}
+                    />
+                  )}
+                </div>
+                <div className="profile-flip-side profile-flip-back" aria-hidden="true">
+                  <div className="profile-coin-medallion">
+                    <span className="profile-coin-text">BA</span>
+                  </div>
+                </div>
+              </div>
+            </button>
             <h1
               id="hero-heading"
               className="text-4xl sm:text-5xl lg:text-6xl xl:text-[4.3rem] font-bold tracking-tight text-neutral-900 dark:text-white leading-[1.1]"
