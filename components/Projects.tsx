@@ -42,6 +42,7 @@ const FIXED_PROJECT_DATES: Record<string, FixedProjectDates> = {
   gta6: { startDate: "2025-04-01", endDate: "2025-07-01" },
   gtavi: { startDate: "2025-04-01", endDate: "2025-07-01" },
   calorytracker: { startDate: "2025-07-01", endDate: "2025-10-01" },
+  calorietracker: { startDate: "2025-07-01", endDate: "2025-10-01" },
   aisearchagent: { startDate: "2026-01-01" },
 };
 

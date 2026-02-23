@@ -2,6 +2,7 @@
 const DEFENCE_2D_IMAGE_PATH = "/projects/defence-2d.png";
 // Paste/update your Matching Game image path here if you want to change it later.
 const MATCHING_GAME_IMAGE_PATH = "/projects/matching-game.png";
+const CALORIE_TRACKER_IMAGE_PATH = "/pictures/Calorie Tracker.png";
 
 export const PROJECT_IMAGES: Record<string, string> = {
   "AI-Search-Agent": "/projects/ai-search-agent.png",
@@ -10,10 +11,14 @@ export const PROJECT_IMAGES: Record<string, string> = {
   "flappy-bird": "/projects/flappy-bird.png",
   GTAVI: "/projects/gtavi.png",
   gtavi: "/projects/gtavi.png",
-  "Calory-Tracker": "/projects/calory-tracker.png",
-  "calory-tracker": "/projects/calory-tracker.png",
-  CaloryTracker: "/projects/calory-tracker.png",
-  "Calory Tracker": "/projects/calory-tracker.png",
+  "Calory-Tracker": CALORIE_TRACKER_IMAGE_PATH,
+  "calory-tracker": CALORIE_TRACKER_IMAGE_PATH,
+  CaloryTracker: CALORIE_TRACKER_IMAGE_PATH,
+  "Calory Tracker": CALORIE_TRACKER_IMAGE_PATH,
+  "Calorie-Tracker": CALORIE_TRACKER_IMAGE_PATH,
+  "calorie-tracker": CALORIE_TRACKER_IMAGE_PATH,
+  CalorieTracker: CALORIE_TRACKER_IMAGE_PATH,
+  "Calorie Tracker": CALORIE_TRACKER_IMAGE_PATH,
   "Subway-Surface": "/projects/subway-surfers.png",
   "subway-surface": "/projects/subway-surfers.png",
   SubwaySurface: "/projects/subway-surfers.png",
