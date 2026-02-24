@@ -5,6 +5,6 @@ export const SITE = {
     "mailto:bornaboyafraz@gmail.com?subject=Contact%20from%20Portfolio&body=Hi%20Borna%2C%0A%0A",
   github: "https://github.com/BornaBoyafraz",
   linkedin: "https://www.linkedin.com/in/bornaboyafraz/",
-  x: "https://x.com/BAfraz69994",
+  x: "https://x.com/bornabafrazx",
   instagram: "https://www.instagram.com/borna_afraz/",
 } as const;
