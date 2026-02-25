@@ -59,6 +59,18 @@ const MANUAL_PROJECTS: ManualProject[] = [
     primaryCtaLabel: "Watch on Loom",
     isVideo: true,
   },
+  {
+    id: "integrating-deep-reinforcement-learning-for-operational-discovery-in-dynamic-markets",
+    title:
+      "Integrating Deep Reinforcement Learning for Operational Discovery in Dynamic Markets",
+    description:
+      "A detailed analysis of how Machine Learning and Deep Reinforcement Learning can be combined to shift from traditional market forecasting toward autonomous, sequential decision systems. The article explores state representation, model-based and model-free reinforcement learning approaches, risk-aware policy design, and adaptation in evolving market conditions.",
+    href: "https://medium.com/@bornaboyafraz/integrating-deep-reinforcement-learning-for-operational-discovery-in-dynamic-markets-342af8af33cf",
+    category: "Research",
+    startDate: "2026-02-01",
+    thumbnail: "/pictures/Research.png",
+    primaryCtaLabel: "Read on Medium",
+  },
 ];
 
 function normalizeProjectName(value: string): string {
@@ -82,7 +94,13 @@ function resolveProjectCategory(project: ProjectData): Category {
 
 type ProjectFilter = "All" | Category;
 
-const FILTER_OPTIONS: ProjectFilter[] = ["All", "Project", "Pitch", "Fun"];
+const FILTER_OPTIONS: ProjectFilter[] = [
+  "All",
+  "Project",
+  "Fun",
+  "Pitch",
+  "Research",
+];
 const SORT_OPTIONS: Array<{ label: string; value: SortOrder }> = [
   { label: "Newest", value: "newest" },
   { label: "Oldest", value: "oldest" },

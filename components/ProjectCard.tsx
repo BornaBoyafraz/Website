@@ -3,7 +3,7 @@
 import { useId, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ExternalLink, Github } from "lucide-react";
+import { BookOpen, ExternalLink, Github } from "lucide-react";
 import { Card } from "./ui/Card";
 import { cn } from "@/lib/cn";
 import { getCategory, type Category } from "@/lib/projectCategory";
@@ -61,8 +61,13 @@ export function ProjectCard({
   const [expanded, setExpanded] = useState(false);
   const descriptionId = useId();
   const category = project.category ?? getCategory(project.name);
-  const primaryCtaLabel = project.primaryCtaLabel ?? "Source Code";
-  const PrimaryCtaIcon = project.isVideo ? ExternalLink : Github;
+  const isResearch = category === "Research";
+  const primaryCtaLabel = project.primaryCtaLabel ?? (isResearch ? "Read on Medium" : "Source Code");
+  const PrimaryCtaIcon = isResearch
+    ? BookOpen
+    : project.isVideo
+      ? ExternalLink
+      : Github;
   const description = project.description;
   const projectDateLabel = getProjectDateLabel(project);
   const canToggleDescription =
@@ -72,7 +77,9 @@ export function ProjectCard({
       ? "bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-200 dark:border-indigo-500/30"
       : category === "Pitch"
         ? "bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-500/20 dark:text-cyan-200 dark:border-cyan-500/30"
-        : "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-500/20 dark:text-purple-200 dark:border-purple-500/30";
+        : category === "Research"
+          ? "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-500/20 dark:text-emerald-200 dark:border-emerald-500/30"
+          : "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-500/20 dark:text-purple-200 dark:border-purple-500/30";
 
   const homepageUrl = project.homepage
     ? project.homepage.startsWith("http")
@@ -163,8 +170,8 @@ export function ProjectCard({
               )}
             >
               <PrimaryCtaIcon
-                size={16}
-                className={project.isVideo ? "fill-current" : undefined}
+                size={18}
+                className={!isResearch && project.isVideo ? "fill-current" : undefined}
               />
               {primaryCtaLabel}
             </a>
