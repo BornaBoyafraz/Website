@@ -7,6 +7,7 @@ import { ChevronDown, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 const latestProjectUrl = "https://www.loom.com/share/e0d66f81e0784b3896f6cb886a029657";
+const loveableUrl = "https://loveable.dev";
 // If this project URL changes, update `latestProjectUrl`.
 
 export default function Hero() {
@@ -179,10 +180,18 @@ export default function Hero() {
                 Latest
               </p>
               <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-2">
-                Loveable.ai Growth Strategy
+                <a
+                  href={loveableUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-neutral-700 dark:hover:text-neutral-200"
+                >
+                  Loveable.dev
+                </a>{" "}
+                Growth Strategy
               </h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed mb-5">
-                A growth strategy focused on increasing Loveable.ai users.
+                A growth strategy focused on increasing Loveable.dev users. This work explores user acquisition, product positioning, and scalable growth channels. The strategy was developed while collaborating professionally with a large technology company.
               </p>
               <a
                 href={latestProjectUrl}

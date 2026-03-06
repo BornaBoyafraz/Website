@@ -10,6 +10,8 @@ import { getCategory, type Category } from "@/lib/projectCategory";
 import { getProjectImage } from "@/lib/projectImages";
 
 const DESCRIPTION_TOGGLE_CHAR_THRESHOLD = 140;
+const LOVEABLE_GROWTH_TITLE = "Loveable.dev Growth Strategy";
+const LOVEABLE_URL = "https://loveable.dev";
 
 export interface ProjectData {
   id?: string;
@@ -113,7 +115,21 @@ export function ProjectCard({
           <div className="flex items-start justify-between gap-3 mb-3">
             <div>
               <h3 className="text-lg font-semibold text-neutral-900 dark:text-white leading-tight">
-                {project.name}
+                {project.name === LOVEABLE_GROWTH_TITLE ? (
+                  <>
+                    <a
+                      href={LOVEABLE_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-colors hover:text-neutral-700 dark:hover:text-neutral-200"
+                    >
+                      Loveable.dev
+                    </a>{" "}
+                    Growth Strategy
+                  </>
+                ) : (
+                  project.name
+                )}
               </h3>
               {projectDateLabel && (
                 <p className="mt-1 text-sm text-muted-foreground">{projectDateLabel}</p>

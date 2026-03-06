@@ -49,8 +49,9 @@ const FIXED_PROJECT_DATES: Record<string, FixedProjectDates> = {
 const MANUAL_PROJECTS: ManualProject[] = [
   {
     id: "loveable-ai-growth-strategy",
-    title: "Loveable.ai Growth Strategy",
-    description: "A growth strategy focused on increasing Loveable.ai users.",
+    title: "Loveable.dev Growth Strategy",
+    description:
+      "A growth strategy focused on increasing Loveable.dev users. This work explores user acquisition, product positioning, and scalable growth channels. The strategy was developed while collaborating professionally with a large technology company.",
     href: "https://www.loom.com/share/e0d66f81e0784b3896f6cb886a029657",
     category: "Pitch",
     startDate: "2026-01-01",
