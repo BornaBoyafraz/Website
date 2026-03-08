@@ -48,6 +48,35 @@ const FIXED_PROJECT_DATES: Record<string, FixedProjectDates> = {
 
 const MANUAL_PROJECTS: ManualProject[] = [
   {
+    id: "q-neo",
+    title: "q neo",
+    description: `q neo is an AI platform designed to unlock the hidden value of everyday physical items and support the circular economy.
+
+A user scans an object using their phone camera. A computer vision AI identifies the object, detects possible damage, and analyzes important visual details. The user can also add background information such as the age of the item or known issues.
+
+All of this information is analyzed by a valuation engine called the Quantum AI Key. The system studies resale prices, depreciation patterns, market demand, and repair costs.
+
+Using these data points, the system calculates a Pivot Score that determines the best course of action for the item.
+
+Possible recommendations include selling, repairing, keeping, or recycling the item.
+
+The goal is to help people and businesses make smarter decisions about the products they own while reducing waste and supporting a circular economy.
+
+During the hackathon our team:
+• designed the concept
+• built a website frontend prototype
+• created the product logic
+• demonstrated how the AI decision system works
+
+Our project placed in the Top 10 at the hackathon.`,
+    href: "https://www.loom.com/share/79e478861c6242a99139f08a8f679ef3",
+    category: "Pitch",
+    startDate: "2026-03-01",
+    thumbnail: "/pictures/q neo.png",
+    primaryCtaLabel: "Watch Demo",
+    isVideo: true,
+  },
+  {
     id: "loveable-ai-growth-strategy",
     title: "Loveable.dev Growth Strategy",
     description:

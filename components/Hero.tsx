@@ -6,9 +6,17 @@ import Image from "next/image";
 import { ChevronDown, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/cn";
 
-const latestProjectUrl = "https://www.loom.com/share/e0d66f81e0784b3896f6cb886a029657";
-const loveableUrl = "https://loveable.dev";
-// If this project URL changes, update `latestProjectUrl`.
+const latestProject = {
+  title: "q neo",
+  category: "Pitch",
+  dateLabel: "March 2026",
+  url: "https://www.loom.com/share/79e478861c6242a99139f08a8f679ef3",
+  thumbnail: "/pictures/q neo.png",
+  description:
+    "q neo is an AI platform that helps unlock the hidden value of everyday physical items while supporting the circular economy. During the hackathon, our team designed the concept, built a frontend prototype, developed the product logic, and demonstrated how the AI decision system works. The project placed in the Top 10.",
+  ctaLabel: "Watch on Loom",
+};
+// If this project URL changes, update `latestProject.url`.
 
 export default function Hero() {
   const [imgError, setImgError] = useState(false);
@@ -179,22 +187,30 @@ export default function Hero() {
               <p className="text-xs uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400 mb-2">
                 Latest
               </p>
+              <div className="mb-4 overflow-hidden rounded-xl border border-neutral-200/60 dark:border-neutral-700/70">
+                <Image
+                  src={latestProject.thumbnail}
+                  alt={`${latestProject.title} thumbnail`}
+                  width={640}
+                  height={360}
+                  className="h-40 w-full object-cover"
+                  sizes="(max-width: 1024px) 100vw, 360px"
+                />
+              </div>
+              <div className="mb-2 flex items-center gap-2 text-xs font-medium text-neutral-500 dark:text-neutral-400">
+                <span className="rounded-full border border-cyan-200 bg-cyan-100 px-2 py-0.5 text-cyan-800 dark:border-cyan-500/30 dark:bg-cyan-500/20 dark:text-cyan-200">
+                  {latestProject.category}
+                </span>
+                <span>{latestProject.dateLabel}</span>
+              </div>
               <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-2">
-                <a
-                  href={loveableUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-colors hover:text-neutral-700 dark:hover:text-neutral-200"
-                >
-                  Loveable.dev
-                </a>{" "}
-                Growth Strategy
+                {latestProject.title}
               </h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed mb-5">
-                A growth strategy focused on increasing Loveable.dev users. This work explores user acquisition, product positioning, and scalable growth channels. The strategy was developed while collaborating professionally with a large technology company.
+                {latestProject.description}
               </p>
               <a
-                href={latestProjectUrl}
+                href={latestProject.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
@@ -205,7 +221,7 @@ export default function Hero() {
                 )}
               >
                 <ExternalLink size={16} />
-                Watch on Loom
+                {latestProject.ctaLabel}
               </a>
             </div>
           </div>
