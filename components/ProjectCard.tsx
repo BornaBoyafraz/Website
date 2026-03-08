@@ -18,6 +18,7 @@ export interface ProjectData {
   name: string;
   description: string;
   html_url: string;
+  secondaryCtaHref?: string;
   homepage: string | null;
   pushed_at?: string;
   date?: string;
@@ -26,6 +27,7 @@ export interface ProjectData {
   category?: Category;
   thumbnail?: string;
   primaryCtaLabel?: string;
+  secondaryCtaLabel?: string;
   isVideo?: boolean;
 }
 
@@ -70,6 +72,8 @@ export function ProjectCard({
     : project.isVideo
       ? ExternalLink
       : Github;
+  const secondaryCtaHref = project.secondaryCtaHref;
+  const secondaryCtaLabel = project.secondaryCtaLabel;
   const description = project.description;
   const projectDateLabel = getProjectDateLabel(project);
   const canToggleDescription =
@@ -191,6 +195,23 @@ export function ProjectCard({
               />
               {primaryCtaLabel}
             </a>
+
+            {secondaryCtaHref && secondaryCtaLabel && (
+              <a
+                href={secondaryCtaHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  "inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium",
+                  "border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white",
+                  "hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors",
+                  "focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
+                )}
+              >
+                <Github size={16} />
+                {secondaryCtaLabel}
+              </a>
+            )}
 
             {homepageUrl && (
               <a

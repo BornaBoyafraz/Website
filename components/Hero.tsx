@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ChevronDown, ExternalLink } from "lucide-react";
+import { ChevronDown, ExternalLink, Github } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 const latestProject = {
@@ -11,10 +11,12 @@ const latestProject = {
   category: "Pitch",
   dateLabel: "March 2026",
   url: "https://www.loom.com/share/79e478861c6242a99139f08a8f679ef3",
+  sourceCodeUrl: "https://github.com/BornaBoyafraz/q-neo?tab=MIT-1-ov-file",
   thumbnail: "/pictures/q neo.png",
   description:
     "q neo is an AI platform that helps unlock the hidden value of everyday physical items while supporting the circular economy. During the hackathon, our team designed the concept, built a frontend prototype, developed the product logic, and demonstrated how the AI decision system works. The project placed in the Top 10.",
   ctaLabel: "Watch on Loom",
+  sourceCtaLabel: "Source Code",
 };
 // If this project URL changes, update `latestProject.url`.
 
@@ -209,20 +211,37 @@ export default function Hero() {
               <p className="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed mb-5">
                 {latestProject.description}
               </p>
-              <a
-                href={latestProject.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  "inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium",
-                  "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900",
-                  "hover:opacity-90 transition-opacity",
-                  "focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
-                )}
-              >
-                <ExternalLink size={16} />
-                {latestProject.ctaLabel}
-              </a>
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2">
+                <a
+                  href={latestProject.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(
+                    "inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium",
+                    "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900",
+                    "hover:opacity-90 transition-opacity",
+                    "focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900",
+                    "w-full sm:w-auto justify-center"
+                  )}
+                >
+                  <ExternalLink size={18} className="fill-current" />
+                  {latestProject.ctaLabel}
+                </a>
+                <a
+                  href={latestProject.sourceCodeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(
+                    "inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium",
+                    "border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white",
+                    "hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors",
+                    "focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
+                  )}
+                >
+                  <Github size={16} />
+                  {latestProject.sourceCtaLabel}
+                </a>
+              </div>
             </div>
           </div>
         </motion.div>

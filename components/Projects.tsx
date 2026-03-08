@@ -22,11 +22,13 @@ type ManualProject = {
   title: string;
   description: string;
   href: string;
+  secondaryCtaHref?: string;
   category: Category;
   startDate: string;
   endDate?: string;
   thumbnail?: string;
   primaryCtaLabel?: string;
+  secondaryCtaLabel?: string;
   isVideo?: boolean;
 };
 
@@ -70,10 +72,12 @@ During the hackathon our team:
 
 Our project placed in the Top 10 at the hackathon.`,
     href: "https://www.loom.com/share/79e478861c6242a99139f08a8f679ef3",
+    secondaryCtaHref: "https://github.com/BornaBoyafraz/q-neo?tab=MIT-1-ov-file",
     category: "Pitch",
     startDate: "2026-03-01",
     thumbnail: "/pictures/q neo.png",
-    primaryCtaLabel: "Watch Demo",
+    primaryCtaLabel: "Watch on Loom",
+    secondaryCtaLabel: "Source Code",
     isVideo: true,
   },
   {
@@ -170,6 +174,8 @@ export default function Projects({
         date: project.endDate ?? project.startDate,
         thumbnail: project.thumbnail,
         primaryCtaLabel: project.primaryCtaLabel,
+        secondaryCtaLabel: project.secondaryCtaLabel,
+        secondaryCtaHref: project.secondaryCtaHref,
         isVideo: project.isVideo,
       })),
     []
