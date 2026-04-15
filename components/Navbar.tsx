@@ -11,7 +11,6 @@ import {
   Mail,
 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
-import XTwitterIcon from "./icons/XTwitterIcon";
 import { SITE } from "@/lib/constants";
 import { cn } from "@/lib/cn";
 
@@ -25,7 +24,6 @@ const navLinks = [
 const socialLinks = [
   { href: SITE.github, icon: Github, label: "GitHub" },
   { href: SITE.linkedin, icon: Linkedin, label: "LinkedIn" },
-  { href: SITE.x, icon: XTwitterIcon, label: "X (Twitter)" },
   { href: SITE.instagram, icon: Instagram, label: "Instagram" },
   {
     href: SITE.mailto,

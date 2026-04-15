@@ -22,13 +22,12 @@ type ManualProject = {
   title: string;
   description: string;
   href: string;
-  secondaryCtaHref?: string;
+  homepage?: string | null;
   category: Category;
   startDate: string;
   endDate?: string;
   thumbnail?: string;
   primaryCtaLabel?: string;
-  secondaryCtaLabel?: string;
   isVideo?: boolean;
 };
 
@@ -44,66 +43,31 @@ const FIXED_PROJECT_DATES: Record<string, FixedProjectDates> = {
   gta6: { startDate: "2025-04-01", endDate: "2025-07-01" },
   gtavi: { startDate: "2025-04-01", endDate: "2025-07-01" },
   calorytracker: { startDate: "2025-07-01", endDate: "2025-10-01" },
-  calorietracker: { startDate: "2025-07-01", endDate: "2025-10-01" },
   aisearchagent: { startDate: "2026-01-01" },
 };
 
 const MANUAL_PROJECTS: ManualProject[] = [
   {
-    id: "q-neo",
-    title: "q neo",
-    description: `q neo is an AI platform designed to unlock the hidden value of everyday physical items and support the circular economy.
-
-A user scans an object using their phone camera. A computer vision AI identifies the object, detects possible damage, and analyzes important visual details. The user can also add background information such as the age of the item or known issues.
-
-All of this information is analyzed by a valuation engine called the Quantum AI Key. The system studies resale prices, depreciation patterns, market demand, and repair costs.
-
-Using these data points, the system calculates a Pivot Score that determines the best course of action for the item.
-
-Possible recommendations include selling, repairing, keeping, or recycling the item.
-
-The goal is to help people and businesses make smarter decisions about the products they own while reducing waste and supporting a circular economy.
-
-During the hackathon our team:
-• designed the concept
-• built a website frontend prototype
-• created the product logic
-• demonstrated how the AI decision system works
-
-Our project placed in the Top 10 at the hackathon.`,
-    href: "https://www.loom.com/share/79e478861c6242a99139f08a8f679ef3",
-    secondaryCtaHref: "https://github.com/BornaBoyafraz/q-neo?tab=MIT-1-ov-file",
-    category: "Pitch",
-    startDate: "2026-03-01",
-    thumbnail: "/pictures/q neo.png",
-    primaryCtaLabel: "Watch on Loom",
-    secondaryCtaLabel: "Source Code",
-    isVideo: true,
+    id: "debtguard",
+    title: "DebtGuard",
+    description:
+      "DebtGuard is an AI-assisted app for debt decisions. Users input their finances to assess risk and simulate what-if scenarios, helping them understand outcomes and make better financial choices.",
+    href: "https://github.com/BornaBoyafraz/DebtGuard",
+    category: "Project",
+    startDate: "2026-01-01",
+    endDate: "2026-04-01",
+    thumbnail: "/pictures/debtguard.png",
   },
   {
-    id: "loveable-ai-growth-strategy",
-    title: "Loveable.dev Growth Strategy",
-    description:
-      "A growth strategy focused on increasing Loveable.dev users. This work explores user acquisition, product positioning, and scalable growth channels. The strategy was developed while collaborating professionally with a large technology company.",
+    id: "loveable-ai-user-growth-pitch",
+    title: "Loveable.ai User Growth Pitch",
+    description: "A pitch focused on increasing Loveable.ai users.",
     href: "https://www.loom.com/share/e0d66f81e0784b3896f6cb886a029657",
     category: "Pitch",
     startDate: "2026-01-01",
-    endDate: "2026-02-01",
     thumbnail: "/pictures/Loveable.png",
     primaryCtaLabel: "Watch on Loom",
     isVideo: true,
-  },
-  {
-    id: "integrating-deep-reinforcement-learning-for-operational-discovery-in-dynamic-markets",
-    title:
-      "Integrating Deep Reinforcement Learning for Operational Discovery in Dynamic Markets",
-    description:
-      "A detailed analysis of how Machine Learning and Deep Reinforcement Learning can be combined to shift from traditional market forecasting toward autonomous, sequential decision systems. The article explores state representation, model-based and model-free reinforcement learning approaches, risk-aware policy design, and adaptation in evolving market conditions.",
-    href: "https://medium.com/@bornaboyafraz/integrating-deep-reinforcement-learning-for-operational-discovery-in-dynamic-markets-342af8af33cf",
-    category: "Research",
-    startDate: "2026-02-01",
-    thumbnail: "/pictures/Research.png",
-    primaryCtaLabel: "Read on Medium",
   },
 ];
 
@@ -113,6 +77,45 @@ function normalizeProjectName(value: string): string {
 
 function getFixedProjectDates(projectName: string): FixedProjectDates | null {
   return FIXED_PROJECT_DATES[normalizeProjectName(projectName)] ?? null;
+}
+
+function toManualProjectData(project: ManualProject): ProjectData {
+  return {
+    id: project.id,
+    name: project.title,
+    description: project.description,
+    html_url: project.href,
+    homepage: project.homepage ?? null,
+    category: project.category,
+    startDate: project.startDate,
+    endDate: project.endDate,
+    date: project.endDate ?? project.startDate,
+    thumbnail: project.thumbnail,
+    primaryCtaLabel: project.primaryCtaLabel,
+    isVideo: project.isVideo,
+  };
+}
+
+function mergeManualProject(
+  existingProject: ProjectData,
+  manualProject: ManualProject
+): ProjectData {
+  return {
+    ...existingProject,
+    id: manualProject.id,
+    name: manualProject.title,
+    description: manualProject.description,
+    html_url: manualProject.href,
+    homepage: manualProject.homepage ?? existingProject.homepage,
+    category: manualProject.category,
+    startDate: manualProject.startDate,
+    endDate: manualProject.endDate,
+    date: manualProject.endDate ?? manualProject.startDate,
+    thumbnail: manualProject.thumbnail ?? existingProject.thumbnail,
+    primaryCtaLabel:
+      manualProject.primaryCtaLabel ?? existingProject.primaryCtaLabel,
+    isVideo: manualProject.isVideo ?? existingProject.isVideo,
+  };
 }
 
 function getSortDate(project: ProjectData): number | null {
@@ -128,13 +131,7 @@ function resolveProjectCategory(project: ProjectData): Category {
 
 type ProjectFilter = "All" | Category;
 
-const FILTER_OPTIONS: ProjectFilter[] = [
-  "All",
-  "Project",
-  "Fun",
-  "Pitch",
-  "Research",
-];
+const FILTER_OPTIONS: ProjectFilter[] = ["All", "Project", "Pitch", "Fun"];
 const SORT_OPTIONS: Array<{ label: string; value: SortOrder }> = [
   { label: "Newest", value: "newest" },
   { label: "Oldest", value: "oldest" },
@@ -160,27 +157,6 @@ export default function Projects({
   const [reduceMotion, setReduceMotion] = useState(false);
   const sortDropdownRef = useRef<HTMLDivElement>(null);
 
-  const manualProjects = useMemo<ProjectData[]>(
-    () =>
-      MANUAL_PROJECTS.map((project) => ({
-        id: project.id,
-        name: project.title,
-        description: project.description,
-        html_url: project.href,
-        homepage: null,
-        category: project.category,
-        startDate: project.startDate,
-        endDate: project.endDate,
-        date: project.endDate ?? project.startDate,
-        thumbnail: project.thumbnail,
-        primaryCtaLabel: project.primaryCtaLabel,
-        secondaryCtaLabel: project.secondaryCtaLabel,
-        secondaryCtaHref: project.secondaryCtaHref,
-        isVideo: project.isVideo,
-      })),
-    []
-  );
-
   const projects = useMemo(() => {
     const githubReposMapped = githubProjects.map((project) => {
       const fixedDates = getFixedProjectDates(project.name);
@@ -192,9 +168,30 @@ export default function Projects({
       };
     });
 
-    const combinedItems = [...manualProjects, ...githubReposMapped];
-    return combinedItems;
-  }, [githubProjects, manualProjects]);
+    const projectsByName = new Map<string, ProjectData>(
+      githubReposMapped.map((project) => [
+        normalizeProjectName(project.name),
+        project,
+      ])
+    );
+
+    for (const manualProject of MANUAL_PROJECTS) {
+      const projectKey = normalizeProjectName(manualProject.title);
+      const existingProject = projectsByName.get(projectKey);
+
+      if (existingProject) {
+        projectsByName.set(
+          projectKey,
+          mergeManualProject(existingProject, manualProject)
+        );
+        continue;
+      }
+
+      projectsByName.set(projectKey, toManualProjectData(manualProject));
+    }
+
+    return Array.from(projectsByName.values());
+  }, [githubProjects]);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");

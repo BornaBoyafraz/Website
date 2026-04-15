@@ -1,64 +1,22 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ChevronDown, ExternalLink, Github } from "lucide-react";
+import { ChevronDown, Github } from "lucide-react";
 import { cn } from "@/lib/cn";
 
-const latestProject = {
-  title: "q neo",
-  category: "Pitch",
-  dateLabel: "March 2026",
-  url: "https://www.loom.com/share/79e478861c6242a99139f08a8f679ef3",
-  sourceCodeUrl: "https://github.com/BornaBoyafraz/q-neo?tab=MIT-1-ov-file",
-  thumbnail: "/pictures/q neo.png",
-  description:
-    "q neo is an AI platform that helps unlock the hidden value of everyday physical items while supporting the circular economy. During the hackathon, our team designed the concept, built a frontend prototype, developed the product logic, and demonstrated how the AI decision system works. The project placed in the Top 10.",
-  ctaLabel: "Watch on Loom",
-  sourceCtaLabel: "Source Code",
-};
-// If this project URL changes, update `latestProject.url`.
+const latestProjectRepoUrl = "https://github.com/BornaBoyafraz/AI-Search-Agent";
+// If this repository slug changes, update `latestProjectRepoUrl`.
 
 export default function Hero() {
   const [imgError, setImgError] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
-  const [flipping, setFlipping] = useState(false);
-  const [flipReset, setFlipReset] = useState(false);
-  const flipTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const FLIP_DURATION_MS = 800;
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReduceMotion(mq.matches);
   }, []);
-
-  useEffect(() => {
-    return () => {
-      if (flipTimeoutRef.current) {
-        clearTimeout(flipTimeoutRef.current);
-      }
-      if (resetTimeoutRef.current) {
-        clearTimeout(resetTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  const onProfileClick = () => {
-    if (flipping || flipReset) return;
-    setFlipReset(false);
-    setFlipping(true);
-    flipTimeoutRef.current = setTimeout(() => {
-      setFlipReset(true);
-      setFlipping(false);
-      flipTimeoutRef.current = null;
-      resetTimeoutRef.current = setTimeout(() => {
-        setFlipReset(false);
-        resetTimeoutRef.current = null;
-      }, 0);
-    }, FLIP_DURATION_MS);
-  };
 
   return (
     <section
@@ -87,48 +45,23 @@ export default function Hero() {
             PORTFOLIO
           </p>
           <div className="flex items-center justify-center lg:justify-start gap-4 mb-5">
-            <button
-              type="button"
-              onClick={onProfileClick}
-              aria-label="Flip profile photo"
-              style={{ perspective: "800px" }}
-              className={cn(
-                "relative h-[70px] w-[70px] sm:h-[72px] sm:w-[72px] shrink-0 rounded-full border border-white/10 ring-2 ring-indigo-500/30 overflow-hidden bg-neutral-200 dark:bg-neutral-800 shadow-[0_0_28px_rgba(99,102,241,0.28)]",
-                "cursor-pointer transition-transform duration-200 ease-out hover:scale-[1.03]",
-                "focus:outline-none focus:ring-2 focus:ring-indigo-500/60 focus:ring-offset-2 dark:focus:ring-offset-neutral-950"
+            <div className="relative h-14 w-14 shrink-0 rounded-full border border-white/10 ring-2 ring-indigo-500/30 overflow-hidden bg-neutral-200 dark:bg-neutral-800 shadow-[0_0_28px_rgba(99,102,241,0.28)]">
+              {imgError ? (
+                <span className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-neutral-600 dark:text-neutral-300">
+                  BA
+                </span>
+              ) : (
+                <Image
+                  src="/profile.png"
+                  alt="Borna B. Afraz"
+                  fill
+                  className="object-cover"
+                  sizes="56px"
+                  priority
+                  onError={() => setImgError(true)}
+                />
               )}
-            >
-              <div
-                className={cn(
-                  "profile-flip-container relative h-full w-full",
-                  flipping && "profile-flip-active",
-                  flipReset && "profile-flip-reset"
-                )}
-              >
-                <div className="profile-flip-side profile-flip-front">
-                  {imgError ? (
-                    <span className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-neutral-600 dark:text-neutral-300">
-                      BA
-                    </span>
-                  ) : (
-                    <Image
-                      src="/pictures/portfolio picture.jpeg"
-                      alt="Borna B. Afraz"
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 640px) 70px, 72px"
-                      priority
-                      onError={() => setImgError(true)}
-                    />
-                  )}
-                </div>
-                <div className="profile-flip-side profile-flip-back" aria-hidden="true">
-                  <div className="profile-coin-medallion">
-                    <span className="profile-coin-text">BA</span>
-                  </div>
-                </div>
-              </div>
-            </button>
+            </div>
             <h1
               id="hero-heading"
               className="text-4xl sm:text-5xl lg:text-6xl xl:text-[4.3rem] font-bold tracking-tight text-neutral-900 dark:text-white leading-[1.1]"
@@ -189,59 +122,27 @@ export default function Hero() {
               <p className="text-xs uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400 mb-2">
                 Latest
               </p>
-              <div className="mb-4 overflow-hidden rounded-xl border border-neutral-200/60 dark:border-neutral-700/70">
-                <Image
-                  src={latestProject.thumbnail}
-                  alt={`${latestProject.title} thumbnail`}
-                  width={640}
-                  height={360}
-                  className="h-40 w-full object-cover"
-                  sizes="(max-width: 1024px) 100vw, 360px"
-                />
-              </div>
-              <div className="mb-2 flex items-center gap-2 text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                <span className="rounded-full border border-cyan-200 bg-cyan-100 px-2 py-0.5 text-cyan-800 dark:border-cyan-500/30 dark:bg-cyan-500/20 dark:text-cyan-200">
-                  {latestProject.category}
-                </span>
-                <span>{latestProject.dateLabel}</span>
-              </div>
               <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-2">
-                {latestProject.title}
+                AI Search Agent
               </h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed mb-5">
-                {latestProject.description}
+                Semantic search assistant that interprets natural language and
+                returns fast, relevant results.
               </p>
-              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2">
-                <a
-                  href={latestProject.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={cn(
-                    "inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium",
-                    "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900",
-                    "hover:opacity-90 transition-opacity",
-                    "focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900",
-                    "w-full sm:w-auto justify-center"
-                  )}
-                >
-                  <ExternalLink size={18} className="fill-current" />
-                  {latestProject.ctaLabel}
-                </a>
-                <a
-                  href={latestProject.sourceCodeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={cn(
-                    "inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium",
-                    "border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white",
-                    "hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors",
-                    "focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
-                  )}
-                >
-                  <Github size={16} />
-                  {latestProject.sourceCtaLabel}
-                </a>
-              </div>
+              <a
+                href={latestProjectRepoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  "inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium",
+                  "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900",
+                  "hover:opacity-90 transition-opacity",
+                  "focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
+                )}
+              >
+                <Github size={16} />
+                View on GitHub
+              </a>
             </div>
           </div>
         </motion.div>

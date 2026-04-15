@@ -3,12 +3,10 @@
 import { Github, Linkedin, Instagram, Mail } from "lucide-react";
 import { SITE } from "@/lib/constants";
 import { cn } from "@/lib/cn";
-import XTwitterIcon from "./icons/XTwitterIcon";
 
 const socialLinks = [
   { href: SITE.github, icon: Github, label: "GitHub" },
   { href: SITE.linkedin, icon: Linkedin, label: "LinkedIn" },
-  { href: SITE.x, icon: XTwitterIcon, label: "X (Twitter)" },
   { href: SITE.instagram, icon: Instagram, label: "Instagram" },
   {
     href: SITE.mailto,

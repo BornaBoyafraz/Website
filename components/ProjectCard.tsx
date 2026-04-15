@@ -3,22 +3,19 @@
 import { useId, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { BookOpen, ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Github } from "lucide-react";
 import { Card } from "./ui/Card";
 import { cn } from "@/lib/cn";
 import { getCategory, type Category } from "@/lib/projectCategory";
 import { getProjectImage } from "@/lib/projectImages";
 
 const DESCRIPTION_TOGGLE_CHAR_THRESHOLD = 140;
-const LOVEABLE_GROWTH_TITLE = "Loveable.dev Growth Strategy";
-const LOVEABLE_URL = "https://loveable.dev";
 
 export interface ProjectData {
   id?: string;
   name: string;
   description: string;
   html_url: string;
-  secondaryCtaHref?: string;
   homepage: string | null;
   pushed_at?: string;
   date?: string;
@@ -27,7 +24,6 @@ export interface ProjectData {
   category?: Category;
   thumbnail?: string;
   primaryCtaLabel?: string;
-  secondaryCtaLabel?: string;
   isVideo?: boolean;
 }
 
@@ -65,15 +61,8 @@ export function ProjectCard({
   const [expanded, setExpanded] = useState(false);
   const descriptionId = useId();
   const category = project.category ?? getCategory(project.name);
-  const isResearch = category === "Research";
-  const primaryCtaLabel = project.primaryCtaLabel ?? (isResearch ? "Read on Medium" : "Source Code");
-  const PrimaryCtaIcon = isResearch
-    ? BookOpen
-    : project.isVideo
-      ? ExternalLink
-      : Github;
-  const secondaryCtaHref = project.secondaryCtaHref;
-  const secondaryCtaLabel = project.secondaryCtaLabel;
+  const primaryCtaLabel = project.primaryCtaLabel ?? "Source Code";
+  const PrimaryCtaIcon = project.isVideo ? ExternalLink : Github;
   const description = project.description;
   const projectDateLabel = getProjectDateLabel(project);
   const canToggleDescription =
@@ -83,9 +72,7 @@ export function ProjectCard({
       ? "bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-200 dark:border-indigo-500/30"
       : category === "Pitch"
         ? "bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-500/20 dark:text-cyan-200 dark:border-cyan-500/30"
-        : category === "Research"
-          ? "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-500/20 dark:text-emerald-200 dark:border-emerald-500/30"
-          : "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-500/20 dark:text-purple-200 dark:border-purple-500/30";
+        : "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-500/20 dark:text-purple-200 dark:border-purple-500/30";
 
   const homepageUrl = project.homepage
     ? project.homepage.startsWith("http")
@@ -119,21 +106,7 @@ export function ProjectCard({
           <div className="flex items-start justify-between gap-3 mb-3">
             <div>
               <h3 className="text-lg font-semibold text-neutral-900 dark:text-white leading-tight">
-                {project.name === LOVEABLE_GROWTH_TITLE ? (
-                  <>
-                    <a
-                      href={LOVEABLE_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="transition-colors hover:text-neutral-700 dark:hover:text-neutral-200"
-                    >
-                      Loveable.dev
-                    </a>{" "}
-                    Growth Strategy
-                  </>
-                ) : (
-                  project.name
-                )}
+                {project.name}
               </h3>
               {projectDateLabel && (
                 <p className="mt-1 text-sm text-muted-foreground">{projectDateLabel}</p>
@@ -190,28 +163,11 @@ export function ProjectCard({
               )}
             >
               <PrimaryCtaIcon
-                size={18}
-                className={!isResearch && project.isVideo ? "fill-current" : undefined}
+                size={16}
+                className={project.isVideo ? "fill-current" : undefined}
               />
               {primaryCtaLabel}
             </a>
-
-            {secondaryCtaHref && secondaryCtaLabel && (
-              <a
-                href={secondaryCtaHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  "inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium",
-                  "border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white",
-                  "hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors",
-                  "focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
-                )}
-              >
-                <Github size={16} />
-                {secondaryCtaLabel}
-              </a>
-            )}
 
             {homepageUrl && (
               <a
