@@ -1,22 +1,46 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type CSSProperties } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ChevronDown, Github } from "lucide-react";
 import { cn } from "@/lib/cn";
+import bornaPortrait from "@/app/assets/Borna.jpeg";
 
-const latestProjectRepoUrl = "https://github.com/BornaBoyafraz/AI-Search-Agent";
-// If this repository slug changes, update `latestProjectRepoUrl`.
+const latestProject = {
+  title: "DebtGuard",
+  description:
+    "AI-assisted debt decision app that helps users assess financial risk and run what-if scenarios before borrowing.",
+  href: "https://github.com/BornaBoyafraz/DebtGuard",
+};
+
+const coinSpinStyle: CSSProperties = {
+  animation: "hero-profile-coin-spin 900ms cubic-bezier(0.22, 1, 0.36, 1) both",
+};
 
 export default function Hero() {
   const [imgError, setImgError] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
+  const [isSpinning, setIsSpinning] = useState(false);
+  const [spinVersion, setSpinVersion] = useState(0);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReduceMotion(mq.matches);
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      setReduceMotion(event.matches);
+    };
+
+    mq.addEventListener("change", handleChange);
+    return () => mq.removeEventListener("change", handleChange);
   }, []);
+
+  const handleProfileClick = () => {
+    if (reduceMotion) return;
+    setSpinVersion((current) => current + 1);
+    setIsSpinning(true);
+  };
 
   return (
     <section
@@ -45,23 +69,64 @@ export default function Hero() {
             PORTFOLIO
           </p>
           <div className="flex items-center justify-center lg:justify-start gap-4 mb-5">
-            <div className="relative h-14 w-14 shrink-0 rounded-full border border-white/10 ring-2 ring-indigo-500/30 overflow-hidden bg-neutral-200 dark:bg-neutral-800 shadow-[0_0_28px_rgba(99,102,241,0.28)]">
-              {imgError ? (
-                <span className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-neutral-600 dark:text-neutral-300">
-                  BA
-                </span>
-              ) : (
-                <Image
-                  src="/profile.png"
-                  alt="Borna B. Afraz"
-                  fill
-                  className="object-cover"
-                  sizes="56px"
-                  priority
-                  onError={() => setImgError(true)}
-                />
+            <button
+              type="button"
+              onClick={handleProfileClick}
+              className={cn(
+                "group relative shrink-0 rounded-full",
+                "focus:outline-none focus:ring-2 focus:ring-indigo-400/60 focus:ring-offset-2 dark:focus:ring-offset-neutral-950"
               )}
-            </div>
+              aria-label="Spin the Borna profile coin"
+            >
+              <div className="relative h-[5.25rem] w-[5.25rem] sm:h-[5.5rem] sm:w-[5.5rem] [perspective:1200px]">
+                <div
+                  key={spinVersion}
+                  className="relative h-full w-full rounded-full [transform-style:preserve-3d] [will-change:transform]"
+                  style={isSpinning ? coinSpinStyle : undefined}
+                  onAnimationEnd={() => setIsSpinning(false)}
+                >
+                  <div
+                    className={cn(
+                      "absolute inset-0 overflow-hidden rounded-full border border-white/10 ring-2 ring-indigo-500/30 bg-neutral-200 dark:bg-neutral-800 shadow-[0_0_28px_rgba(99,102,241,0.28)]",
+                      "[backface-visibility:hidden]"
+                    )}
+                  >
+                    {imgError ? (
+                      <span className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-neutral-600 dark:text-neutral-300">
+                        BA
+                      </span>
+                    ) : (
+                      <Image
+                        src={bornaPortrait}
+                        alt="Borna B. Afraz"
+                        fill
+                        quality={100}
+                        className="object-cover object-[center_32%]"
+                        sizes="(min-width: 640px) 88px, 84px"
+                        priority
+                        onError={() => setImgError(true)}
+                      />
+                    )}
+                  </div>
+                  <div
+                    className={cn(
+                      "absolute inset-0 rounded-full border border-white/10 ring-2 ring-indigo-500/30 shadow-[0_0_28px_rgba(99,102,241,0.28)]",
+                      "bg-[radial-gradient(circle_at_30%_28%,rgba(255,250,214,0.98)_0%,rgba(245,198,77,0.96)_34%,rgba(194,124,18,0.94)_72%,rgba(110,59,9,0.98)_100%)]",
+                      "[backface-visibility:hidden] [transform:rotateY(180deg)]"
+                    )}
+                  >
+                    <span className="absolute inset-[12%] rounded-full border border-white/35" />
+                    <span className="absolute inset-[22%] rounded-full border border-amber-950/15" />
+                    <span className="absolute inset-0 rounded-full bg-[linear-gradient(140deg,rgba(255,255,255,0.62),transparent_34%,rgba(120,53,15,0.18)_74%,rgba(255,255,255,0.16)_100%)]" />
+                    <span className="absolute left-[16%] top-[14%] h-[22%] w-[42%] rounded-full bg-white/30 blur-[7px]" />
+                    <span className="absolute inset-0 shadow-[inset_0_2px_10px_rgba(255,255,255,0.35),inset_0_-10px_14px_rgba(120,53,15,0.3)] rounded-full" />
+                    <span className="absolute inset-0 flex items-center justify-center text-xl font-black tracking-normal text-amber-950 drop-shadow-[0_1px_1px_rgba(255,255,255,0.45)] sm:text-2xl">
+                      BA
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </button>
             <h1
               id="hero-heading"
               className="text-4xl sm:text-5xl lg:text-6xl xl:text-[4.3rem] font-bold tracking-tight text-neutral-900 dark:text-white leading-[1.1]"
@@ -123,14 +188,13 @@ export default function Hero() {
                 Latest
               </p>
               <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-2">
-                AI Search Agent
+                {latestProject.title}
               </h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed mb-5">
-                Semantic search assistant that interprets natural language and
-                returns fast, relevant results.
+                {latestProject.description}
               </p>
               <a
-                href={latestProjectRepoUrl}
+                href={latestProject.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
