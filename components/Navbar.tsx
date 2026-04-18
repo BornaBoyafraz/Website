@@ -13,6 +13,7 @@ import {
 import ThemeToggle from "./ThemeToggle";
 import { SITE } from "@/lib/constants";
 import { cn } from "@/lib/cn";
+import XTwitterIcon from "./icons/XTwitterIcon";
 
 const navLinks = [
   { href: "#home", label: "Home" },
@@ -24,6 +25,7 @@ const navLinks = [
 const socialLinks = [
   { href: SITE.github, icon: Github, label: "GitHub" },
   { href: SITE.linkedin, icon: Linkedin, label: "LinkedIn" },
+  { href: SITE.x, icon: XTwitterIcon, label: "X" },
   { href: SITE.instagram, icon: Instagram, label: "Instagram" },
   {
     href: SITE.mailto,

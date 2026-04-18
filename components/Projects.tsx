@@ -8,7 +8,11 @@ import { Input } from "./ui/Input";
 import { Button } from "./ui/Button";
 import { Card } from "./ui/Card";
 import { cn } from "@/lib/cn";
-import { getCategory, type Category } from "@/lib/projectCategory";
+import {
+  FILTER_CATEGORIES,
+  getProjectCategories,
+  type Category,
+} from "@/lib/projectCategory";
 
 type SortOrder = "newest" | "oldest";
 
@@ -23,11 +27,12 @@ type ManualProject = {
   description: string;
   href: string;
   homepage?: string | null;
-  category: Category;
+  categories: Category[];
   startDate: string;
   endDate?: string;
   thumbnail?: string;
   primaryCtaLabel?: string;
+  secondaryCtaLabel?: string;
   isVideo?: boolean;
 };
 
@@ -53,7 +58,7 @@ const MANUAL_PROJECTS: ManualProject[] = [
     description:
       "DebtGuard is an AI-assisted app for debt decisions. Users input their finances to assess risk and simulate what-if scenarios, helping them understand outcomes and make better financial choices.",
     href: "https://github.com/BornaBoyafraz/DebtGuard",
-    category: "Project",
+    categories: ["Project"],
     startDate: "2026-01-01",
     endDate: "2026-04-01",
     thumbnail: "/pictures/debtguard.png",
@@ -63,11 +68,24 @@ const MANUAL_PROJECTS: ManualProject[] = [
     title: "Loveable.ai User Growth Pitch",
     description: "A pitch focused on increasing Loveable.ai users.",
     href: "https://www.loom.com/share/e0d66f81e0784b3896f6cb886a029657",
-    category: "Pitch",
+    categories: ["Pitch"],
     startDate: "2026-01-01",
     thumbnail: "/pictures/Loveable.png",
     primaryCtaLabel: "Watch on Loom",
     isVideo: true,
+  },
+  {
+    id: "q-neo",
+    title: "q-neo",
+    description:
+      "q-neo is a featured build with both its GitHub source and a Loom walkthrough, so it belongs in both the Project and Pitch views.",
+    href: "https://github.com/BornaBoyafraz/q-neo",
+    homepage: "https://www.loom.com/share/79e478861c6242a99139f08a8f679ef3",
+    categories: ["Project", "Pitch"],
+    startDate: "2026-03-01",
+    thumbnail: "/pictures/q neo.png",
+    primaryCtaLabel: "Source Code",
+    secondaryCtaLabel: "Watch on Loom",
   },
 ];
 
@@ -86,12 +104,13 @@ function toManualProjectData(project: ManualProject): ProjectData {
     description: project.description,
     html_url: project.href,
     homepage: project.homepage ?? null,
-    category: project.category,
+    categories: project.categories,
     startDate: project.startDate,
     endDate: project.endDate,
     date: project.endDate ?? project.startDate,
     thumbnail: project.thumbnail,
     primaryCtaLabel: project.primaryCtaLabel,
+    secondaryCtaLabel: project.secondaryCtaLabel,
     isVideo: project.isVideo,
   };
 }
@@ -107,13 +126,15 @@ function mergeManualProject(
     description: manualProject.description,
     html_url: manualProject.href,
     homepage: manualProject.homepage ?? existingProject.homepage,
-    category: manualProject.category,
+    categories: manualProject.categories,
     startDate: manualProject.startDate,
     endDate: manualProject.endDate,
     date: manualProject.endDate ?? manualProject.startDate,
     thumbnail: manualProject.thumbnail ?? existingProject.thumbnail,
     primaryCtaLabel:
       manualProject.primaryCtaLabel ?? existingProject.primaryCtaLabel,
+    secondaryCtaLabel:
+      manualProject.secondaryCtaLabel ?? existingProject.secondaryCtaLabel,
     isVideo: manualProject.isVideo ?? existingProject.isVideo,
   };
 }
@@ -125,13 +146,9 @@ function getSortDate(project: ProjectData): number | null {
   return Number.isNaN(timestamp) ? null : timestamp;
 }
 
-function resolveProjectCategory(project: ProjectData): Category {
-  return project.category ?? getCategory(project.name);
-}
-
 type ProjectFilter = "All" | Category;
 
-const FILTER_OPTIONS: ProjectFilter[] = ["All", "Project", "Pitch", "Fun"];
+const FILTER_OPTIONS: ProjectFilter[] = ["All", ...FILTER_CATEGORIES];
 const SORT_OPTIONS: Array<{ label: string; value: SortOrder }> = [
   { label: "Newest", value: "newest" },
   { label: "Oldest", value: "oldest" },
@@ -238,7 +255,7 @@ export default function Projects({
       })
       .filter((project) => {
         if (categoryFilter === "All") return true;
-        return resolveProjectCategory(project) === categoryFilter;
+        return getProjectCategories(project).includes(categoryFilter);
       })
       .sort((a, b) => {
         const aDate = getSortDate(a);

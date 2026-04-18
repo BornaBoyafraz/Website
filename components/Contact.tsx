@@ -4,9 +4,10 @@ export default function Contact() {
   const contactLinks = [
     { href: SITE.github, label: "GitHub" },
     { href: SITE.linkedin, label: "LinkedIn" },
+    { href: SITE.x, label: "X" },
     { href: SITE.instagram, label: "Instagram" },
     {
-      href: "mailto:bornaboyafraz@gmail.com?subject=Contact%20from%20Portfolio",
+      href: SITE.mailto,
       label: "Gmail",
     },
   ];

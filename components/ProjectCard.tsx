@@ -6,7 +6,11 @@ import Image from "next/image";
 import { ExternalLink, Github } from "lucide-react";
 import { Card } from "./ui/Card";
 import { cn } from "@/lib/cn";
-import { getCategory, type Category } from "@/lib/projectCategory";
+import {
+  getCategoryBadgeClass,
+  getProjectCategories,
+  type Category,
+} from "@/lib/projectCategory";
 import { getProjectImage } from "@/lib/projectImages";
 
 const DESCRIPTION_TOGGLE_CHAR_THRESHOLD = 140;
@@ -21,9 +25,11 @@ export interface ProjectData {
   date?: string;
   startDate?: string;
   endDate?: string;
+  categories?: Category[];
   category?: Category;
   thumbnail?: string;
   primaryCtaLabel?: string;
+  secondaryCtaLabel?: string;
   isVideo?: boolean;
 }
 
@@ -60,19 +66,14 @@ export function ProjectCard({
 }: ProjectCardProps) {
   const [expanded, setExpanded] = useState(false);
   const descriptionId = useId();
-  const category = project.category ?? getCategory(project.name);
+  const categories = getProjectCategories(project);
   const primaryCtaLabel = project.primaryCtaLabel ?? "Source Code";
+  const secondaryCtaLabel = project.secondaryCtaLabel ?? "Live Demo";
   const PrimaryCtaIcon = project.isVideo ? ExternalLink : Github;
   const description = project.description;
   const projectDateLabel = getProjectDateLabel(project);
   const canToggleDescription =
     description.length > DESCRIPTION_TOGGLE_CHAR_THRESHOLD;
-  const categoryBadgeClass =
-    category === "Project"
-      ? "bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-500/20 dark:text-indigo-200 dark:border-indigo-500/30"
-      : category === "Pitch"
-        ? "bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-500/20 dark:text-cyan-200 dark:border-cyan-500/30"
-        : "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-500/20 dark:text-purple-200 dark:border-purple-500/30";
 
   const homepageUrl = project.homepage
     ? project.homepage.startsWith("http")
@@ -112,14 +113,19 @@ export function ProjectCard({
                 <p className="mt-1 text-sm text-muted-foreground">{projectDateLabel}</p>
               )}
             </div>
-            <span
-              className={cn(
-                "inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold shrink-0",
-                categoryBadgeClass
-              )}
-            >
-              {category}
-            </span>
+            <div className="flex shrink-0 flex-wrap justify-end gap-2">
+              {categories.map((category) => (
+                <span
+                  key={category}
+                  className={cn(
+                    "inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold",
+                    getCategoryBadgeClass(category)
+                  )}
+                >
+                  {category}
+                </span>
+              ))}
+            </div>
           </div>
 
           <div className="mb-4 flex-1">
@@ -182,7 +188,7 @@ export function ProjectCard({
                 )}
               >
                 <ExternalLink size={16} />
-                Live Demo
+                {secondaryCtaLabel}
               </a>
             )}
           </div>
