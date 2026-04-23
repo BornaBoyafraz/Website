@@ -5,18 +5,72 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { ChevronDown, Github } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { CURRENT_WORKING_ON } from "@/lib/workingOn";
 import bornaPortrait from "@/app/assets/Borna.jpeg";
 
-const latestProject = {
+type HeroProjectSpotlight = {
+  label: string;
+  title: string;
+  description: string;
+  href: string;
+  ctaLabel: string;
+};
+
+const latestProject: HeroProjectSpotlight = {
+  label: "Latest",
   title: "DebtGuard",
   description:
     "AI-assisted debt decision app that helps users assess financial risk and run what-if scenarios before borrowing.",
   href: "https://github.com/BornaBoyafraz/DebtGuard",
+  ctaLabel: "View on GitHub",
 };
 
 const coinSpinStyle: CSSProperties = {
   animation: "hero-profile-coin-spin 900ms cubic-bezier(0.22, 1, 0.36, 1) both",
 };
+
+const workingOnProject: HeroProjectSpotlight | null = CURRENT_WORKING_ON.enabled
+  ? {
+      label: "Working On",
+      title: CURRENT_WORKING_ON.title,
+      description: CURRENT_WORKING_ON.description,
+      href: CURRENT_WORKING_ON.githubUrl,
+      ctaLabel: "Source Code",
+    }
+  : null;
+
+function HeroProjectCard({ project }: { project: HeroProjectSpotlight }) {
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-white/20 dark:border-indigo-400/20 bg-white/55 dark:bg-neutral-900/55 p-6 shadow-xl shadow-indigo-900/10 backdrop-blur-xl dark:shadow-black/35">
+      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(130deg,rgba(99,102,241,0.16),transparent_45%)]" />
+      <div className="relative">
+        <p className="mb-2 text-xs uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400">
+          {project.label}
+        </p>
+        <h3 className="mb-2 text-xl font-semibold text-neutral-900 dark:text-white">
+          {project.title}
+        </h3>
+        <p className="mb-5 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
+          {project.description}
+        </p>
+        <a
+          href={project.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={cn(
+            "inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium",
+            "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900",
+            "hover:opacity-90 transition-opacity",
+            "focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
+          )}
+        >
+          <Github size={16} />
+          {project.ctaLabel}
+        </a>
+      </div>
+    </div>
+  );
+}
 
 export default function Hero() {
   const [imgError, setImgError] = useState(false);
@@ -181,33 +235,9 @@ export default function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="relative overflow-hidden rounded-2xl border border-white/20 dark:border-indigo-400/20 bg-white/55 dark:bg-neutral-900/55 backdrop-blur-xl shadow-xl shadow-indigo-900/10 dark:shadow-black/35 p-6">
-            <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(130deg,rgba(99,102,241,0.16),transparent_45%)]" />
-            <div className="relative">
-              <p className="text-xs uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400 mb-2">
-                Latest
-              </p>
-              <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-2">
-                {latestProject.title}
-              </h3>
-              <p className="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed mb-5">
-                {latestProject.description}
-              </p>
-              <a
-                href={latestProject.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  "inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium",
-                  "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900",
-                  "hover:opacity-90 transition-opacity",
-                  "focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
-                )}
-              >
-                <Github size={16} />
-                View on GitHub
-              </a>
-            </div>
+          <div className="flex flex-col gap-6">
+            <HeroProjectCard project={latestProject} />
+            {workingOnProject && <HeroProjectCard project={workingOnProject} />}
           </div>
         </motion.div>
       </div>

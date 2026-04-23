@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
-import { fetchAllRepos } from "@/lib/github";
+import { getProjects } from "@/lib/projects";
 
-const GITHUB_USERNAME = "BornaBoyafraz";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const projects = await fetchAllRepos(GITHUB_USERNAME);
+    const projects = await getProjects();
     return NextResponse.json(projects);
   } catch (error) {
     console.error("Failed to fetch GitHub repos:", error);
