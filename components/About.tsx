@@ -15,13 +15,13 @@ export default function About() {
   return (
     <section
       id="about"
-      className="section-padding bg-white dark:bg-neutral-900/50"
+      className="section-padding bg-background"
       aria-labelledby="about-heading"
     >
       <div className="container-narrow">
         <motion.h2
           id="about-heading"
-          className="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 dark:text-white mb-8"
+          className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground mb-8"
           initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           whileInView={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -31,7 +31,7 @@ export default function About() {
         </motion.h2>
         <motion.div
           className={cn(
-            "text-neutral-600 dark:text-neutral-400 text-base sm:text-lg",
+            "text-muted-foreground text-base sm:text-lg",
             "leading-relaxed space-y-6"
           )}
           initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}

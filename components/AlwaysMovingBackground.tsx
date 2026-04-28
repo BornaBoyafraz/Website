@@ -26,7 +26,7 @@ export default function AlwaysMovingBackground() {
           left: "20%",
           top: "20%",
           background:
-            "radial-gradient(circle, rgba(99,102,241,0.4) 0%, rgba(168,85,247,0.2) 50%, transparent 70%)",
+            "radial-gradient(circle, rgba(245,158,11,0.28) 0%, rgba(217,119,6,0.14) 50%, transparent 70%)",
         }}
         animate={
           reduceMotion
@@ -50,7 +50,7 @@ export default function AlwaysMovingBackground() {
 
       {/* Car A: left -> right */}
       <motion.div
-        className="absolute top-[40%] w-24 h-8 rounded-full opacity-[0.22] bg-gradient-to-r from-indigo-500 to-purple-600"
+        className="absolute top-[40%] w-24 h-8 rounded-full opacity-[0.18] bg-gradient-to-r from-amber-500 to-orange-600"
         style={{ left: 0 }}
         animate={
           reduceMotion
@@ -72,7 +72,7 @@ export default function AlwaysMovingBackground() {
 
       {/* Car B: right -> left */}
       <motion.div
-        className="absolute top-[55%] left-0 w-20 h-7 rounded-full opacity-[0.22] bg-gradient-to-r from-purple-600 to-indigo-500"
+        className="absolute top-[55%] left-0 w-20 h-7 rounded-full opacity-[0.18] bg-gradient-to-r from-orange-600 to-amber-500"
         animate={
           reduceMotion
             ? {}

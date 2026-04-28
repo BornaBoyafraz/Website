@@ -36,10 +36,9 @@ export default function ThemeToggle({ className }: ThemeToggleProps) {
       onKeyDown={handleKeyDown}
       className={cn(
         "relative inline-flex h-7 w-[52px] items-center rounded-full border p-0.5",
-        "border-neutral-300/80 bg-neutral-200/80 hover:bg-neutral-300/70",
-        "dark:border-neutral-700/80 dark:bg-neutral-800/80 dark:hover:bg-neutral-700/70",
+        "border-border bg-secondary hover:bg-accent",
         "transition-colors duration-200",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-neutral-950",
+        "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         className
       )}
     >
@@ -47,7 +46,7 @@ export default function ThemeToggle({ className }: ThemeToggleProps) {
       <span
         className={cn(
           "pointer-events-none inline-flex h-6 w-6 items-center justify-center rounded-full shadow-sm",
-          "bg-white text-amber-500 dark:bg-neutral-950 dark:text-sky-400",
+          "bg-card text-primary",
           "transition-transform duration-300 ease-out",
           isDark ? "translate-x-[24px]" : "translate-x-0"
         )}

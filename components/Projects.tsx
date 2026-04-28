@@ -6,7 +6,7 @@ import { Search, RefreshCw, ChevronDown } from "lucide-react";
 import { ProjectCard, type ProjectData } from "./ProjectCard";
 import { Input } from "./ui/Input";
 import { Button } from "./ui/Button";
-import { Card } from "./ui/Card";
+import { Card } from "./ui/card";
 import { cn } from "@/lib/cn";
 import {
   FILTER_CATEGORIES,
@@ -288,18 +288,18 @@ export default function Projects({
     return (
       <section
         id="projects"
-        className="section-padding bg-neutral-50/50 dark:bg-neutral-950/50"
+        className="section-padding bg-transparent"
         aria-labelledby="projects-heading"
       >
         <div className="container-wide">
           <h2
             id="projects-heading"
-            className="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 dark:text-white mb-8"
+            className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground mb-8"
           >
             Projects
           </h2>
-          <Card className="p-12 text-center">
-            <p className="text-neutral-600 dark:text-neutral-400 mb-6">{error}</p>
+          <Card className="border-border/20 bg-background/20 p-12 text-center shadow-none backdrop-blur-sm">
+            <p className="text-muted-foreground mb-6">{error}</p>
             <Button
               onClick={retry}
               disabled={loading}
@@ -319,7 +319,7 @@ export default function Projects({
   return (
     <section
       id="projects"
-      className="section-padding bg-neutral-50/50 dark:bg-neutral-950/50"
+      className="section-padding bg-transparent"
       aria-labelledby="projects-heading"
     >
       <div className="container-wide">
@@ -331,7 +331,7 @@ export default function Projects({
         >
           <h2
             id="projects-heading"
-            className="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 dark:text-white"
+            className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground"
           >
             Projects
           </h2>
@@ -339,7 +339,7 @@ export default function Projects({
             <button
               onClick={retry}
               disabled={loading}
-              className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white flex items-center gap-1.5"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-1.5"
             >
               <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
               Retry fetch
@@ -355,7 +355,7 @@ export default function Projects({
           transition={{ delay: 0.05 }}
         >
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="inline-flex items-center rounded-2xl border border-neutral-200/70 dark:border-neutral-700/70 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-md p-1 shadow-sm shadow-neutral-900/5 dark:shadow-black/20">
+            <div className="inline-flex items-center rounded-2xl border border-border/20 bg-background/20 backdrop-blur-sm p-1">
               {FILTER_OPTIONS.map((option) => {
                 const isActive = categoryFilter === option;
                 return (
@@ -365,17 +365,17 @@ export default function Projects({
                     onClick={() => setCategoryFilter(option)}
                     className={cn(
                       "relative px-4 py-2.5 rounded-xl text-sm font-medium transition-colors",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 dark:focus-visible:ring-indigo-300 dark:focus-visible:ring-offset-neutral-950",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                       isActive
-                        ? "text-neutral-900 dark:text-white"
-                        : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
+                        ? "text-foreground"
+                        : "text-muted-foreground hover:text-foreground"
                     )}
                     aria-pressed={isActive}
                   >
                     {isActive && (
                       <motion.span
                         layoutId="project-category-pill"
-                        className="absolute inset-0 rounded-xl border border-indigo-400/35 bg-gradient-to-r from-indigo-500/20 to-indigo-400/10 dark:from-indigo-500/35 dark:to-indigo-300/20 shadow-sm"
+                        className="absolute inset-0 rounded-xl border border-primary bg-[linear-gradient(90deg,rgba(245,158,11,0.22),rgba(245,158,11,0.08))] shadow-sm"
                         transition={{ type: "spring", stiffness: 380, damping: 30 }}
                       />
                     )}
@@ -390,22 +390,23 @@ export default function Projects({
                 type="button"
                 onClick={() => setIsSortMenuOpen((prev) => !prev)}
                 className={cn(
-                  "inline-flex h-11 items-center gap-2 rounded-2xl border border-neutral-200/70 dark:border-neutral-700/70 bg-white/70 dark:bg-neutral-900/70 px-4 backdrop-blur-md shadow-sm shadow-neutral-900/5 dark:shadow-black/20",
-                  "text-sm transition-colors text-neutral-700 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-white",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 dark:focus-visible:ring-indigo-300 dark:focus-visible:ring-offset-neutral-950"
+                  "inline-flex h-11 items-center gap-2 rounded-2xl border px-4 backdrop-blur-md shadow-sm dark:shadow-black/20",
+                  "text-sm transition-colors text-secondary-foreground hover:text-foreground",
+                  "border-border/20 bg-background/20 shadow-none backdrop-blur-sm",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 )}
                 aria-haspopup="menu"
                 aria-expanded={isSortMenuOpen}
                 aria-controls="projects-sort-menu"
               >
                 <span className="font-medium">Sort</span>
-                <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                <span className="text-xs text-muted-foreground">
                   {sortOrder === "newest" ? "Newest" : "Oldest"}
                 </span>
                 <ChevronDown
                   size={16}
                   className={cn(
-                    "text-neutral-500 dark:text-neutral-400 transition-transform duration-200",
+                    "text-muted-foreground transition-transform duration-200",
                     isSortMenuOpen && "rotate-180"
                   )}
                 />
@@ -420,7 +421,7 @@ export default function Projects({
                     animate={{ opacity: 1, y: 0 }}
                     exit={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 4 }}
                     transition={{ duration: 0.16, ease: "easeOut" }}
-                    className="absolute left-0 z-20 mt-2 w-40 rounded-xl border border-neutral-200/80 bg-white/95 p-1 shadow-lg shadow-neutral-900/10 backdrop-blur-md dark:border-neutral-700/80 dark:bg-neutral-900/95 dark:shadow-black/30"
+                    className="absolute left-0 z-20 mt-2 w-40 rounded-xl border border-border/20 bg-background/80 p-1 shadow-lg shadow-black/10 backdrop-blur-md dark:shadow-black/30"
                   >
                     {SORT_OPTIONS.map((option) => {
                       const isActive = sortOrder === option.value;
@@ -437,15 +438,15 @@ export default function Projects({
                           }}
                           className={cn(
                             "flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors",
-                            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:focus-visible:ring-indigo-300",
+                            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                             isActive
-                              ? "bg-indigo-50 text-neutral-900 dark:bg-indigo-500/20 dark:text-white"
-                              : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-white"
+                              ? "bg-accent text-accent-foreground"
+                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
                           )}
                         >
                           {option.label}
                           {isActive && (
-                            <span className="text-xs text-indigo-600 dark:text-indigo-300">
+                            <span className="text-xs text-accent-foreground">
                               Selected
                             </span>
                           )}
@@ -468,7 +469,7 @@ export default function Projects({
               placeholder="Search projects..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 h-11 rounded-2xl border-neutral-200/70 dark:border-neutral-700/70 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-md"
+              className="pl-10 h-11 rounded-2xl border-border/20 bg-background/20 backdrop-blur-sm"
               aria-label="Search projects"
             />
           </div>
@@ -486,7 +487,7 @@ export default function Projects({
             ))}
           </div>
         ) : (
-          <p className="text-center text-neutral-500 dark:text-neutral-400 py-16">
+          <p className="text-center text-muted-foreground py-16">
             No projects match your filters.
           </p>
         )}

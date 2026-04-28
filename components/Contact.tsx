@@ -15,18 +15,18 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="section-padding bg-white dark:bg-neutral-900/50"
+      className="section-padding bg-transparent"
       aria-labelledby="contact-heading"
     >
       <div className="mx-auto max-w-3xl px-4 text-center">
         <h2
           id="contact-heading"
-          className="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 dark:text-white"
+          className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground"
         >
           Stay in touch with me
         </h2>
 
-        <p className="mt-6 text-base sm:text-lg leading-relaxed text-neutral-600 dark:text-neutral-400">
+        <p className="mt-6 text-base sm:text-lg leading-relaxed text-muted-foreground">
           I am always excited to connect, collaborate, and explore new opportunities.
           Whether you have a project in mind, an idea to build, or just want to talk
           about technology, I would be happy to hear from you.
@@ -46,7 +46,7 @@ export default function Contact() {
               href={href}
               target={href.startsWith("mailto") ? undefined : "_blank"}
               rel={href.startsWith("mailto") ? undefined : "noopener noreferrer"}
-              className="rounded-lg border border-neutral-300 dark:border-neutral-700 px-4 py-2 text-sm sm:text-base font-medium text-neutral-900 dark:text-white transition-colors hover:border-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
+              className="rounded-lg border border-border bg-secondary px-4 py-2 text-sm sm:text-base font-medium text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
             >
               {label}
             </a>

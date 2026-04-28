@@ -59,7 +59,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 border-b border-neutral-200/60 dark:border-neutral-800/60 bg-white/70 dark:bg-neutral-950/70 backdrop-blur-xl"
+      className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background backdrop-blur-xl"
       role="navigation"
       aria-label="Main navigation"
     >
@@ -71,7 +71,7 @@ export default function Navbar() {
               alt="Borna Logo"
               className="h-8 w-auto invert dark:invert-0"
             />
-            <span className="font-semibold text-lg text-neutral-900 dark:text-white">
+            <span className="font-semibold text-lg text-foreground">
               Borna B. Afraz
             </span>
           </a>
@@ -84,8 +84,8 @@ export default function Navbar() {
                 className={cn(
                   "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
                   activeSection === link.href
-                    ? "text-neutral-900 dark:text-white bg-neutral-100 dark:bg-neutral-800"
-                    : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100/80 dark:hover:bg-neutral-800/80"
+                    ? "bg-accent text-accent-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
                 {link.label}
@@ -101,7 +101,7 @@ export default function Navbar() {
                 {...(href.startsWith("mailto")
                   ? {}
                   : { target: "_blank", rel: "noopener noreferrer" })}
-                className="p-2.5 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-transform duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-950"
+                className="p-2.5 rounded-lg text-muted-foreground hover:text-accent-foreground hover:bg-accent transition-transform duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
                 aria-label={label}
               >
                 <Icon className="h-5 w-5" />
@@ -114,7 +114,7 @@ export default function Navbar() {
             <ThemeToggle />
             <button
               onClick={() => setOpen(!open)}
-              className="p-2.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
+              className="p-2.5 rounded-lg hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
             >
@@ -129,7 +129,7 @@ export default function Navbar() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden overflow-hidden border-t border-neutral-200/60 dark:border-neutral-800/60"
+              className="md:hidden overflow-hidden border-t border-border"
             >
               <div className="py-4 flex flex-col gap-0.5">
                 {navLinks.map((link) => (
@@ -138,14 +138,15 @@ export default function Navbar() {
                     href={link.href}
                     onClick={() => setOpen(false)}
                     className={cn(
-                      "px-4 py-3 rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800",
-                      activeSection === link.href && "font-medium text-neutral-900 dark:text-white"
+                      "px-4 py-3 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground",
+                      activeSection === link.href &&
+                        "font-medium bg-accent text-accent-foreground"
                     )}
                   >
                     {link.label}
                   </a>
                 ))}
-                <div className="flex gap-2 pt-2 mt-2 border-t border-neutral-200/60 dark:border-neutral-800/60">
+                <div className="flex gap-2 pt-2 mt-2 border-t border-border">
                   {socialLinks.map(({ href, icon: Icon, label }) => (
                     <a
                       key={label}
@@ -153,7 +154,7 @@ export default function Navbar() {
                       {...(href.startsWith("mailto")
                         ? {}
                         : { target: "_blank", rel: "noopener noreferrer" })}
-                      className="p-2.5 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-transform duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-neutral-400 dark:focus:ring-neutral-500"
+                      className="p-2.5 rounded-lg text-muted-foreground hover:text-accent-foreground hover:bg-accent transition-transform duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring"
                       aria-label={label}
                     >
                       <Icon className="h-5 w-5" />
