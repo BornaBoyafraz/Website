@@ -4,7 +4,7 @@ Live site: https://bornaba.com
 
 ## Overview
 
-Borna Afraz Portfolio is a personal developer portfolio built with Next.js,
+Seyedborna Boyafraz(Borna Afraz) Portfolio is a personal developer portfolio built with Next.js,
 TypeScript, and Tailwind CSS. It presents profile information, featured work,
 current projects, and a dynamic projects section powered by GitHub repository
 data.
