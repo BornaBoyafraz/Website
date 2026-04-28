@@ -95,7 +95,7 @@ export function ProjectCard({
       }}
     >
       <GlowingShadow className="h-full rounded-lg">
-        <Card className="h-full flex flex-col overflow-hidden transition-shadow hover:shadow-lg dark:hover:shadow-neutral-900/50">
+        <Card className="h-full flex flex-col overflow-hidden transition-shadow md:hover:shadow-lg dark:md:hover:shadow-neutral-900/50">
           <div className="relative w-full h-48 overflow-hidden">
             <Image
               src={project.thumbnail ?? getProjectImage(project.name)}

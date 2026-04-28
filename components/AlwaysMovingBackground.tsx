@@ -4,15 +4,31 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 export default function AlwaysMovingBackground() {
+  const [mounted, setMounted] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduceMotion(mq.matches);
-    const handler = () => setReduceMotion(mq.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const mobileQuery = window.matchMedia("(max-width: 767px)");
+
+    const syncPreferences = () => {
+      setReduceMotion(motionQuery.matches);
+      setIsMobile(mobileQuery.matches);
+      setMounted(true);
+    };
+
+    syncPreferences();
+    motionQuery.addEventListener("change", syncPreferences);
+    mobileQuery.addEventListener("change", syncPreferences);
+
+    return () => {
+      motionQuery.removeEventListener("change", syncPreferences);
+      mobileQuery.removeEventListener("change", syncPreferences);
+    };
   }, []);
+
+  if (!mounted || reduceMotion || isMobile) return null;
 
   return (
     <div

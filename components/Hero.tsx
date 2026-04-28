@@ -53,7 +53,7 @@ const socialLinks = [
 
 function HeroProjectCard({ project }: { project: HeroProjectSpotlight }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-xl shadow-black/5 backdrop-blur-xl dark:shadow-black/35">
+    <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-sm md:shadow-xl md:shadow-black/5 md:backdrop-blur-xl dark:md:shadow-black/35">
       <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(130deg,rgba(245,158,11,0.14),transparent_45%)]" />
       <div className="relative">
         <p className="mb-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
@@ -84,6 +84,17 @@ function HeroProjectCard({ project }: { project: HeroProjectSpotlight }) {
   );
 }
 
+function HeroSplineFallback() {
+  return (
+    <Card className="relative flex h-48 w-full items-center justify-center overflow-hidden rounded-xl border-border bg-card p-6 text-center shadow-sm sm:h-64 lg:h-[500px]">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.14),transparent_58%)]" />
+      <p className="relative max-w-xs text-sm font-medium leading-relaxed text-muted-foreground">
+        Interactive 3D preview available on desktop
+      </p>
+    </Card>
+  );
+}
+
 function HeroSplineCard() {
   return (
     <Card className="relative h-[500px] w-full overflow-hidden rounded-xl border-none bg-transparent shadow-none">
@@ -98,6 +109,7 @@ function HeroSplineCard() {
 export default function Hero() {
   const [imgError, setImgError] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
   const [spinVersion, setSpinVersion] = useState(0);
 
@@ -113,11 +125,26 @@ export default function Hero() {
     return () => mq.removeEventListener("change", handleChange);
   }, []);
 
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    setIsMobile(mq.matches);
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      setIsMobile(event.matches);
+    };
+
+    mq.addEventListener("change", handleChange);
+    return () => mq.removeEventListener("change", handleChange);
+  }, []);
+
   const handleProfileClick = () => {
-    if (reduceMotion) return;
+    if (reduceMotion || isMobile !== false) return;
     setSpinVersion((current) => current + 1);
     setIsSpinning(true);
   };
+
+  const shouldLoadSpline = isMobile === false && !reduceMotion;
+  const shouldPauseContinuousMotion = reduceMotion || isMobile !== false;
 
   return (
     <section
@@ -158,7 +185,11 @@ export default function Hero() {
                   <div
                     key={spinVersion}
                     className="relative h-full w-full rounded-full [transform-style:preserve-3d] [will-change:transform]"
-                    style={isSpinning ? coinSpinStyle : undefined}
+                    style={
+                      isSpinning && !shouldPauseContinuousMotion
+                        ? coinSpinStyle
+                        : undefined
+                    }
                     onAnimationEnd={() => setIsSpinning(false)}
                   >
                     <div
@@ -176,7 +207,7 @@ export default function Hero() {
                           src={bornaPortrait}
                           alt="Borna B. Afraz"
                           fill
-                          quality={100}
+                          quality={85}
                           className="object-cover object-[center_32%]"
                           sizes="(min-width: 640px) 88px, 84px"
                           priority
@@ -278,7 +309,7 @@ export default function Hero() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
           >
-            <HeroSplineCard />
+            {shouldLoadSpline ? <HeroSplineCard /> : <HeroSplineFallback />}
           </motion.div>
         </div>
 
@@ -303,7 +334,7 @@ export default function Hero() {
         transition={{ delay: 0.8 }}
       >
         <motion.div
-          animate={reduceMotion ? {} : { y: [0, 6, 0] }}
+          animate={shouldPauseContinuousMotion ? {} : { y: [0, 6, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
           <ChevronDown size={28} strokeWidth={2} />

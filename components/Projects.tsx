@@ -172,6 +172,7 @@ export default function Projects({
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const sortDropdownRef = useRef<HTMLDivElement>(null);
 
   const projects = useMemo(() => {
@@ -211,8 +212,21 @@ export default function Projects({
   }, [githubProjects]);
 
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduceMotion(mq.matches);
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const mobileQuery = window.matchMedia("(max-width: 767px)");
+    const syncMotion = () => {
+      setReduceMotion(motionQuery.matches);
+      setIsMobile(mobileQuery.matches);
+    };
+
+    syncMotion();
+    motionQuery.addEventListener("change", syncMotion);
+    mobileQuery.addEventListener("change", syncMotion);
+
+    return () => {
+      motionQuery.removeEventListener("change", syncMotion);
+      mobileQuery.removeEventListener("change", syncMotion);
+    };
   }, []);
 
   useEffect(() => {
@@ -269,6 +283,8 @@ export default function Projects({
       });
   }, [projects, search, categoryFilter, sortOrder]);
 
+  const shouldReduceMotion = reduceMotion || isMobile;
+
   const retry = async () => {
     setError(null);
     setLoading(true);
@@ -298,7 +314,7 @@ export default function Projects({
           >
             Projects
           </h2>
-          <Card className="border-border/20 bg-background/20 p-12 text-center shadow-none backdrop-blur-sm">
+          <Card className="border-border/20 bg-background/20 p-12 text-center shadow-none md:backdrop-blur-sm">
             <p className="text-muted-foreground mb-6">{error}</p>
             <Button
               onClick={retry}
@@ -325,7 +341,9 @@ export default function Projects({
       <div className="container-wide">
         <motion.div
           className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10"
-          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          initial={
+            shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+          }
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
@@ -349,13 +367,15 @@ export default function Projects({
 
         <motion.div
           className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between mb-10"
-          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          initial={
+            shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+          }
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.05 }}
         >
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="inline-flex items-center rounded-2xl border border-border/20 bg-background/20 backdrop-blur-sm p-1">
+            <div className="inline-flex items-center rounded-2xl border border-border/20 bg-background/20 p-1 md:backdrop-blur-sm">
               {FILTER_OPTIONS.map((option) => {
                 const isActive = categoryFilter === option;
                 return (
@@ -390,9 +410,9 @@ export default function Projects({
                 type="button"
                 onClick={() => setIsSortMenuOpen((prev) => !prev)}
                 className={cn(
-                  "inline-flex h-11 items-center gap-2 rounded-2xl border px-4 backdrop-blur-md shadow-sm dark:shadow-black/20",
+                  "inline-flex h-11 items-center gap-2 rounded-2xl border px-4 shadow-sm dark:shadow-black/20 md:backdrop-blur-md",
                   "text-sm transition-colors text-secondary-foreground hover:text-foreground",
-                  "border-border/20 bg-background/20 shadow-none backdrop-blur-sm",
+                  "border-border/20 bg-background/20 shadow-none md:backdrop-blur-sm",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 )}
                 aria-haspopup="menu"
@@ -417,11 +437,19 @@ export default function Projects({
                   <motion.div
                     id="projects-sort-menu"
                     role="menu"
-                    initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 4 }}
+                    initial={
+                      shouldReduceMotion
+                        ? { opacity: 1, y: 0 }
+                        : { opacity: 0, y: 4 }
+                    }
                     animate={{ opacity: 1, y: 0 }}
-                    exit={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 4 }}
+                    exit={
+                      shouldReduceMotion
+                        ? { opacity: 1, y: 0 }
+                        : { opacity: 0, y: 4 }
+                    }
                     transition={{ duration: 0.16, ease: "easeOut" }}
-                    className="absolute left-0 z-20 mt-2 w-40 rounded-xl border border-border/20 bg-background/80 p-1 shadow-lg shadow-black/10 backdrop-blur-md dark:shadow-black/30"
+                    className="absolute left-0 z-20 mt-2 w-40 rounded-xl border border-border/20 bg-background/80 p-1 shadow-sm md:shadow-lg md:shadow-black/10 md:backdrop-blur-md dark:md:shadow-black/30"
                   >
                     {SORT_OPTIONS.map((option) => {
                       const isActive = sortOrder === option.value;
@@ -461,15 +489,15 @@ export default function Projects({
 
           <div className="relative w-full lg:max-w-sm">
             <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none"
-              size={18}
+              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
             />
             <Input
               type="search"
               placeholder="Search projects..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 h-11 rounded-2xl border-border/20 bg-background/20 backdrop-blur-sm"
+              className="h-11 rounded-lg border-border bg-card pl-10 pr-4 text-foreground placeholder:text-muted-foreground transition-colors hover:border-primary/50 focus:border-primary focus:ring-2 focus:ring-primary"
               aria-label="Search projects"
             />
           </div>
@@ -482,7 +510,7 @@ export default function Projects({
                 key={project.id ?? project.html_url}
                 project={project}
                 index={i}
-                reduceMotion={reduceMotion}
+                reduceMotion={shouldReduceMotion}
               />
             ))}
           </div>

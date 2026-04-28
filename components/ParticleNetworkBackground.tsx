@@ -4,27 +4,82 @@ import { useEffect, useRef, useState, useCallback } from "react";
 
 // ─── Config constants ─────────────────────────────────────────────────────
 // Tuned defaults:
-// targetFps=40, dprCap=1.25, particles desktop/mobile=80/50, maxLinkDistance=140
-const TARGET_FPS = 40;
+// Desktop keeps the full ambient network; mobile uses a lighter canvas budget.
+const TARGET_FPS_DESKTOP = 40;
+const TARGET_FPS_MOBILE = 24;
 const HIDDEN_TAB_FPS = 5;
-const DPR_CAP = 1.25;
+const DPR_CAP_DESKTOP = 1.25;
+const DPR_CAP_MOBILE = 1;
+const MOBILE_BREAKPOINT = 768;
 const PARTICLE_COUNT_DESKTOP = 80;
-const PARTICLE_COUNT_MOBILE = 50;
-const MAX_LINK_DISTANCE = 140;
-const MAX_LINE_OPACITY = 0.38;
+const PARTICLE_COUNT_MOBILE = 25;
+const MAX_LINK_DISTANCE_DESKTOP = 140;
+const MAX_LINK_DISTANCE_MOBILE = 90;
 const SPEED_RANGE = { min: 0.2, max: 0.6 };
 const DOT_RADIUS_RANGE = { min: 1.5, max: 2.5 };
-const DOT_COLOR = "rgba(99, 102, 241, 0.8)";
 const DOT_GLOW_BLUR = 0;
-const DOT_GLOW_COLOR = "rgba(99, 102, 241, 0.6)";
-const LINE_COLOR_RGB = "99, 102, 241";
-const POINTER_LINK_DISTANCE = 220;
-const POINTER_LINE_OPACITY_MAX = 0.35;
+const POINTER_LINK_DISTANCE_DESKTOP = 220;
 const POINTER_INFLUENCE = 0.018;
 const DIRECTION_WIGGLE = 0.02;
 const BOOT_DURATION_MS = 1300;
 const BOOT_LERP_FACTOR = 0.08;
 const BOOT_RADIUS_SCALE_START = 0.4;
+
+type ParticleColorMode = "light" | "dark";
+
+type ParticlePalette = {
+  dotColor: string;
+  dotGlowColor: string;
+  lineRgb: string;
+  maxLineOpacity: number;
+  pointerLineOpacityMax: number;
+};
+
+type ParticleSceneConfig = {
+  count: number;
+  dprCap: number;
+  maxLinkDistance: number;
+  pointerLinkDistance: number;
+  targetFps: number;
+  pointerEnabled: boolean;
+};
+
+const PARTICLE_PALETTES = {
+  light: {
+    dotColor: "rgba(245, 158, 11, 0.55)",
+    dotGlowColor: "rgba(245, 158, 11, 0.35)",
+    lineRgb: "217, 119, 6",
+    maxLineOpacity: 0.18,
+    pointerLineOpacityMax: 0.22,
+  },
+  dark: {
+    dotColor: "rgba(251, 191, 36, 0.70)",
+    dotGlowColor: "rgba(251, 191, 36, 0.42)",
+    lineRgb: "245, 158, 11",
+    maxLineOpacity: 0.28,
+    pointerLineOpacityMax: 0.30,
+  },
+} satisfies Record<ParticleColorMode, ParticlePalette>;
+
+function getParticleColorMode(): ParticleColorMode {
+  if (typeof document === "undefined") return "light";
+  return document.documentElement.classList.contains("dark") ? "dark" : "light";
+}
+
+function getParticleSceneConfig(width: number): ParticleSceneConfig {
+  const isMobile = width < MOBILE_BREAKPOINT;
+
+  return {
+    count: isMobile ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT_DESKTOP,
+    dprCap: isMobile ? DPR_CAP_MOBILE : DPR_CAP_DESKTOP,
+    maxLinkDistance: isMobile
+      ? MAX_LINK_DISTANCE_MOBILE
+      : MAX_LINK_DISTANCE_DESKTOP,
+    pointerLinkDistance: isMobile ? 0 : POINTER_LINK_DISTANCE_DESKTOP,
+    targetFps: isMobile ? TARGET_FPS_MOBILE : TARGET_FPS_DESKTOP,
+    pointerEnabled: !isMobile,
+  };
+}
 
 type Particle = {
   x: number;
@@ -88,11 +143,13 @@ function buildSpatialGrid(
 function drawParticleLinks(
   ctx: CanvasRenderingContext2D,
   particles: Particle[],
-  lineOpacityFactor: number
+  lineOpacityFactor: number,
+  palette: ParticlePalette,
+  maxLinkDistance: number
 ) {
   // Spatial hashing keeps link checks local instead of O(N^2) across all particles.
-  const cellSize = MAX_LINK_DISTANCE;
-  const maxDistSq = MAX_LINK_DISTANCE * MAX_LINK_DISTANCE;
+  const cellSize = maxLinkDistance;
+  const maxDistSq = maxLinkDistance * maxLinkDistance;
   const grid = buildSpatialGrid(particles, cellSize);
   ctx.lineWidth = 1;
 
@@ -117,12 +174,12 @@ function drawParticleLinks(
 
           const dist = Math.sqrt(distSq);
           const alpha =
-            MAX_LINE_OPACITY *
-            (1 - dist / MAX_LINK_DISTANCE) *
+            palette.maxLineOpacity *
+            (1 - dist / maxLinkDistance) *
             lineOpacityFactor;
           if (alpha <= 0) continue;
 
-          ctx.strokeStyle = `rgba(${LINE_COLOR_RGB}, ${alpha})`;
+          ctx.strokeStyle = `rgba(${palette.lineRgb}, ${alpha})`;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
@@ -138,10 +195,30 @@ export default function ParticleNetworkBackground() {
   const particlesRef = useRef<Particle[]>([]);
   const pointerRef = useRef<{ x: number; y: number } | null>(null);
   const rafRef = useRef<number | null>(null);
+  const paletteRef = useRef<ParticlePalette>(PARTICLE_PALETTES.light);
   const isBootingRef = useRef(true);
   const hasBootedRef = useRef(false);
   const bootStartTimeRef = useRef<number | null>(null);
-  const [reduceMotion, setReduceMotion] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(true);
+  const [colorMode, setColorMode] = useState<ParticleColorMode>("light");
+
+  useEffect(() => {
+    const syncPalette = () => {
+      const nextMode = getParticleColorMode();
+      paletteRef.current = PARTICLE_PALETTES[nextMode];
+      setColorMode(nextMode);
+    };
+
+    syncPalette();
+
+    const observer = new MutationObserver(syncPalette);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -153,8 +230,7 @@ export default function ParticleNetworkBackground() {
 
   const initParticles = useCallback(
     (width: number, height: number, startCentered: boolean) => {
-      const isMobile = width < 768;
-      const count = isMobile ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT_DESKTOP;
+      const { count } = getParticleSceneConfig(width);
 
       particlesRef.current = createParticles(count, width, height, startCentered);
       isBootingRef.current = startCentered;
@@ -183,12 +259,17 @@ export default function ParticleNetworkBackground() {
     let height = 0;
     let dpr = 1;
     let lastFrameTime = 0;
+    let sceneConfig = getParticleSceneConfig(window.innerWidth);
 
     const resize = () => {
-      // Cap DPR to avoid oversampling on high-density screens.
-      dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
       width = window.innerWidth;
       height = window.innerHeight;
+      sceneConfig = getParticleSceneConfig(width);
+      // Cap DPR to avoid oversampling on high-density screens.
+      dpr = Math.min(window.devicePixelRatio || 1, sceneConfig.dprCap);
+      if (!sceneConfig.pointerEnabled) {
+        pointerRef.current = null;
+      }
 
       canvas.width = width * dpr;
       canvas.height = height * dpr;
@@ -201,6 +282,7 @@ export default function ParticleNetworkBackground() {
     };
 
     const handlePointerMove = (e: PointerEvent | MouseEvent) => {
+      if (!sceneConfig.pointerEnabled) return;
       pointerRef.current = { x: e.clientX, y: e.clientY };
     };
 
@@ -224,9 +306,11 @@ export default function ParticleNetworkBackground() {
     const animate = (now: number) => {
       if (reduceMotion) return;
 
-      // Frame limiter: 40fps normally, 5fps while tab is hidden.
+      // Frame limiter: desktop/mobile budgets, 5fps while tab is hidden.
       const currentTargetFps =
-        document.visibilityState === "hidden" ? HIDDEN_TAB_FPS : TARGET_FPS;
+        document.visibilityState === "hidden"
+          ? HIDDEN_TAB_FPS
+          : sceneConfig.targetFps;
       const frameInterval = 1000 / currentTargetFps;
       if (now - lastFrameTime < frameInterval) {
         rafRef.current = requestAnimationFrame(animate);
@@ -299,11 +383,11 @@ export default function ParticleNetworkBackground() {
           }
 
           // Subtle pointer attraction
-          if (pointer) {
+          if (pointer && sceneConfig.pointerEnabled) {
             const dx = pointer.x - p.x;
             const dy = pointer.y - p.y;
             const dist = Math.hypot(dx, dy);
-            if (dist < 220 && dist > 0) {
+            if (dist < sceneConfig.pointerLinkDistance && dist > 0) {
               p.vx += (dx / dist) * POINTER_INFLUENCE;
               p.vy += (dy / dist) * POINTER_INFLUENCE;
             }
@@ -317,18 +401,27 @@ export default function ParticleNetworkBackground() {
           (1 - BOOT_RADIUS_SCALE_START) * bootProgress
         : 1;
 
-      drawParticleLinks(ctx, particles, lineOpacityFactor);
+      const palette = paletteRef.current;
+
+      drawParticleLinks(
+        ctx,
+        particles,
+        lineOpacityFactor,
+        palette,
+        sceneConfig.maxLinkDistance
+      );
 
       // Draw brighter pointer-to-particle connections when mouse is present
-      if (pointer && !isBooting) {
+      if (pointer && sceneConfig.pointerEnabled && !isBooting) {
         for (const p of particles) {
           const dx = pointer.x - p.x;
           const dy = pointer.y - p.y;
           const dist = Math.hypot(dx, dy);
-          if (dist < POINTER_LINK_DISTANCE) {
+          if (dist < sceneConfig.pointerLinkDistance) {
             const alpha =
-              POINTER_LINE_OPACITY_MAX * (1 - dist / POINTER_LINK_DISTANCE);
-            ctx.strokeStyle = `rgba(${LINE_COLOR_RGB}, ${alpha})`;
+              palette.pointerLineOpacityMax *
+              (1 - dist / sceneConfig.pointerLinkDistance);
+            ctx.strokeStyle = `rgba(${palette.lineRgb}, ${alpha})`;
             ctx.lineWidth = 1.5;
             ctx.beginPath();
             ctx.moveTo(pointer.x, pointer.y);
@@ -341,11 +434,11 @@ export default function ParticleNetworkBackground() {
       // Particle glow is disabled/capped for performance.
       if (DOT_GLOW_BLUR > 0) {
         ctx.shadowBlur = DOT_GLOW_BLUR;
-        ctx.shadowColor = DOT_GLOW_COLOR;
+        ctx.shadowColor = palette.dotGlowColor;
       } else {
         ctx.shadowBlur = 0;
       }
-      ctx.fillStyle = DOT_COLOR;
+      ctx.fillStyle = palette.dotColor;
       for (const p of particles) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius * radiusScale, 0, Math.PI * 2);
@@ -378,9 +471,10 @@ export default function ParticleNetworkBackground() {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
       const width = window.innerWidth;
       const height = window.innerHeight;
+      const sceneConfig = getParticleSceneConfig(width);
+      const dpr = Math.min(window.devicePixelRatio || 1, sceneConfig.dprCap);
 
       canvas.width = width * dpr;
       canvas.height = height * dpr;
@@ -389,22 +483,27 @@ export default function ParticleNetworkBackground() {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
 
-      const isMobile = width < 768;
-      const count = isMobile ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT_DESKTOP;
-      const particles = createParticles(count, width, height, false);
+      const particles = createParticles(sceneConfig.count, width, height, false);
 
       ctx.clearRect(0, 0, width, height);
       ctx.globalCompositeOperation = "source-over";
       ctx.shadowBlur = 0;
-      drawParticleLinks(ctx, particles, 0.75);
+      const palette = paletteRef.current;
+      drawParticleLinks(
+        ctx,
+        particles,
+        0.75,
+        palette,
+        sceneConfig.maxLinkDistance
+      );
 
       if (DOT_GLOW_BLUR > 0) {
         ctx.shadowBlur = DOT_GLOW_BLUR;
-        ctx.shadowColor = DOT_GLOW_COLOR;
+        ctx.shadowColor = palette.dotGlowColor;
       } else {
         ctx.shadowBlur = 0;
       }
-      ctx.fillStyle = DOT_COLOR;
+      ctx.fillStyle = palette.dotColor;
       for (const p of particles) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
@@ -416,7 +515,7 @@ export default function ParticleNetworkBackground() {
     drawStatic();
     window.addEventListener("resize", drawStatic);
     return () => window.removeEventListener("resize", drawStatic);
-  }, [reduceMotion]);
+  }, [reduceMotion, colorMode]);
 
   return (
     <canvas

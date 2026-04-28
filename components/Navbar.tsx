@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import {
   Menu,
   X,
@@ -59,16 +60,18 @@ export default function Navbar() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background backdrop-blur-xl"
+      className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background md:backdrop-blur-xl"
       role="navigation"
       aria-label="Main navigation"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <a href="/" className="flex items-center gap-2">
-            <img
+            <Image
               src="/logo.svg"
               alt="Borna Logo"
+              width={32}
+              height={32}
               className="h-8 w-auto invert dark:invert-0"
             />
             <span className="font-semibold text-lg text-foreground">
@@ -101,7 +104,7 @@ export default function Navbar() {
                 {...(href.startsWith("mailto")
                   ? {}
                   : { target: "_blank", rel: "noopener noreferrer" })}
-                className="p-2.5 rounded-lg text-muted-foreground hover:text-accent-foreground hover:bg-accent transition-transform duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
+                className="p-2.5 rounded-lg text-muted-foreground hover:text-accent-foreground hover:bg-accent transition-transform duration-200 md:hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
                 aria-label={label}
               >
                 <Icon className="h-5 w-5" />
@@ -154,7 +157,7 @@ export default function Navbar() {
                       {...(href.startsWith("mailto")
                         ? {}
                         : { target: "_blank", rel: "noopener noreferrer" })}
-                      className="p-2.5 rounded-lg text-muted-foreground hover:text-accent-foreground hover:bg-accent transition-transform duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring"
+                      className="p-2.5 rounded-lg text-muted-foreground hover:text-accent-foreground hover:bg-accent transition-transform duration-200 md:hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring"
                       aria-label={label}
                     >
                       <Icon className="h-5 w-5" />
