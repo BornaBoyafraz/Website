@@ -29,6 +29,7 @@ const HIDDEN_REPOS = new Set([
   "bornaba",
 ]);
 const EXCLUDED_PROJECT_NAMES = new Set([
+  "safewalk",
   "ticktacktoe",
   "ticktacktow",
   "tictactoe",

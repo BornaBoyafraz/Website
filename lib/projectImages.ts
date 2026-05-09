@@ -6,6 +6,10 @@ const CALORIE_TRACKER_IMAGE_PATH = "/pictures/Calorie Tracker.png";
 
 export const PROJECT_IMAGES: Record<string, string> = {
   "AI-Search-Agent": "/projects/ai-search-agent.png",
+  SafeWalk: "/pictures/SafeWalk.png",
+  "Safe-Walk": "/pictures/SafeWalk.png",
+  safewalk: "/pictures/SafeWalk.png",
+  "safe-walk": "/pictures/SafeWalk.png",
   "Flappy-bird": "/projects/flappy-bird.png",
   FlappyBird: "/projects/flappy-bird.png",
   "flappy-bird": "/projects/flappy-bird.png",

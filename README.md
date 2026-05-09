@@ -12,7 +12,7 @@ data.
 ## Features
 
 - Responsive hero layout with profile content and a Spline 3D scene.
-- Working On and Latest sections for highlighted project updates.
+- Latest section for highlighted project updates.
 - Dynamic project listing with GitHub data fetching.
 - Project filters, sorting, thumbnails, and manual project entries.
 - Dark mode support with a custom amber and neutral theme.

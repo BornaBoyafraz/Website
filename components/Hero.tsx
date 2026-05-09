@@ -3,12 +3,20 @@
 import { useState, useEffect, type CSSProperties } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ChevronDown, Github, Instagram, Linkedin, Mail } from "lucide-react";
+import {
+  ChevronDown,
+  ExternalLink,
+  Github,
+  Instagram,
+  Linkedin,
+  Mail,
+  PlayCircle,
+} from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { SplineScene } from "@/components/ui/splite";
 import { SITE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { CURRENT_WORKING_ON } from "@/lib/workingOn";
+import { SAFEWALK_PROJECT, type ProjectLink } from "@/lib/manualProjects";
 import XTwitterIcon from "./icons/XTwitterIcon";
 import bornaPortrait from "@/app/assets/Borna.jpeg";
 
@@ -16,32 +24,32 @@ type HeroProjectSpotlight = {
   label: string;
   title: string;
   description: string;
-  href: string;
-  ctaLabel: string;
+  thumbnail: string;
+  startDate: string;
+  endDate?: string;
+  links: ProjectLink[];
 };
 
 const latestProject: HeroProjectSpotlight = {
   label: "Latest",
-  title: "DebtGuard",
-  description:
-    "AI-assisted debt decision app that helps users assess financial risk and run what-if scenarios before borrowing.",
-  href: "https://github.com/BornaBoyafraz/DebtGuard",
-  ctaLabel: "Source Code",
+  title: SAFEWALK_PROJECT.title,
+  description: SAFEWALK_PROJECT.description,
+  thumbnail: SAFEWALK_PROJECT.thumbnail ?? "/projects/default.png",
+  startDate: SAFEWALK_PROJECT.startDate,
+  endDate: SAFEWALK_PROJECT.endDate,
+  links: SAFEWALK_PROJECT.links ?? [
+    {
+      label: "Source Code",
+      href: SAFEWALK_PROJECT.href,
+      kind: "source",
+      variant: "primary",
+    },
+  ],
 };
 
 const coinSpinStyle: CSSProperties = {
   animation: "hero-profile-coin-spin 900ms cubic-bezier(0.22, 1, 0.36, 1) both",
 };
-
-const workingOnProject: HeroProjectSpotlight | null = CURRENT_WORKING_ON.enabled
-  ? {
-      label: "Working On",
-      title: CURRENT_WORKING_ON.title,
-      description: CURRENT_WORKING_ON.description,
-      href: CURRENT_WORKING_ON.githubUrl,
-      ctaLabel: "Source Code",
-    }
-  : null;
 
 const socialLinks = [
   { href: SITE.github, icon: Github, label: "GitHub" },
@@ -51,34 +59,94 @@ const socialLinks = [
   { href: SITE.mailto, icon: Mail, label: "Email me" },
 ];
 
+function formatMonthYear(date: string): string {
+  const normalizedDate = /^\d{4}-\d{2}-\d{2}$/.test(date)
+    ? `${date}T12:00:00`
+    : date;
+
+  return new Date(normalizedDate).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+  });
+}
+
+function getProjectDateLabel(project: HeroProjectSpotlight): string {
+  if (project.endDate) {
+    return `${formatMonthYear(project.startDate)} – ${formatMonthYear(project.endDate)}`;
+  }
+
+  return formatMonthYear(project.startDate);
+}
+
+function getProjectLinkIcon(kind: ProjectLink["kind"]) {
+  switch (kind) {
+    case "source":
+      return Github;
+    case "video":
+      return PlayCircle;
+    case "live":
+    default:
+      return ExternalLink;
+  }
+}
+
 function HeroProjectCard({ project }: { project: HeroProjectSpotlight }) {
+  const dateLabel = getProjectDateLabel(project);
+
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-sm md:shadow-xl md:shadow-black/5 md:backdrop-blur-xl dark:md:shadow-black/35">
+    <div className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm md:shadow-xl md:shadow-black/5 md:backdrop-blur-xl dark:md:shadow-black/35">
       <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(130deg,rgba(245,158,11,0.14),transparent_45%)]" />
-      <div className="relative">
-        <p className="mb-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-          {project.label}
-        </p>
-        <h3 className="mb-2 text-xl font-semibold text-foreground">
-          {project.title}
-        </h3>
-        <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
-          {project.description}
-        </p>
-        <a
-          href={project.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={cn(
-            "inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium",
-            "bg-primary text-primary-foreground",
-            "transition-colors hover:brightness-95",
-            "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
-          )}
-        >
-          <Github size={16} />
-          {project.ctaLabel}
-        </a>
+      <div className="relative grid gap-0 md:grid-cols-[minmax(0,260px)_1fr]">
+        <div className="relative h-48 overflow-hidden md:h-full md:min-h-[250px]">
+          <Image
+            src={project.thumbnail}
+            alt={`${project.title} thumbnail`}
+            fill
+            sizes="(max-width: 768px) 100vw, 260px"
+            className="object-cover"
+            priority={false}
+          />
+        </div>
+        <div className="p-6 sm:p-7">
+          <p className="mb-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            {project.label}
+          </p>
+          <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+            <h3 className="text-xl font-semibold text-foreground">
+              {project.title}
+            </h3>
+            <p className="text-sm text-muted-foreground">{dateLabel}</p>
+          </div>
+          <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
+            {project.description}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {project.links.map((link, index) => {
+              const Icon = getProjectLinkIcon(link.kind);
+              const isPrimary =
+                link.variant === "primary" || (!link.variant && index === 0);
+
+              return (
+                <a
+                  key={`${link.label}-${link.href}`}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(
+                    "inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium",
+                    "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background",
+                    isPrimary
+                      ? "bg-primary text-primary-foreground transition-colors hover:brightness-95"
+                      : "border border-border bg-secondary text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                  )}
+                >
+                  <Icon size={16} />
+                  {link.label}
+                </a>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -318,9 +386,8 @@ export default function Hero() {
           initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-          aria-label="Featured project updates"
+          aria-label="Featured project update"
         >
-          {workingOnProject && <HeroProjectCard project={workingOnProject} />}
           <HeroProjectCard project={latestProject} />
         </motion.div>
       </div>

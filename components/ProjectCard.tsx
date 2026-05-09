@@ -3,10 +3,11 @@
 import { useId, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Github, PlayCircle } from "lucide-react";
 import { Card } from "./ui/card";
 import { GlowingShadow } from "./ui/glowing-shadow";
 import { cn } from "@/lib/cn";
+import type { ProjectLink } from "@/lib/manualProjects";
 import {
   getCategoryBadgeClass,
   getProjectCategories,
@@ -32,6 +33,7 @@ export interface ProjectData {
   primaryCtaLabel?: string;
   secondaryCtaLabel?: string;
   isVideo?: boolean;
+  links?: ProjectLink[];
 }
 
 interface ProjectCardProps {
@@ -60,6 +62,22 @@ function getProjectDateLabel(project: ProjectData): string | null {
   return formatMonthYear(startDate);
 }
 
+function normalizeExternalUrl(href: string): string {
+  return href.startsWith("http") ? href : `https://${href}`;
+}
+
+function getProjectLinkIcon(kind: ProjectLink["kind"]) {
+  switch (kind) {
+    case "source":
+      return Github;
+    case "video":
+      return PlayCircle;
+    case "live":
+    default:
+      return ExternalLink;
+  }
+}
+
 export function ProjectCard({
   project,
   index,
@@ -70,7 +88,6 @@ export function ProjectCard({
   const categories = getProjectCategories(project);
   const primaryCtaLabel = project.primaryCtaLabel ?? "Source Code";
   const secondaryCtaLabel = project.secondaryCtaLabel ?? "Live Demo";
-  const PrimaryCtaIcon = project.isVideo ? ExternalLink : Github;
   const description = project.description;
   const projectDateLabel = getProjectDateLabel(project);
   const canToggleDescription =
@@ -81,6 +98,27 @@ export function ProjectCard({
       ? project.homepage
       : `https://${project.homepage}`
     : null;
+  const projectLinks =
+    project.links && project.links.length > 0
+      ? project.links
+      : [
+          {
+            label: primaryCtaLabel,
+            href: project.html_url,
+            kind: project.isVideo ? "video" : "source",
+            variant: "primary",
+          } satisfies ProjectLink,
+          ...(homepageUrl
+            ? [
+                {
+                  label: secondaryCtaLabel,
+                  href: homepageUrl,
+                  kind: project.isVideo ? "video" : "live",
+                  variant: "secondary",
+                } satisfies ProjectLink,
+              ]
+            : []),
+        ];
 
   return (
     <motion.article
@@ -162,40 +200,31 @@ export function ProjectCard({
             </div>
 
             <div className="flex flex-wrap gap-2">
-              <a
-                href={project.html_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  "inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium",
-                  "bg-primary text-primary-foreground",
-                  "transition-colors hover:brightness-95",
-                  "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
-                )}
-              >
-                <PrimaryCtaIcon
-                  size={16}
-                  className={project.isVideo ? "fill-current" : undefined}
-                />
-                {primaryCtaLabel}
-              </a>
+              {projectLinks.map((link, linkIndex) => {
+                const Icon = getProjectLinkIcon(link.kind);
+                const isPrimary =
+                  link.variant === "primary" ||
+                  (!link.variant && linkIndex === 0);
 
-              {homepageUrl && (
-                <a
-                  href={homepageUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={cn(
-                    "inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium",
-                    "border border-border bg-secondary text-secondary-foreground",
-                    "hover:bg-accent hover:text-accent-foreground transition-colors",
-                    "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
-                  )}
-                >
-                  <ExternalLink size={16} />
-                  {secondaryCtaLabel}
-                </a>
-              )}
+                return (
+                  <a
+                    key={`${link.label}-${link.href}`}
+                    href={normalizeExternalUrl(link.href)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(
+                      "inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium",
+                      "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background",
+                      isPrimary
+                        ? "bg-primary text-primary-foreground transition-colors hover:brightness-95"
+                        : "border border-border bg-secondary text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                    )}
+                  >
+                    <Icon size={16} />
+                    {link.label}
+                  </a>
+                );
+              })}
             </div>
           </div>
         </Card>
