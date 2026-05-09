@@ -3,7 +3,7 @@
 import { useId, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ExternalLink, Github, PlayCircle } from "lucide-react";
+import { BookOpen, ExternalLink, Github, PlayCircle } from "lucide-react";
 import { Card } from "./ui/card";
 import { GlowingShadow } from "./ui/glowing-shadow";
 import { cn } from "@/lib/cn";
@@ -78,6 +78,8 @@ function getProjectLinkIcon(link: ProjectLink) {
   if (isLoomLink(link)) return LoomIcon;
 
   switch (link.kind) {
+    case "article":
+      return BookOpen;
     case "source":
       return Github;
     case "video":

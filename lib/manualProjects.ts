@@ -1,6 +1,6 @@
 import type { Category } from "./projectCategory";
 
-export type ProjectLinkKind = "source" | "live" | "video";
+export type ProjectLinkKind = "source" | "live" | "video" | "article";
 
 export type ProjectLink = {
   label: string;
@@ -32,7 +32,7 @@ export const SAFEWALK_PROJECT: ManualProject = {
     "SafeWalk is a safety-focused navigation platform designed to help users choose safer walking routes using location intelligence and safety-aware routing systems. The project combines a modern interface with practical urban safety concepts to support smarter and safer movement.",
   href: "https://github.com/BornaBoyafraz/Safe-Walk",
   homepage: "https://safewalk-two.vercel.app/",
-  categories: ["Project"],
+  categories: ["Project", "Pitch"],
   startDate: "2026-04-01",
   endDate: "2026-05-01",
   thumbnail: "/pictures/SafeWalk.png",
@@ -60,6 +60,25 @@ export const SAFEWALK_PROJECT: ManualProject = {
 
 export const MANUAL_PROJECTS: ManualProject[] = [
   SAFEWALK_PROJECT,
+  {
+    id: "integrating-deep-reinforcement-learning-dynamic-markets",
+    title:
+      "Integrating Deep Reinforcement Learning for Operational Discovery in Dynamic Markets",
+    description:
+      "A detailed analysis of how Machine Learning and Deep Reinforcement Learning can be combined to shift from traditional market forecasting toward autonomous, sequential decision systems. The article explores state representation, model-based and model-free reinforcement learning approaches, risk-aware policy design, and adaptation in evolving market conditions.",
+    href: "https://medium.com/@bornaboyafraz/integrating-deep-reinforcement-learning-for-operational-discovery-in-dynamic-markets-342af8af33cf",
+    categories: ["Research"],
+    startDate: "2026-02-01",
+    thumbnail: "/pictures/Research.png",
+    links: [
+      {
+        label: "Read on Medium",
+        href: "https://medium.com/@bornaboyafraz/integrating-deep-reinforcement-learning-for-operational-discovery-in-dynamic-markets-342af8af33cf",
+        kind: "article",
+        variant: "primary",
+      },
+    ],
+  },
   {
     id: "debtguard",
     title: "DebtGuard",
