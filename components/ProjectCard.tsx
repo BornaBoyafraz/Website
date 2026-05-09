@@ -8,6 +8,7 @@ import { Card } from "./ui/card";
 import { GlowingShadow } from "./ui/glowing-shadow";
 import { cn } from "@/lib/cn";
 import type { ProjectLink } from "@/lib/manualProjects";
+import LoomIcon from "@/components/icons/LoomIcon";
 import {
   getCategoryBadgeClass,
   getProjectCategories,
@@ -66,8 +67,17 @@ function normalizeExternalUrl(href: string): string {
   return href.startsWith("http") ? href : `https://${href}`;
 }
 
-function getProjectLinkIcon(kind: ProjectLink["kind"]) {
-  switch (kind) {
+function isLoomLink(link: ProjectLink): boolean {
+  return (
+    link.label.toLowerCase().includes("loom") ||
+    link.href.toLowerCase().includes("loom.com")
+  );
+}
+
+function getProjectLinkIcon(link: ProjectLink) {
+  if (isLoomLink(link)) return LoomIcon;
+
+  switch (link.kind) {
     case "source":
       return Github;
     case "video":
@@ -105,7 +115,12 @@ export function ProjectCard({
           {
             label: primaryCtaLabel,
             href: project.html_url,
-            kind: project.isVideo ? "video" : "source",
+            kind:
+              primaryCtaLabel.toLowerCase().includes("loom") ||
+              project.html_url.toLowerCase().includes("loom.com") ||
+              project.isVideo
+                ? "video"
+                : "source",
             variant: "primary",
           } satisfies ProjectLink,
           ...(homepageUrl
@@ -113,7 +128,12 @@ export function ProjectCard({
                 {
                   label: secondaryCtaLabel,
                   href: homepageUrl,
-                  kind: project.isVideo ? "video" : "live",
+                  kind:
+                    secondaryCtaLabel.toLowerCase().includes("loom") ||
+                    homepageUrl.toLowerCase().includes("loom.com") ||
+                    project.isVideo
+                      ? "video"
+                      : "live",
                   variant: "secondary",
                 } satisfies ProjectLink,
               ]
@@ -201,7 +221,7 @@ export function ProjectCard({
 
             <div className="flex flex-wrap gap-2">
               {projectLinks.map((link, linkIndex) => {
-                const Icon = getProjectLinkIcon(link.kind);
+                const Icon = getProjectLinkIcon(link);
                 const isPrimary =
                   link.variant === "primary" ||
                   (!link.variant && linkIndex === 0);

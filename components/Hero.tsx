@@ -17,6 +17,7 @@ import { SplineScene } from "@/components/ui/splite";
 import { SITE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { SAFEWALK_PROJECT, type ProjectLink } from "@/lib/manualProjects";
+import LoomIcon from "@/components/icons/LoomIcon";
 import XTwitterIcon from "./icons/XTwitterIcon";
 import bornaPortrait from "@/app/assets/Borna.jpeg";
 
@@ -78,8 +79,17 @@ function getProjectDateLabel(project: HeroProjectSpotlight): string {
   return formatMonthYear(project.startDate);
 }
 
-function getProjectLinkIcon(kind: ProjectLink["kind"]) {
-  switch (kind) {
+function isLoomLink(link: ProjectLink): boolean {
+  return (
+    link.label.toLowerCase().includes("loom") ||
+    link.href.toLowerCase().includes("loom.com")
+  );
+}
+
+function getProjectLinkIcon(link: ProjectLink) {
+  if (isLoomLink(link)) return LoomIcon;
+
+  switch (link.kind) {
     case "source":
       return Github;
     case "video":
@@ -122,7 +132,7 @@ function HeroProjectCard({ project }: { project: HeroProjectSpotlight }) {
           </p>
           <div className="flex flex-wrap gap-2">
             {project.links.map((link, index) => {
-              const Icon = getProjectLinkIcon(link.kind);
+              const Icon = getProjectLinkIcon(link);
               const isPrimary =
                 link.variant === "primary" || (!link.variant && index === 0);
 
