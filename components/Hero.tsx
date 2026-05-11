@@ -4,6 +4,7 @@ import { useState, useEffect, type CSSProperties } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import {
+  BookOpen,
   ChevronDown,
   ExternalLink,
   Github,
@@ -17,17 +18,22 @@ import { SplineScene } from "@/components/ui/splite";
 import { SITE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { SAFEWALK_PROJECT, type ProjectLink } from "@/lib/manualProjects";
+import {
+  getCategoryBadgeClass,
+  type Category,
+} from "@/lib/projectCategory";
 import LoomIcon from "@/components/icons/LoomIcon";
 import XTwitterIcon from "./icons/XTwitterIcon";
 import bornaPortrait from "@/app/assets/Borna.jpeg";
 
 type HeroProjectSpotlight = {
   label: string;
+  subtitle?: string;
   title: string;
   description: string;
-  thumbnail: string;
-  startDate: string;
+  startDate?: string;
   endDate?: string;
+  categories?: Category[];
   links: ProjectLink[];
 };
 
@@ -35,13 +41,31 @@ const latestProject: HeroProjectSpotlight = {
   label: "Latest",
   title: SAFEWALK_PROJECT.title,
   description: SAFEWALK_PROJECT.description,
-  thumbnail: SAFEWALK_PROJECT.thumbnail ?? "/projects/default.png",
   startDate: SAFEWALK_PROJECT.startDate,
   endDate: SAFEWALK_PROJECT.endDate,
+  categories: SAFEWALK_PROJECT.categories,
   links: SAFEWALK_PROJECT.links ?? [
     {
       label: "Source Code",
       href: SAFEWALK_PROJECT.href,
+      kind: "source",
+      variant: "primary",
+    },
+  ],
+};
+
+const CODEPULSE_SOURCE_URL = "https://github.com/BornaBoyafraz/CodePulse";
+
+const workingOnProject: HeroProjectSpotlight = {
+  label: "Working On",
+  subtitle: "Currently Building",
+  title: "CodePulse",
+  description:
+    "CodePulse is an AI-powered predictive code risk system built in Python. The project analyzes GitHub repositories, studies commit history, and identifies files that are statistically more likely to introduce bugs or instability. The goal is to help developers detect high-risk areas early and improve software reliability.",
+  links: [
+    {
+      label: "Source Code",
+      href: CODEPULSE_SOURCE_URL,
       kind: "source",
       variant: "primary",
     },
@@ -71,7 +95,9 @@ function formatMonthYear(date: string): string {
   });
 }
 
-function getProjectDateLabel(project: HeroProjectSpotlight): string {
+function getProjectDateLabel(project: HeroProjectSpotlight): string | null {
+  if (!project.startDate) return null;
+
   if (project.endDate) {
     return `${formatMonthYear(project.startDate)} – ${formatMonthYear(project.endDate)}`;
   }
@@ -90,6 +116,8 @@ function getProjectLinkIcon(link: ProjectLink) {
   if (isLoomLink(link)) return LoomIcon;
 
   switch (link.kind) {
+    case "article":
+      return BookOpen;
     case "source":
       return Github;
     case "video":
@@ -102,60 +130,76 @@ function getProjectLinkIcon(link: ProjectLink) {
 
 function HeroProjectCard({ project }: { project: HeroProjectSpotlight }) {
   const dateLabel = getProjectDateLabel(project);
+  const categories = project.categories ?? [];
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm md:shadow-xl md:shadow-black/5 md:backdrop-blur-xl dark:md:shadow-black/35">
-      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(130deg,rgba(245,158,11,0.14),transparent_45%)]" />
-      <div className="relative grid gap-0 md:grid-cols-[minmax(0,260px)_1fr]">
-        <div className="relative h-48 overflow-hidden md:h-full md:min-h-[250px]">
-          <Image
-            src={project.thumbnail}
-            alt={`${project.title} thumbnail`}
-            fill
-            sizes="(max-width: 768px) 100vw, 260px"
-            className="object-cover"
-            priority={false}
-          />
-        </div>
-        <div className="p-6 sm:p-7">
-          <p className="mb-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+    <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card/95 p-6 shadow-sm md:p-7 md:shadow-xl md:shadow-black/5 md:backdrop-blur-xl dark:bg-card/90 dark:md:shadow-black/35">
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(245,158,11,0.13),transparent_42%)]" />
+      <div className="relative flex h-full flex-col">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
             {project.label}
           </p>
-          <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-            <h3 className="text-xl font-semibold text-foreground">
-              {project.title}
-            </h3>
+          {dateLabel && (
             <p className="text-sm text-muted-foreground">{dateLabel}</p>
-          </div>
-          <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
-            {project.description}
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {project.links.map((link, index) => {
-              const Icon = getProjectLinkIcon(link);
-              const isPrimary =
-                link.variant === "primary" || (!link.variant && index === 0);
+          )}
+        </div>
 
-              return (
-                <a
-                  key={`${link.label}-${link.href}`}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+        <div className="mb-4">
+          {project.subtitle && (
+            <p className="mb-2 text-sm font-medium text-primary">
+              {project.subtitle}
+            </p>
+          )}
+          <h3 className="text-2xl font-semibold leading-tight text-foreground">
+            {project.title}
+          </h3>
+          {categories.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {categories.map((category) => (
+                <span
+                  key={category}
                   className={cn(
-                    "inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium",
-                    "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background",
-                    isPrimary
-                      ? "bg-primary text-primary-foreground transition-colors hover:brightness-95"
-                      : "border border-border bg-secondary text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                    "inline-flex max-w-full items-center rounded-full border px-2.5 py-1 text-xs font-semibold leading-tight",
+                    getCategoryBadgeClass(category)
                   )}
                 >
-                  <Icon size={16} />
-                  {link.label}
-                </a>
-              );
-            })}
-          </div>
+                  {category}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <p className="mb-6 flex-1 text-sm leading-relaxed text-muted-foreground">
+          {project.description}
+        </p>
+
+        <div className="flex flex-wrap gap-2">
+          {project.links.map((link, index) => {
+            const Icon = getProjectLinkIcon(link);
+            const isPrimary =
+              link.variant === "primary" || (!link.variant && index === 0);
+
+            return (
+              <a
+                key={`${link.label}-${link.href}`}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  "inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium",
+                  "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background",
+                  isPrimary
+                    ? "bg-primary text-primary-foreground transition-colors hover:brightness-95"
+                    : "border border-border bg-secondary text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                )}
+              >
+                <Icon size={16} />
+                {link.label}
+              </a>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -392,13 +436,14 @@ export default function Hero() {
         </div>
 
         <motion.div
-          className="mx-auto mt-12 flex w-full max-w-3xl flex-col gap-6 lg:mt-14"
+          className="mx-auto mt-12 grid w-full max-w-5xl gap-6 lg:mt-14 lg:grid-cols-2"
           initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-          aria-label="Featured project update"
+          aria-label="Featured project updates"
         >
           <HeroProjectCard project={latestProject} />
+          <HeroProjectCard project={workingOnProject} />
         </motion.div>
       </div>
 
