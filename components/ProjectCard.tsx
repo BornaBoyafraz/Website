@@ -167,8 +167,8 @@ export function ProjectCard({
             />
           </div>
           <div className="p-6 flex flex-col flex-1 min-h-0">
-            <div className="flex items-start justify-between gap-3 mb-3">
-              <div>
+            <div className="mb-3 flex flex-col gap-3">
+              <div className="min-w-0">
                 <h3 className="text-lg font-semibold text-foreground leading-tight">
                   {project.name}
                 </h3>
@@ -178,12 +178,12 @@ export function ProjectCard({
                   </p>
                 )}
               </div>
-              <div className="flex shrink-0 flex-wrap justify-end gap-2">
+              <div className="flex flex-wrap gap-2">
                 {categories.map((category) => (
                   <span
                     key={category}
                     className={cn(
-                      "inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold",
+                      "inline-flex max-w-full items-center rounded-full border px-2.5 py-1 text-xs font-semibold leading-tight",
                       getCategoryBadgeClass(category)
                     )}
                   >

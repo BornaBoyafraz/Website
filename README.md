@@ -14,7 +14,10 @@ data.
 - Responsive hero layout with profile content and a Spline 3D scene.
 - Latest section for highlighted project updates.
 - Dynamic project listing with GitHub data fetching.
-- Project filters, sorting, thumbnails, and manual project entries.
+- Project filters for Project, Pitch, Fun, and Researches/Articles work,
+  plus sorting, thumbnails, and manual project entries.
+- SafeWalk appears under Project, Pitch, and Researches/Articles, with links
+  for source code, the live site, the Loom walkthrough, and the Medium article.
 - Dark mode support with a custom amber and neutral theme.
 - Contact and social links.
 

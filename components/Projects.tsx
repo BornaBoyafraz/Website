@@ -326,7 +326,7 @@ export default function Projects({
           transition={{ delay: 0.05 }}
         >
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="inline-flex items-center rounded-2xl border border-border/20 bg-background/20 p-1 md:backdrop-blur-sm">
+            <div className="flex flex-wrap items-center gap-1 rounded-2xl border border-border/20 bg-background/20 p-1 md:backdrop-blur-sm">
               {FILTER_OPTIONS.map((option) => {
                 const isActive = categoryFilter === option;
                 return (

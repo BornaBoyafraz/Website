@@ -32,7 +32,7 @@ export const SAFEWALK_PROJECT: ManualProject = {
     "SafeWalk is a safety-focused navigation platform designed to help users choose safer walking routes using location intelligence and safety-aware routing systems. The project combines a modern interface with practical urban safety concepts to support smarter and safer movement.",
   href: "https://github.com/BornaBoyafraz/Safe-Walk",
   homepage: "https://safewalk-two.vercel.app/",
-  categories: ["Project", "Pitch"],
+  categories: ["Project", "Pitch", "Researches/Articles"],
   startDate: "2026-04-01",
   endDate: "2026-05-01",
   thumbnail: "/pictures/SafeWalk.png",
@@ -55,6 +55,12 @@ export const SAFEWALK_PROJECT: ManualProject = {
       kind: "video",
       variant: "secondary",
     },
+    {
+      label: "Read Article",
+      href: "https://medium.com/@bornaboyafraz/the-safe-walk-master-plan-ebe294a94c35",
+      kind: "article",
+      variant: "secondary",
+    },
   ],
 };
 
@@ -67,7 +73,7 @@ export const MANUAL_PROJECTS: ManualProject[] = [
     description:
       "A detailed analysis of how Machine Learning and Deep Reinforcement Learning can be combined to shift from traditional market forecasting toward autonomous, sequential decision systems. The article explores state representation, model-based and model-free reinforcement learning approaches, risk-aware policy design, and adaptation in evolving market conditions.",
     href: "https://medium.com/@bornaboyafraz/integrating-deep-reinforcement-learning-for-operational-discovery-in-dynamic-markets-342af8af33cf",
-    categories: ["Research"],
+    categories: ["Researches/Articles"],
     startDate: "2026-02-01",
     thumbnail: "/pictures/Research.png",
     links: [

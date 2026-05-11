@@ -1,10 +1,10 @@
-export type Category = "Project" | "Fun" | "Pitch" | "Research";
+export type Category = "Project" | "Fun" | "Pitch" | "Researches/Articles";
 
 export const FILTER_CATEGORIES: Category[] = [
   "Project",
   "Pitch",
   "Fun",
-  "Research",
+  "Researches/Articles",
 ];
 
 export const CATEGORY_BY_REPO: Record<string, Category> = {
@@ -59,7 +59,7 @@ export function getCategoryBadgeClass(category: Category): string {
       return "bg-amber-100 text-amber-900 border-amber-200 dark:bg-amber-500/20 dark:text-amber-200 dark:border-amber-500/30";
     case "Pitch":
       return "bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-500/20 dark:text-cyan-200 dark:border-cyan-500/30";
-    case "Research":
+    case "Researches/Articles":
       return "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-500/20 dark:text-emerald-200 dark:border-emerald-500/30";
     case "Fun":
     default:
