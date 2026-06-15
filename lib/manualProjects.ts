@@ -64,7 +64,33 @@ export const SAFEWALK_PROJECT: ManualProject = {
   ],
 };
 
+export const CODEPULSE_PROJECT: ManualProject = {
+  id: "codepulse",
+  title: "CodePulse",
+  description:
+    "CodePulse is an AI-powered predictive code risk system built in Python. It analyzes GitHub repositories, studies commit history, and predicts which files are most likely to introduce bugs or instability before problems happen.",
+  href: "https://github.com/BornaBoyafraz/CodePulse",
+  categories: ["Project"],
+  startDate: "2026-05-01",
+  thumbnail: "/pictures/CodePulse.png",
+  links: [
+    {
+      label: "Source Code",
+      href: "https://github.com/BornaBoyafraz/CodePulse",
+      kind: "source",
+      variant: "primary",
+    },
+    {
+      label: "Read Article",
+      href: "https://medium.com/@bornaboyafraz/codepulse-predicting-which-files-will-break-before-anyone-writes-the-code-c4bd4bd80576",
+      kind: "article",
+      variant: "secondary",
+    },
+  ],
+};
+
 export const MANUAL_PROJECTS: ManualProject[] = [
+  CODEPULSE_PROJECT,
   SAFEWALK_PROJECT,
   {
     id: "integrating-deep-reinforcement-learning-dynamic-markets",

@@ -17,7 +17,7 @@ import { Card } from "@/components/ui/card";
 import { SplineScene } from "@/components/ui/splite";
 import { SITE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { SAFEWALK_PROJECT, type ProjectLink } from "@/lib/manualProjects";
+import { CODEPULSE_PROJECT, type ProjectLink } from "@/lib/manualProjects";
 import {
   getCategoryBadgeClass,
   type Category,
@@ -39,33 +39,15 @@ type HeroProjectSpotlight = {
 
 const latestProject: HeroProjectSpotlight = {
   label: "Latest",
-  title: SAFEWALK_PROJECT.title,
-  description: SAFEWALK_PROJECT.description,
-  startDate: SAFEWALK_PROJECT.startDate,
-  endDate: SAFEWALK_PROJECT.endDate,
-  categories: SAFEWALK_PROJECT.categories,
-  links: SAFEWALK_PROJECT.links ?? [
+  title: CODEPULSE_PROJECT.title,
+  description: CODEPULSE_PROJECT.description,
+  startDate: CODEPULSE_PROJECT.startDate,
+  endDate: CODEPULSE_PROJECT.endDate,
+  categories: CODEPULSE_PROJECT.categories,
+  links: CODEPULSE_PROJECT.links ?? [
     {
       label: "Source Code",
-      href: SAFEWALK_PROJECT.href,
-      kind: "source",
-      variant: "primary",
-    },
-  ],
-};
-
-const CODEPULSE_SOURCE_URL = "https://github.com/BornaBoyafraz/CodePulse";
-
-const workingOnProject: HeroProjectSpotlight = {
-  label: "Working On",
-  subtitle: "Currently Building",
-  title: "CodePulse",
-  description:
-    "CodePulse is an AI-powered predictive code risk system built in Python. The project analyzes GitHub repositories, studies commit history, and identifies files that are statistically more likely to introduce bugs or instability. The goal is to help developers detect high-risk areas early and improve software reliability.",
-  links: [
-    {
-      label: "Source Code",
-      href: CODEPULSE_SOURCE_URL,
+      href: CODEPULSE_PROJECT.href,
       kind: "source",
       variant: "primary",
     },
@@ -436,14 +418,13 @@ export default function Hero() {
         </div>
 
         <motion.div
-          className="mx-auto mt-12 grid w-full max-w-5xl gap-6 lg:mt-14 lg:grid-cols-2"
+          className="mx-auto mt-12 grid w-full max-w-2xl gap-6 lg:mt-14"
           initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
           aria-label="Featured project updates"
         >
           <HeroProjectCard project={latestProject} />
-          <HeroProjectCard project={workingOnProject} />
         </motion.div>
       </div>
 
