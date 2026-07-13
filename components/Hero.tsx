@@ -349,7 +349,7 @@ export default function Hero() {
               Python Developer | Machine Learning • Game Development • Algorithms
             </p>
             <p className="mx-auto mb-9 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg lg:mx-0">
-              High school developer building practical software with Python.
+              Software developer building practical software with Python.
               Machine learning experiments, games, and tools that solve real
               problems. VibeCoding meets algorithmic thinking.
             </p>

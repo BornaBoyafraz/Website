@@ -40,7 +40,7 @@ export default function About() {
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <p>
-            I am a high school developer focused on building practical software
+            I am a developer focused on building practical software
             using Python. My work includes machine learning experiments, game
             development, and small tools designed to solve real problems
             quickly.

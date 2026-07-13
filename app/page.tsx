@@ -1,5 +1,6 @@
 import Hero from "@/components/Hero";
 import About from "@/components/About";
+import WorkingOn from "@/components/WorkingOn";
 import Projects from "@/components/Projects";
 import Contact from "@/components/Contact";
 import { getProjects } from "@/lib/projects";
@@ -18,6 +19,7 @@ export default async function Home() {
     <>
       <Hero />
       <About />
+      <WorkingOn />
       <Projects initialProjects={projects} error={error} />
       <Contact />
     </>

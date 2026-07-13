@@ -35,6 +35,7 @@ const EXCLUDED_PROJECT_NAMES = new Set([
   "tictactoe",
   "qneo",
   "codepulse",
+  "opportunityos",
 ]);
 
 function normalizeRepoName(name: string): string {
