@@ -42,7 +42,8 @@ type HeroProjectSpotlight = {
 type SkillDashboard = {
   id: string;
   label: string;
-  shortLabel: string;
+  buttonLabel: string;
+  buttonDescription: string;
   icon: typeof Code2;
   bars: Array<{
     label: string;
@@ -54,45 +55,49 @@ const SKILL_DASHBOARDS: SkillDashboard[] = [
   {
     id: "python",
     label: "Python",
-    shortLabel: "Python",
+    buttonLabel: "Python",
+    buttonDescription: "Automation and tools",
     icon: Code2,
     bars: [
-      { label: "Automation", value: 92 },
-      { label: "Backend tools", value: 84 },
-      { label: "Data workflows", value: 78 },
+      { label: "Automation pipelines", value: 92 },
+      { label: "Backend foundations", value: 84 },
+      { label: "Data tooling", value: 78 },
     ],
   },
   {
     id: "machine-learning",
     label: "Machine Learning",
-    shortLabel: "ML",
+    buttonLabel: "Machine Learning",
+    buttonDescription: "Models and prediction",
     icon: BrainCircuit,
     bars: [
-      { label: "Model design", value: 88 },
-      { label: "Evaluation", value: 82 },
-      { label: "Risk prediction", value: 91 },
+      { label: "Model building", value: 88 },
+      { label: "Evaluation loops", value: 82 },
+      { label: "Risk signals", value: 91 },
     ],
   },
   {
     id: "game-development",
     label: "Game Development",
-    shortLabel: "Games",
+    buttonLabel: "Game Development",
+    buttonDescription: "Loops and feel",
     icon: Gamepad2,
     bars: [
       { label: "Game loops", value: 86 },
-      { label: "Physics feel", value: 74 },
+      { label: "Physics tuning", value: 74 },
       { label: "Player polish", value: 80 },
     ],
   },
   {
     id: "algorithms",
     label: "Algorithms",
-    shortLabel: "Algorithms",
+    buttonLabel: "Algorithms",
+    buttonDescription: "Logic and optimization",
     icon: GitBranch,
     bars: [
       { label: "Problem solving", value: 94 },
       { label: "Optimization", value: 83 },
-      { label: "System logic", value: 89 },
+      { label: "System design", value: 89 },
     ],
   },
 ];
@@ -258,15 +263,15 @@ function HeroArchitecturePanel({ reduceMotion }: { reduceMotion: boolean }) {
     SKILL_DASHBOARDS[0];
 
   return (
-    <div className="washi-panel architectural-tilt joinery-shadow-strong relative min-h-[430px] max-w-full overflow-hidden border border-border sm:min-h-[500px]">
+    <div className="washi-panel architectural-tilt joinery-shadow-strong relative min-h-[540px] w-full max-w-full overflow-hidden border border-border sm:min-h-[590px] lg:min-h-[620px]">
       <div className="pointer-events-none absolute inset-0 shoji-grid opacity-55" />
       <div className="absolute left-0 top-0 h-4 w-full bg-[#315243] dark:bg-[#8fb08e]" />
       <div className="absolute left-0 top-4 h-2 w-2/5 bg-primary" />
       <div className="absolute bottom-0 right-0 h-20 w-2 bg-primary" />
       <div className="absolute bottom-0 right-2 h-2 w-1/2 bg-[#315243] dark:bg-[#8fb08e]" />
 
-      <div className="relative grid min-h-[430px] grid-cols-1 gap-0 p-4 sm:min-h-[500px] sm:grid-cols-[1fr_112px] sm:p-8">
-        <div className="panel-face-3d relative border border-border bg-background p-5">
+      <div className="relative grid min-h-[540px] grid-cols-1 gap-0 p-4 sm:min-h-[590px] sm:grid-cols-[minmax(0,1fr)_96px] sm:p-8 lg:min-h-[620px] xl:grid-cols-[minmax(0,1fr)_120px]">
+        <div className="panel-face-3d relative border border-border bg-background p-5 sm:p-7">
           <div className="absolute -left-3 top-10 h-24 w-3 bg-primary" />
           <div className="absolute -right-5 bottom-12 h-32 w-5 bg-secondary" />
           <div className="mb-8 flex items-center justify-between gap-4 border-b border-border pb-4">
@@ -318,7 +323,7 @@ function HeroArchitecturePanel({ reduceMotion }: { reduceMotion: boolean }) {
             ))}
           </div>
 
-          <div className="mt-10 grid grid-cols-2 gap-3 xl:grid-cols-4">
+          <div className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {SKILL_DASHBOARDS.map((skill) => {
               const Icon = skill.icon;
               const isActive = selectedSkill.id === skill.id;
@@ -329,7 +334,7 @@ function HeroArchitecturePanel({ reduceMotion }: { reduceMotion: boolean }) {
                   type="button"
                   onClick={() => setSelectedSkillId(skill.id)}
                   className={cn(
-                    "button-3d flex min-h-24 flex-col justify-between border border-border bg-card p-4 text-left",
+                    "group/skill button-3d flex min-h-[6.75rem] items-start gap-3 border border-border bg-card p-4 text-left",
                     "transition-all duration-200 hover:-translate-y-1 hover:border-primary hover:bg-accent hover:text-accent-foreground",
                     "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background",
                     isActive &&
@@ -337,9 +342,17 @@ function HeroArchitecturePanel({ reduceMotion }: { reduceMotion: boolean }) {
                   )}
                   aria-pressed={isActive}
                 >
-                  <Icon className="h-6 w-6 text-primary" aria-hidden="true" />
-                  <span className="block max-w-full break-words text-xs font-semibold leading-tight text-foreground sm:text-sm">
-                    {skill.shortLabel}
+                  <Icon
+                    className="mt-0.5 h-6 w-6 shrink-0 text-primary"
+                    aria-hidden="true"
+                  />
+                  <span className="min-w-0">
+                    <span className="block text-sm font-semibold leading-tight text-foreground">
+                      {skill.buttonLabel}
+                    </span>
+                    <span className="mt-1 block text-[11px] font-medium leading-snug text-muted-foreground transition-colors group-hover/skill:text-accent-foreground/80">
+                      {skill.buttonDescription}
+                    </span>
                   </span>
                 </button>
               );
@@ -407,7 +420,7 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-0 shoji-grid opacity-45" />
       <div className="pointer-events-none absolute right-0 top-56 h-px w-2/3 bg-border" />
       <div className="container-wide relative">
-        <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(380px,1fr)] lg:gap-16">
+        <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,0.76fr)_minmax(540px,1.24fr)] lg:gap-10 xl:grid-cols-[minmax(0,0.7fr)_minmax(640px,1.3fr)] xl:gap-14">
           <motion.div
             className="relative min-w-0 text-center lg:text-left"
             initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
