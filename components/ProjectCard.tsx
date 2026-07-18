@@ -41,6 +41,11 @@ interface ProjectCardProps {
   project: ProjectData;
   index: number;
   reduceMotion?: boolean;
+  isHovered?: boolean;
+  isAnyHovered?: boolean;
+  pushDirection?: "left" | "right" | "none";
+  onHoverStart?: () => void;
+  onHoverEnd?: () => void;
 }
 
 function formatMonthYear(date: string): string {
@@ -94,6 +99,11 @@ export function ProjectCard({
   project,
   index,
   reduceMotion = false,
+  isHovered = false,
+  isAnyHovered = false,
+  pushDirection = "none",
+  onHoverStart,
+  onHoverEnd,
 }: ProjectCardProps) {
   const [expanded, setExpanded] = useState(false);
   const descriptionId = useId();
@@ -147,10 +157,23 @@ export function ProjectCard({
       : index % 3 === 2
         ? "lg:-translate-y-2"
         : "";
+  const shouldShiftCards = isAnyHovered && !isHovered && !reduceMotion;
 
   return (
     <motion.article
-      className={cn("h-full", offsetClass)}
+      className={cn(
+        "h-full [perspective:1400px]",
+        offsetClass,
+        isHovered ? "relative z-30" : "relative z-0"
+      )}
+      onMouseEnter={onHoverStart}
+      onMouseLeave={onHoverEnd}
+      onFocus={onHoverStart}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          onHoverEnd?.();
+        }
+      }}
       initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
@@ -160,8 +183,29 @@ export function ProjectCard({
         ease: [0.22, 1, 0.36, 1],
       }}
     >
-      <GlowingShadow className="h-full">
-        <Card className="washi-panel group relative flex h-full flex-col overflow-hidden border-border transition-transform md:hover:-translate-y-1">
+      <div
+        className={cn(
+          "h-full transition-all duration-300 ease-out",
+          isHovered &&
+            !reduceMotion &&
+            "lg:-translate-y-10 lg:scale-[1.1] lg:[transform:translateY(-2.5rem)_scale(1.1)_rotateX(4deg)_translateZ(80px)]",
+          shouldShiftCards &&
+            pushDirection === "left" &&
+            "lg:-translate-x-14 lg:scale-[0.92] lg:opacity-45 lg:[transform:translateX(-3.5rem)_scale(0.92)_rotateY(7deg)]",
+          shouldShiftCards &&
+            pushDirection === "right" &&
+            "lg:translate-x-14 lg:scale-[0.92] lg:opacity-45 lg:[transform:translateX(3.5rem)_scale(0.92)_rotateY(-7deg)]"
+        )}
+      >
+        <GlowingShadow className="h-full">
+          <Card
+            className={cn(
+              "washi-panel group relative flex h-full flex-col overflow-hidden border-border transition-shadow duration-300 [transform-style:preserve-3d]",
+              isHovered
+                ? "shadow-[18px_18px_0_rgba(217,104,70,0.24),0_34px_110px_rgba(0,0,0,0.55)]"
+                : "shadow-[8px_8px_0_rgba(0,0,0,0.2)] md:hover:shadow-[12px_12px_0_rgba(217,104,70,0.14),0_22px_70px_rgba(0,0,0,0.34)]"
+            )}
+          >
           <div className="pointer-events-none absolute inset-y-0 left-0 w-1.5 bg-primary" />
           <div className="relative mx-4 mt-4 h-48 overflow-hidden border border-border bg-muted">
             <div className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(135deg,rgba(32,28,23,0.12),transparent_34%,rgba(183,65,46,0.10))] opacity-80" />
@@ -257,8 +301,9 @@ export function ProjectCard({
               })}
             </div>
           </div>
-        </Card>
-      </GlowingShadow>
+          </Card>
+        </GlowingShadow>
+      </div>
     </motion.article>
   );
 }

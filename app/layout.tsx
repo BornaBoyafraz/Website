@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -12,19 +11,6 @@ const SITE_URL = "https://bornaba.com";
 const SITE_TITLE = "Hi, I am Borna";
 const SITE_DESCRIPTION =
   "Python Developer specializing in Machine Learning, Game Development, and Algorithms. Building practical software with a VibeCoding approach.";
-
-const themeInitScript = `
-(() => {
-  try {
-    const savedTheme = localStorage.getItem("theme");
-    const isDark =
-      savedTheme === "dark" ||
-      (savedTheme !== "light" &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches);
-    document.documentElement.classList.toggle("dark", isDark);
-  } catch {}
-})();
-`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -66,12 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <Script id="theme-init" strategy="beforeInteractive">
-          {themeInitScript}
-        </Script>
-      </head>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body className="antialiased">
         <ThemeProvider>
           <AlwaysMovingBackground />

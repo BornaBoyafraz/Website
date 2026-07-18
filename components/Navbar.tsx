@@ -11,7 +11,6 @@ import {
   Instagram,
   Mail,
 } from "lucide-react";
-import ThemeToggle from "./ThemeToggle";
 import { SITE } from "@/lib/constants";
 import { cn } from "@/lib/cn";
 import XTwitterIcon from "./icons/XTwitterIcon";
@@ -112,11 +111,9 @@ export default function Navbar() {
                 <Icon className="h-5 w-5" />
               </a>
             ))}
-            <ThemeToggle />
           </div>
 
           <div className="flex items-center gap-1 md:hidden">
-            <ThemeToggle />
             <button
               onClick={() => setOpen(!open)}
               className="p-2.5 hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring"

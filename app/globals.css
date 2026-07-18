@@ -157,6 +157,39 @@ body {
     0 22px 55px rgba(0, 0, 0, 0.35);
 }
 
+.joinery-shadow-strong {
+  box-shadow:
+    18px 18px 0 rgba(217, 104, 70, 0.16),
+    32px 34px 0 rgba(49, 82, 67, 0.1),
+    0 38px 95px rgba(0, 0, 0, 0.42);
+}
+
+.architectural-tilt {
+  transform: perspective(1300px) rotateX(1.5deg) rotateY(-2deg);
+  transform-style: preserve-3d;
+}
+
+.panel-face-3d {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 12px 0 22px rgba(255, 255, 255, 0.02),
+    14px 14px 0 rgba(0, 0, 0, 0.2);
+  transform: translateZ(26px);
+}
+
+.side-block-3d {
+  box-shadow:
+    inset 18px 0 24px rgba(0, 0, 0, 0.2),
+    18px 18px 0 rgba(0, 0, 0, 0.2);
+  transform: translateZ(10px);
+}
+
+.button-3d {
+  box-shadow:
+    7px 7px 0 rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
 .timber-rule {
   background:
     linear-gradient(90deg, transparent 0 8%, var(--primary) 8% 20%, transparent 20% 26%, #315243 26% 100%);

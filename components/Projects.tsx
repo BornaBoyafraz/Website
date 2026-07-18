@@ -110,6 +110,10 @@ const SORT_OPTIONS: Array<{ label: string; value: SortOrder }> = [
   { label: "Oldest", value: "oldest" },
 ];
 
+function getProjectRenderKey(project: ProjectData): string {
+  return project.id ?? project.html_url ?? project.name;
+}
+
 interface ProjectsProps {
   initialProjects: ProjectData[];
   error?: string;
@@ -127,6 +131,9 @@ export default function Projects({
   const [categoryFilter, setCategoryFilter] = useState<ProjectFilter>("All");
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
+  const [hoveredProjectKey, setHoveredProjectKey] = useState<string | null>(
+    null
+  );
   const [reduceMotion, setReduceMotion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const sortDropdownRef = useRef<HTMLDivElement>(null);
@@ -247,6 +254,11 @@ export default function Projects({
   }, [projects, search, categoryFilter, sortOrder]);
 
   const shouldReduceMotion = reduceMotion || isMobile;
+  const hoveredProjectIndex = hoveredProjectKey
+    ? filteredAndSorted.findIndex(
+        (project) => getProjectRenderKey(project) === hoveredProjectKey
+      )
+    : -1;
 
   const retry = async () => {
     setError(null);
@@ -474,14 +486,30 @@ export default function Projects({
 
         {filteredAndSorted.length > 0 ? (
           <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredAndSorted.map((project, i) => (
-              <ProjectCard
-                key={project.id ?? project.html_url}
-                project={project}
-                index={i}
-                reduceMotion={shouldReduceMotion}
-              />
-            ))}
+            {filteredAndSorted.map((project, i) => {
+              const projectKey = getProjectRenderKey(project);
+              const isHovered = hoveredProjectKey === projectKey;
+              const pushDirection =
+                hoveredProjectIndex === -1 || isHovered
+                  ? "none"
+                  : i < hoveredProjectIndex
+                    ? "left"
+                    : "right";
+
+              return (
+                <ProjectCard
+                  key={projectKey}
+                  project={project}
+                  index={i}
+                  reduceMotion={shouldReduceMotion}
+                  isHovered={isHovered}
+                  isAnyHovered={hoveredProjectKey !== null}
+                  pushDirection={pushDirection}
+                  onHoverStart={() => setHoveredProjectKey(projectKey)}
+                  onHoverEnd={() => setHoveredProjectKey(null)}
+                />
+              );
+            })}
           </div>
         ) : (
           <p className="text-center text-muted-foreground py-16">

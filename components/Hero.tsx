@@ -39,6 +39,64 @@ type HeroProjectSpotlight = {
   links: ProjectLink[];
 };
 
+type SkillDashboard = {
+  id: string;
+  label: string;
+  shortLabel: string;
+  icon: typeof Code2;
+  bars: Array<{
+    label: string;
+    value: number;
+  }>;
+};
+
+const SKILL_DASHBOARDS: SkillDashboard[] = [
+  {
+    id: "python",
+    label: "Python",
+    shortLabel: "Python",
+    icon: Code2,
+    bars: [
+      { label: "Automation", value: 92 },
+      { label: "Backend tools", value: 84 },
+      { label: "Data workflows", value: 78 },
+    ],
+  },
+  {
+    id: "machine-learning",
+    label: "Machine Learning",
+    shortLabel: "ML",
+    icon: BrainCircuit,
+    bars: [
+      { label: "Model design", value: 88 },
+      { label: "Evaluation", value: 82 },
+      { label: "Risk prediction", value: 91 },
+    ],
+  },
+  {
+    id: "game-development",
+    label: "Game Development",
+    shortLabel: "Games",
+    icon: Gamepad2,
+    bars: [
+      { label: "Game loops", value: 86 },
+      { label: "Physics feel", value: 74 },
+      { label: "Player polish", value: 80 },
+    ],
+  },
+  {
+    id: "algorithms",
+    label: "Algorithms",
+    shortLabel: "Algorithms",
+    icon: GitBranch,
+    bars: [
+      { label: "Problem solving", value: 94 },
+      { label: "Optimization", value: 83 },
+      { label: "System logic", value: 89 },
+    ],
+  },
+];
+
 const latestProject: HeroProjectSpotlight = {
   label: "Latest",
   title: CODEPULSE_PROJECT.title,
@@ -192,14 +250,15 @@ function HeroProjectCard({ project }: { project: HeroProjectSpotlight }) {
 }
 
 function HeroArchitecturePanel({ reduceMotion }: { reduceMotion: boolean }) {
-  const specialties = [
-    { label: "Python", icon: Code2 },
-    { label: "ML", icon: BrainCircuit },
-    { label: "Games", icon: Gamepad2 },
-  ];
+  const [selectedSkillId, setSelectedSkillId] = useState(
+    SKILL_DASHBOARDS[0].id
+  );
+  const selectedSkill =
+    SKILL_DASHBOARDS.find((skill) => skill.id === selectedSkillId) ??
+    SKILL_DASHBOARDS[0];
 
   return (
-    <div className="washi-panel joinery-shadow relative min-h-[430px] max-w-full overflow-hidden border border-border sm:min-h-[500px]">
+    <div className="washi-panel architectural-tilt joinery-shadow-strong relative min-h-[430px] max-w-full overflow-hidden border border-border sm:min-h-[500px]">
       <div className="pointer-events-none absolute inset-0 shoji-grid opacity-55" />
       <div className="absolute left-0 top-0 h-4 w-full bg-[#315243] dark:bg-[#8fb08e]" />
       <div className="absolute left-0 top-4 h-2 w-2/5 bg-primary" />
@@ -207,27 +266,23 @@ function HeroArchitecturePanel({ reduceMotion }: { reduceMotion: boolean }) {
       <div className="absolute bottom-0 right-2 h-2 w-1/2 bg-[#315243] dark:bg-[#8fb08e]" />
 
       <div className="relative grid min-h-[430px] grid-cols-1 gap-0 p-4 sm:min-h-[500px] sm:grid-cols-[1fr_112px] sm:p-8">
-        <div className="relative border border-border bg-background p-5">
+        <div className="panel-face-3d relative border border-border bg-background p-5">
           <div className="absolute -left-3 top-10 h-24 w-3 bg-primary" />
           <div className="absolute -right-5 bottom-12 h-32 w-5 bg-secondary" />
           <div className="mb-8 flex items-center justify-between gap-4 border-b border-border pb-4">
             <div>
               <p className="text-xs font-semibold uppercase text-muted-foreground">
-                Build log
+                Skill matrix
               </p>
               <h2 className="mt-1 font-serif text-3xl font-semibold text-foreground">
-                Code garden
+                {selectedSkill.label}
               </h2>
             </div>
             <GitBranch className="h-8 w-8 text-primary" aria-hidden="true" />
           </div>
 
           <div className="grid gap-4">
-            {[
-              ["Repository intelligence", "78%"],
-              ["Prediction systems", "92%"],
-              ["Prototype velocity", "86%"],
-            ].map(([label, value], index) => (
+            {selectedSkill.bars.map(({ label, value }, index) => (
               <motion.div
                 key={label}
                 className="grid grid-cols-[minmax(0,1fr)_64px] items-center gap-4"
@@ -237,41 +292,65 @@ function HeroArchitecturePanel({ reduceMotion }: { reduceMotion: boolean }) {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 + index * 0.08 }}
               >
-                <div className="h-12 border border-border bg-card p-2">
-                  <div
-                    className="h-full bg-primary"
-                    style={{ width: value }}
-                  />
+                <div className="h-14 border border-border bg-card p-2 shadow-[inset_8px_8px_16px_rgba(0,0,0,0.22)]">
+                  <div className="mb-1 flex items-center justify-between gap-3">
+                    <span className="truncate text-[11px] font-semibold uppercase text-muted-foreground">
+                      {label}
+                    </span>
+                  </div>
+                  <div className="h-5 bg-secondary shadow-[inset_0_2px_8px_rgba(0,0,0,0.32)]">
+                    <motion.div
+                      key={`${selectedSkill.id}-${label}`}
+                      className="h-full bg-primary shadow-[6px_0_16px_rgba(217,104,70,0.42)]"
+                      initial={{ width: reduceMotion ? `${value}%` : "18%" }}
+                      animate={{ width: `${value}%` }}
+                      transition={{
+                        duration: reduceMotion ? 0 : 0.45,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                    />
+                  </div>
                 </div>
                 <span className="font-mono text-sm text-muted-foreground">
-                  {value}
+                  {value}%
                 </span>
               </motion.div>
             ))}
           </div>
 
-          <div className="mt-10 grid gap-3 sm:grid-cols-3">
-            {specialties.map(({ label, icon: Icon }) => (
-              <div
-                key={label}
-                className="flex min-h-24 flex-col justify-between border border-border bg-card p-4"
-              >
-                <Icon className="h-6 w-6 text-primary" aria-hidden="true" />
-                <span className="text-sm font-semibold text-foreground">
-                  {label}
-                </span>
-              </div>
-            ))}
+          <div className="mt-10 grid gap-3 sm:grid-cols-4">
+            {SKILL_DASHBOARDS.map((skill) => {
+              const Icon = skill.icon;
+              const isActive = selectedSkill.id === skill.id;
+
+              return (
+                <button
+                  key={skill.id}
+                  type="button"
+                  onClick={() => setSelectedSkillId(skill.id)}
+                  className={cn(
+                    "button-3d flex min-h-24 flex-col justify-between border border-border bg-card p-4 text-left",
+                    "transition-all duration-200 hover:-translate-y-1 hover:border-primary hover:bg-accent hover:text-accent-foreground",
+                    "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background",
+                    isActive &&
+                      "border-primary text-accent-foreground shadow-[0_0_0_2px_var(--primary),12px_12px_0_rgba(217,104,70,0.22)]"
+                  )}
+                  aria-pressed={isActive}
+                >
+                  <Icon className="h-6 w-6 text-primary" aria-hidden="true" />
+                  <span className="text-sm font-semibold text-foreground">
+                    {skill.shortLabel}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        <div className="relative hidden border-y border-r border-border bg-secondary sm:block">
+        <div className="side-block-3d relative hidden border-y border-r border-border bg-secondary sm:block">
           <div className="absolute inset-x-0 top-0 h-1/3 border-b border-border bg-accent" />
           <div className="absolute inset-x-0 top-1/3 h-1/3 border-b border-border bg-card" />
           <div className="absolute bottom-8 left-1/2 h-28 w-px -translate-x-1/2 bg-primary" />
-          <p className="absolute bottom-5 left-1/2 -translate-x-1/2 rotate-90 whitespace-nowrap text-xs font-semibold uppercase text-muted-foreground">
-            Studio systems
-          </p>
         </div>
       </div>
     </div>
@@ -326,7 +405,7 @@ export default function Hero() {
       aria-labelledby="hero-heading"
     >
       <div className="pointer-events-none absolute inset-0 shoji-grid opacity-45" />
-      <div className="pointer-events-none absolute left-0 top-28 h-3 w-1/2 bg-primary sm:w-1/3" />
+      <div className="pointer-events-none absolute inset-x-0 top-28 h-3 bg-primary" />
       <div className="pointer-events-none absolute right-0 top-56 h-px w-2/3 bg-border" />
       <div className="container-wide relative">
         <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(380px,1fr)] lg:gap-16">
