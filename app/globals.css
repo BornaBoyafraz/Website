@@ -3,84 +3,84 @@
 @tailwind utilities;
 
 :root {
-  --card: #ffffff;
-  --ring: #f59e0b;
-  --input: #e5e7eb;
-  --muted: #f9fafb;
-  --accent: #fffbeb;
-  --border: #e5e7eb;
+  --card: #fffaf1;
+  --ring: #b7412e;
+  --input: #d8d2c5;
+  --muted: #edf1ea;
+  --accent: #e5ecdf;
+  --border: #d8d2c5;
   --radius: 0.375rem;
-  --chart-1: #f59e0b;
-  --chart-2: #d97706;
-  --chart-3: #b45309;
-  --chart-4: #92400e;
-  --chart-5: #78350f;
-  --popover: #ffffff;
-  --primary: #f59e0b;
-  --sidebar: #f9fafb;
+  --chart-1: #b7412e;
+  --chart-2: #315243;
+  --chart-3: #1f3f5b;
+  --chart-4: #c78f4d;
+  --chart-5: #7d3f2f;
+  --popover: #fffaf1;
+  --primary: #b7412e;
+  --sidebar: #f4efe5;
   --spacing: 0.25rem;
   --font-mono: JetBrains Mono, monospace;
   --font-sans: Inter, sans-serif;
-  --secondary: #f3f4f6;
-  --background: #ffffff;
+  --secondary: #ece3d5;
+  --background: #f6f0e6;
   --font-serif: Source Serif 4, serif;
-  --foreground: #262626;
+  --foreground: #201c17;
   --destructive: #ef4444;
   --shadow-blur: 8px;
   --shadow-color: hsl(0 0% 0%);
-  --sidebar-ring: #f59e0b;
+  --sidebar-ring: #b7412e;
   --shadow-spread: -1px;
   --letter-spacing: 0em;
   --shadow-opacity: 0.1;
-  --sidebar-accent: #fffbeb;
-  --sidebar-border: #e5e7eb;
-  --card-foreground: #262626;
+  --sidebar-accent: #e5ecdf;
+  --sidebar-border: #d8d2c5;
+  --card-foreground: #201c17;
   --shadow-offset-x: 0px;
   --shadow-offset-y: 4px;
-  --sidebar-primary: #f59e0b;
-  --muted-foreground: #6b7280;
-  --accent-foreground: #92400e;
-  --popover-foreground: #262626;
-  --primary-foreground: #000000;
-  --sidebar-foreground: #262626;
-  --secondary-foreground: #4b5563;
+  --sidebar-primary: #b7412e;
+  --muted-foreground: #6b6258;
+  --accent-foreground: #263f34;
+  --popover-foreground: #201c17;
+  --primary-foreground: #fffaf1;
+  --sidebar-foreground: #201c17;
+  --secondary-foreground: #51473b;
   --destructive-foreground: #ffffff;
-  --sidebar-accent-foreground: #92400e;
+  --sidebar-accent-foreground: #263f34;
   --sidebar-primary-foreground: #ffffff;
 }
 
 .dark {
-  --card: #262626;
-  --ring: #f59e0b;
-  --input: #404040;
-  --muted: #262626;
-  --accent: #92400e;
-  --border: #404040;
-  --chart-1: #fbbf24;
-  --chart-2: #d97706;
-  --chart-3: #92400e;
-  --chart-4: #b45309;
-  --chart-5: #92400e;
-  --popover: #262626;
-  --primary: #f59e0b;
-  --sidebar: #0f0f0f;
-  --secondary: #262626;
-  --background: #171717;
-  --foreground: #e5e5e5;
+  --card: #17191a;
+  --ring: #d96846;
+  --input: #34332f;
+  --muted: #1e2420;
+  --accent: #20362f;
+  --border: #38352f;
+  --chart-1: #d96846;
+  --chart-2: #8fb08e;
+  --chart-3: #82a8cc;
+  --chart-4: #d2a25c;
+  --chart-5: #b76a58;
+  --popover: #17191a;
+  --primary: #d96846;
+  --sidebar: #0f1112;
+  --secondary: #24231f;
+  --background: #101314;
+  --foreground: #f2eadf;
   --destructive: #ef4444;
-  --sidebar-ring: #f59e0b;
-  --sidebar-accent: #92400e;
-  --sidebar-border: #404040;
-  --card-foreground: #e5e5e5;
-  --sidebar-primary: #f59e0b;
-  --muted-foreground: #a3a3a3;
-  --accent-foreground: #fde68a;
-  --popover-foreground: #e5e5e5;
-  --primary-foreground: #000000;
-  --sidebar-foreground: #e5e5e5;
-  --secondary-foreground: #e5e5e5;
+  --sidebar-ring: #d96846;
+  --sidebar-accent: #20362f;
+  --sidebar-border: #38352f;
+  --card-foreground: #f2eadf;
+  --sidebar-primary: #d96846;
+  --muted-foreground: #b7afa4;
+  --accent-foreground: #d8eadc;
+  --popover-foreground: #f2eadf;
+  --primary-foreground: #17120f;
+  --sidebar-foreground: #f2eadf;
+  --secondary-foreground: #e2d8cb;
   --destructive-foreground: #ffffff;
-  --sidebar-accent-foreground: #fde68a;
+  --sidebar-accent-foreground: #d8eadc;
   --sidebar-primary-foreground: #ffffff;
 }
 
@@ -90,10 +90,81 @@ html {
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background:
+    linear-gradient(90deg, rgba(32, 28, 23, 0.045) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(32, 28, 23, 0.035) 1px, transparent 1px),
+    linear-gradient(135deg, var(--background) 0%, #eef2eb 44%, #f2e5d4 100%);
+  background-size: 88px 88px, 88px 88px, auto;
   font-family: var(--font-sans);
   font-feature-settings: "rlig" 1, "calt" 1;
   letter-spacing: var(--letter-spacing);
+}
+
+.dark body {
+  background:
+    linear-gradient(90deg, rgba(242, 234, 223, 0.05) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(242, 234, 223, 0.035) 1px, transparent 1px),
+    linear-gradient(135deg, var(--background) 0%, #121b20 46%, #211813 100%);
+  background-size: 88px 88px, 88px 88px, auto;
+}
+
+.shoji-grid {
+  background-image:
+    linear-gradient(90deg, rgba(32, 28, 23, 0.09) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(32, 28, 23, 0.075) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+.dark .shoji-grid {
+  background-image:
+    linear-gradient(90deg, rgba(242, 234, 223, 0.07) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(242, 234, 223, 0.055) 1px, transparent 1px);
+}
+
+.washi-panel {
+  background:
+    linear-gradient(135deg, rgba(255, 250, 241, 0.96), rgba(237, 241, 234, 0.82)),
+    repeating-linear-gradient(
+      115deg,
+      rgba(32, 28, 23, 0.03) 0,
+      rgba(32, 28, 23, 0.03) 1px,
+      transparent 1px,
+      transparent 9px
+    );
+}
+
+.dark .washi-panel {
+  background:
+    linear-gradient(135deg, rgba(23, 25, 26, 0.96), rgba(30, 36, 32, 0.86)),
+    repeating-linear-gradient(
+      115deg,
+      rgba(242, 234, 223, 0.025) 0,
+      rgba(242, 234, 223, 0.025) 1px,
+      transparent 1px,
+      transparent 9px
+    );
+}
+
+.joinery-shadow {
+  box-shadow:
+    12px 12px 0 rgba(49, 82, 67, 0.16),
+    0 22px 55px rgba(32, 28, 23, 0.13);
+}
+
+.dark .joinery-shadow {
+  box-shadow:
+    12px 12px 0 rgba(217, 104, 70, 0.12),
+    0 22px 55px rgba(0, 0, 0, 0.35);
+}
+
+.timber-rule {
+  background:
+    linear-gradient(90deg, transparent 0 8%, var(--primary) 8% 20%, transparent 20% 26%, #315243 26% 100%);
+}
+
+.dark .timber-rule {
+  background:
+    linear-gradient(90deg, transparent 0 8%, var(--primary) 8% 20%, transparent 20% 26%, #8fb08e 26% 100%);
 }
 
 @keyframes hero-profile-coin-spin {

@@ -15,13 +15,15 @@ export default function About() {
   return (
     <section
       id="about"
-      className="section-padding bg-background"
+      className="section-padding relative bg-transparent"
       aria-labelledby="about-heading"
     >
-      <div className="container-narrow">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-border" />
+      <div className="container-narrow relative">
+        <div className="mb-8 h-1 w-28 timber-rule" />
         <motion.h2
           id="about-heading"
-          className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground mb-8"
+          className="mb-8 font-serif text-3xl font-semibold tracking-normal text-foreground sm:text-4xl"
           initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           whileInView={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -31,8 +33,8 @@ export default function About() {
         </motion.h2>
         <motion.div
           className={cn(
-            "text-muted-foreground text-base sm:text-lg",
-            "leading-relaxed space-y-6"
+            "border-l-4 border-primary pl-6 text-base text-muted-foreground sm:text-lg",
+            "space-y-6 leading-relaxed"
           )}
           initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           whileInView={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}

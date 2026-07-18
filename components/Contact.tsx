@@ -15,13 +15,15 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="section-padding bg-transparent"
+      className="section-padding relative bg-transparent"
       aria-labelledby="contact-heading"
     >
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-border" />
       <div className="mx-auto max-w-3xl px-4 text-center">
+        <div className="mx-auto mb-6 h-1 w-32 timber-rule" />
         <h2
           id="contact-heading"
-          className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground"
+          className="font-serif text-3xl font-semibold tracking-normal text-foreground sm:text-4xl"
         >
           Stay in touch with me
         </h2>
@@ -46,7 +48,7 @@ export default function Contact() {
               href={href}
               target={href.startsWith("mailto") ? undefined : "_blank"}
               rel={href.startsWith("mailto") ? undefined : "noopener noreferrer"}
-              className="rounded-lg border border-border bg-secondary px-4 py-2 text-sm sm:text-base font-medium text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
+              className="border border-border bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background sm:text-base"
             >
               {label}
             </a>

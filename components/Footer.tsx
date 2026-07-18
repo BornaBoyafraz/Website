@@ -22,10 +22,10 @@ export default function Footer() {
 
   return (
     <footer
-      className="py-8 px-4 sm:px-6 lg:px-8 border-t border-border bg-muted"
+      className="border-t border-border bg-muted px-4 py-8 sm:px-6 lg:px-8"
       role="contentinfo"
     >
-      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
         <p className="text-muted-foreground text-sm">
           © {year} Borna B. Afraz
         </p>
@@ -38,8 +38,8 @@ export default function Footer() {
                 ? {}
                 : { target: "_blank", rel: "noopener noreferrer" })}
               className={cn(
-                "p-2.5 rounded-lg text-muted-foreground",
-                "hover:text-accent-foreground hover:bg-accent transition-transform duration-200 hover:scale-110",
+                "p-2.5 text-muted-foreground",
+                "transition-colors hover:bg-accent hover:text-accent-foreground",
                 "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
               )}
               aria-label={label}

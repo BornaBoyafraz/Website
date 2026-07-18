@@ -273,11 +273,11 @@ export default function Projects({
         <div className="container-wide">
           <h2
             id="projects-heading"
-            className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground mb-8"
+            className="mb-8 font-serif text-3xl font-semibold tracking-normal text-foreground sm:text-4xl"
           >
             Projects
           </h2>
-          <Card className="border-border/20 bg-background/20 p-12 text-center shadow-none md:backdrop-blur-sm">
+          <Card className="washi-panel border-border p-12 text-center shadow-none">
             <p className="text-muted-foreground mb-6">{error}</p>
             <Button
               onClick={retry}
@@ -298,29 +298,35 @@ export default function Projects({
   return (
     <section
       id="projects"
-      className="section-padding bg-transparent"
+      className="section-padding relative bg-transparent"
       aria-labelledby="projects-heading"
     >
-      <div className="container-wide">
+      <div className="pointer-events-none absolute inset-x-0 top-10 h-px bg-border" />
+      <div className="container-wide relative">
         <motion.div
-          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10"
+          className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"
           initial={
             shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
           }
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2
-            id="projects-heading"
-            className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground"
-          >
-            Projects
-          </h2>
+          <div>
+            <p className="mb-2 text-xs font-semibold uppercase text-muted-foreground">
+              Project archive
+            </p>
+            <h2
+              id="projects-heading"
+              className="font-serif text-3xl font-semibold tracking-normal text-foreground sm:text-4xl"
+            >
+              Projects
+            </h2>
+          </div>
           {error && (
             <button
               onClick={retry}
               disabled={loading}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-1.5"
+              className="flex items-center gap-1.5 border border-border bg-card px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
             >
               <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
               Retry fetch
@@ -329,7 +335,7 @@ export default function Projects({
         </motion.div>
 
         <motion.div
-          className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between mb-10"
+          className="washi-panel mb-14 flex flex-col gap-4 border border-border p-3 shadow-[10px_10px_0_rgba(49,82,67,0.12)] lg:flex-row lg:items-center lg:justify-between dark:shadow-[10px_10px_0_rgba(217,104,70,0.10)]"
           initial={
             shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
           }
@@ -338,7 +344,7 @@ export default function Projects({
           transition={{ delay: 0.05 }}
         >
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="flex flex-wrap items-center gap-1 rounded-2xl border border-border/20 bg-background/20 p-1 md:backdrop-blur-sm">
+            <div className="flex flex-wrap items-center gap-1 border border-border bg-background p-1">
               {FILTER_OPTIONS.map((option) => {
                 const isActive = categoryFilter === option;
                 return (
@@ -347,7 +353,7 @@ export default function Projects({
                     type="button"
                     onClick={() => setCategoryFilter(option)}
                     className={cn(
-                      "relative px-4 py-2.5 rounded-xl text-sm font-medium transition-colors",
+                      "relative px-4 py-2.5 text-sm font-medium transition-colors",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                       isActive
                         ? "text-foreground"
@@ -358,7 +364,7 @@ export default function Projects({
                     {isActive && (
                       <motion.span
                         layoutId="project-category-pill"
-                        className="absolute inset-0 rounded-xl border border-primary bg-[linear-gradient(90deg,rgba(245,158,11,0.22),rgba(245,158,11,0.08))] shadow-sm"
+                        className="absolute inset-0 border border-primary bg-accent shadow-sm"
                         transition={{ type: "spring", stiffness: 380, damping: 30 }}
                       />
                     )}
@@ -373,9 +379,9 @@ export default function Projects({
                 type="button"
                 onClick={() => setIsSortMenuOpen((prev) => !prev)}
                 className={cn(
-                  "inline-flex h-11 items-center gap-2 rounded-2xl border px-4 shadow-sm dark:shadow-black/20 md:backdrop-blur-md",
+                  "inline-flex h-11 items-center gap-2 border px-4 shadow-sm dark:shadow-black/20 md:backdrop-blur-md",
                   "text-sm transition-colors text-secondary-foreground hover:text-foreground",
-                  "border-border/20 bg-background/20 shadow-none md:backdrop-blur-sm",
+                  "border-border bg-background shadow-none md:backdrop-blur-sm",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 )}
                 aria-haspopup="menu"
@@ -412,7 +418,7 @@ export default function Projects({
                         : { opacity: 0, y: 4 }
                     }
                     transition={{ duration: 0.16, ease: "easeOut" }}
-                    className="absolute left-0 z-20 mt-2 w-40 rounded-xl border border-border/20 bg-background/80 p-1 shadow-sm md:shadow-lg md:shadow-black/10 md:backdrop-blur-md dark:md:shadow-black/30"
+                    className="absolute left-0 z-20 mt-2 w-40 border border-border bg-card p-1 shadow-sm md:shadow-lg md:shadow-black/10 md:backdrop-blur-md dark:md:shadow-black/30"
                   >
                     {SORT_OPTIONS.map((option) => {
                       const isActive = sortOrder === option.value;
@@ -428,7 +434,7 @@ export default function Projects({
                             setIsSortMenuOpen(false);
                           }}
                           className={cn(
-                            "flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors",
+                            "flex w-full items-center justify-between px-3 py-2 text-sm transition-colors",
                             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                             isActive
                               ? "bg-accent text-accent-foreground"
@@ -460,14 +466,14 @@ export default function Projects({
               placeholder="Search projects..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="h-11 rounded-lg border-border bg-card pl-10 pr-4 text-foreground placeholder:text-muted-foreground transition-colors hover:border-primary/50 focus:border-primary focus:ring-2 focus:ring-primary"
+              className="h-11 border-border bg-card pl-10 pr-4 text-foreground placeholder:text-muted-foreground transition-colors hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary"
               aria-label="Search projects"
             />
           </div>
         </motion.div>
 
         {filteredAndSorted.length > 0 ? (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
             {filteredAndSorted.map((project, i) => (
               <ProjectCard
                 key={project.id ?? project.html_url}

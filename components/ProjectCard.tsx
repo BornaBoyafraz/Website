@@ -141,10 +141,16 @@ export function ProjectCard({
               ]
             : []),
         ];
+  const offsetClass =
+    index % 3 === 1
+      ? "lg:translate-y-8"
+      : index % 3 === 2
+        ? "lg:-translate-y-2"
+        : "";
 
   return (
     <motion.article
-      className="h-full"
+      className={cn("h-full", offsetClass)}
       initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
@@ -154,22 +160,24 @@ export function ProjectCard({
         ease: [0.22, 1, 0.36, 1],
       }}
     >
-      <GlowingShadow className="h-full rounded-lg">
-        <Card className="h-full flex flex-col overflow-hidden transition-shadow md:hover:shadow-lg dark:md:hover:shadow-neutral-900/50">
-          <div className="relative w-full h-48 overflow-hidden">
+      <GlowingShadow className="h-full">
+        <Card className="washi-panel group relative flex h-full flex-col overflow-hidden border-border transition-transform md:hover:-translate-y-1">
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-1.5 bg-primary" />
+          <div className="relative mx-4 mt-4 h-48 overflow-hidden border border-border bg-muted">
+            <div className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(135deg,rgba(32,28,23,0.12),transparent_34%,rgba(183,65,46,0.10))] opacity-80" />
             <Image
               src={project.thumbnail ?? getProjectImage(project.name)}
               alt={project.name}
               fill
               sizes="(max-width: 768px) 100vw, 33vw"
-              className="object-cover scale-[1.02]"
+              className="object-cover scale-[1.02] transition-transform duration-500 group-hover:scale-[1.06]"
               priority={false}
             />
           </div>
-          <div className="p-6 flex flex-col flex-1 min-h-0">
-            <div className="mb-3 flex flex-col gap-3">
+          <div className="flex min-h-0 flex-1 flex-col p-6 pl-7">
+            <div className="mb-4 flex flex-col gap-3">
               <div className="min-w-0">
-                <h3 className="text-lg font-semibold text-foreground leading-tight">
+                <h3 className="font-serif text-xl font-semibold leading-tight text-foreground">
                   {project.name}
                 </h3>
                 {projectDateLabel && (
@@ -183,7 +191,7 @@ export function ProjectCard({
                   <span
                     key={category}
                     className={cn(
-                      "inline-flex max-w-full items-center rounded-full border px-2.5 py-1 text-xs font-semibold leading-tight",
+                      "inline-flex max-w-full items-center border px-2.5 py-1 text-xs font-semibold leading-tight",
                       getCategoryBadgeClass(category)
                     )}
                   >
@@ -212,7 +220,7 @@ export function ProjectCard({
                 <button
                   type="button"
                   onClick={() => setExpanded((prev) => !prev)}
-                  className="mt-1 text-sm font-medium text-accent-foreground hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background rounded-sm"
+                  className="mt-1 text-sm font-medium text-accent-foreground hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
                   aria-expanded={expanded}
                   aria-controls={descriptionId}
                 >
@@ -235,11 +243,11 @@ export function ProjectCard({
                     target="_blank"
                     rel="noopener noreferrer"
                     className={cn(
-                      "inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium",
+                      "inline-flex items-center gap-2 border px-4 py-2 text-sm font-medium",
                       "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background",
                       isPrimary
-                        ? "bg-primary text-primary-foreground transition-colors hover:brightness-95"
-                        : "border border-border bg-secondary text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                        ? "border-primary bg-primary text-primary-foreground transition-colors hover:brightness-95"
+                        : "border-border bg-secondary text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                     )}
                   >
                     <Icon size={16} />
