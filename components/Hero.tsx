@@ -263,14 +263,14 @@ function HeroArchitecturePanel({ reduceMotion }: { reduceMotion: boolean }) {
     SKILL_DASHBOARDS[0];
 
   return (
-    <div className="washi-panel architectural-tilt joinery-shadow-strong relative min-h-[540px] w-full max-w-full overflow-hidden border border-border sm:min-h-[590px] lg:min-h-[620px]">
+    <div className="washi-panel architectural-tilt joinery-shadow-strong relative min-h-[510px] w-full max-w-full overflow-hidden border border-border sm:min-h-[560px] lg:min-h-[585px]">
       <div className="pointer-events-none absolute inset-0 shoji-grid opacity-55" />
       <div className="absolute left-0 top-0 h-4 w-full bg-[#315243] dark:bg-[#8fb08e]" />
       <div className="absolute left-0 top-4 h-2 w-2/5 bg-primary" />
       <div className="absolute bottom-0 right-0 h-20 w-2 bg-primary" />
       <div className="absolute bottom-0 right-2 h-2 w-1/2 bg-[#315243] dark:bg-[#8fb08e]" />
 
-      <div className="relative grid min-h-[540px] grid-cols-1 gap-0 p-4 sm:min-h-[590px] sm:grid-cols-[minmax(0,1fr)_96px] sm:p-8 lg:min-h-[620px] xl:grid-cols-[minmax(0,1fr)_120px]">
+      <div className="relative grid min-h-[510px] grid-cols-1 gap-0 p-4 sm:min-h-[560px] sm:grid-cols-[minmax(0,1fr)_96px] sm:p-8 lg:min-h-[585px] xl:grid-cols-[minmax(0,1fr)_120px]">
         <div className="panel-face-3d relative border border-border bg-background p-5 sm:p-7">
           <div className="absolute -left-3 top-10 h-24 w-3 bg-primary" />
           <div className="absolute -right-5 bottom-12 h-32 w-5 bg-secondary" />

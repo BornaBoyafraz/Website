@@ -85,10 +85,20 @@
 }
 
 html {
+  background: #101314;
+  min-height: 100%;
+  overscroll-behavior-y: none;
   scroll-behavior: smooth;
 }
 
+html.dark {
+  background: var(--background);
+  color-scheme: dark;
+}
+
 body {
+  min-height: 100%;
+  overscroll-behavior-y: none;
   color: var(--foreground);
   background:
     linear-gradient(90deg, rgba(32, 28, 23, 0.045) 1px, transparent 1px),
