@@ -14,6 +14,7 @@ import {
   type Category,
 } from "@/lib/projectCategory";
 import { MANUAL_PROJECTS, type ManualProject } from "@/lib/manualProjects";
+import { WORKING_ON_PROJECTS } from "@/lib/workingOn";
 
 type SortOrder = "newest" | "oldest";
 
@@ -41,6 +42,10 @@ const FIXED_PROJECT_DATES: Record<string, FixedProjectDates> = {
 function normalizeProjectName(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
+
+const WORKING_ON_PROJECT_NAMES = new Set(
+  WORKING_ON_PROJECTS.map((project) => normalizeProjectName(project.title))
+);
 
 function getFixedProjectDates(projectName: string): FixedProjectDates | null {
   return FIXED_PROJECT_DATES[normalizeProjectName(projectName)] ?? null;
@@ -127,15 +132,22 @@ export default function Projects({
   const sortDropdownRef = useRef<HTMLDivElement>(null);
 
   const projects = useMemo(() => {
-    const githubReposMapped = githubProjects.map((project) => {
-      const fixedDates = getFixedProjectDates(project.name);
-      return {
-        ...project,
-        startDate: fixedDates?.startDate,
-        endDate: fixedDates?.endDate,
-        date: fixedDates ? fixedDates.endDate ?? fixedDates.startDate : undefined,
-      };
-    });
+    const githubReposMapped = githubProjects
+      .filter(
+        (project) =>
+          !WORKING_ON_PROJECT_NAMES.has(normalizeProjectName(project.name))
+      )
+      .map((project) => {
+        const fixedDates = getFixedProjectDates(project.name);
+        return {
+          ...project,
+          startDate: fixedDates?.startDate,
+          endDate: fixedDates?.endDate,
+          date: fixedDates
+            ? fixedDates.endDate ?? fixedDates.startDate
+            : undefined,
+        };
+      });
 
     const projectsByName = new Map<string, ProjectData>(
       githubReposMapped.map((project) => [
