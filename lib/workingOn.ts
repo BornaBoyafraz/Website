@@ -11,6 +11,21 @@ export type WorkingOnProject = {
 
 export const WORKING_ON_PROJECTS: WorkingOnProject[] = [
   {
+    id: "antigen",
+    title: "Antigen",
+    description:
+      "An ML classifier that detects prompt-injection attacks in LLM and agent inputs, benchmarked against real-world adversarial data from Gray Swan Arena.",
+    categories: ["Project"],
+    links: [
+      {
+        label: "Source Code",
+        href: "https://github.com/BornaBoyafraz/Antigen",
+        kind: "source",
+        variant: "primary",
+      },
+    ],
+  },
+  {
     id: "drake",
     title: "Drake",
     description:
