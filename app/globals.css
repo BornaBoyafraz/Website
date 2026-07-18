@@ -87,8 +87,9 @@
 html {
   background: #101314;
   min-height: 100%;
-  overscroll-behavior-y: none;
+  overscroll-behavior-y: contain;
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 html.dark {
@@ -98,7 +99,8 @@ html.dark {
 
 body {
   min-height: 100%;
-  overscroll-behavior-y: none;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
   color: var(--foreground);
   background:
     linear-gradient(90deg, rgba(32, 28, 23, 0.045) 1px, transparent 1px),
