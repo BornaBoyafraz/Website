@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, type CSSProperties } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import {
@@ -117,10 +117,6 @@ const latestProject: HeroProjectSpotlight = {
       variant: "primary",
     },
   ],
-};
-
-const coinSpinStyle: CSSProperties = {
-  animation: "hero-profile-coin-spin 900ms cubic-bezier(0.22, 1, 0.36, 1) both",
 };
 
 const socialLinks = [
@@ -261,69 +257,33 @@ function HeroArchitecturePanel({ reduceMotion }: { reduceMotion: boolean }) {
   const selectedSkill =
     SKILL_DASHBOARDS.find((skill) => skill.id === selectedSkillId) ??
     SKILL_DASHBOARDS[0];
+  const SelectedSkillIcon = selectedSkill.icon;
 
   return (
-    <div className="washi-panel architectural-tilt joinery-shadow-strong relative min-h-[510px] w-full max-w-full overflow-hidden border border-border sm:min-h-[560px] lg:min-h-[585px]">
-      <div className="pointer-events-none absolute inset-0 shoji-grid opacity-55" />
-      <div className="absolute left-0 top-0 h-4 w-full bg-[#315243] dark:bg-[#8fb08e]" />
-      <div className="absolute left-0 top-4 h-2 w-2/5 bg-primary" />
-      <div className="absolute bottom-0 right-0 h-20 w-2 bg-primary" />
-      <div className="absolute bottom-0 right-2 h-2 w-1/2 bg-[#315243] dark:bg-[#8fb08e]" />
+    <div className="hero-console relative w-full overflow-hidden border border-border bg-card">
+      <div className="pointer-events-none absolute inset-0 shoji-grid opacity-25" />
+      <div className="relative flex items-center justify-between border-b border-border bg-background/70 px-5 py-4 sm:px-6">
+        <div className="flex items-center gap-3">
+          <span className="h-2 w-2 bg-primary shadow-[0_0_14px_rgba(217,104,70,0.7)]" />
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground sm:text-[11px]">
+            Capability profile
+          </p>
+        </div>
+        <p className="hidden font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground sm:block">
+          Select a discipline
+        </p>
+      </div>
 
-      <div className="relative grid min-h-[510px] grid-cols-1 gap-0 p-4 sm:min-h-[560px] sm:grid-cols-[minmax(0,1fr)_96px] sm:p-8 lg:min-h-[585px] xl:grid-cols-[minmax(0,1fr)_120px]">
-        <div className="panel-face-3d relative border border-border bg-background p-5 sm:p-7">
-          <div className="absolute -left-3 top-10 h-24 w-3 bg-primary" />
-          <div className="absolute -right-5 bottom-12 h-32 w-5 bg-secondary" />
-          <div className="mb-8 flex items-center justify-between gap-4 border-b border-border pb-4">
-            <div>
-              <p className="text-xs font-semibold uppercase text-muted-foreground">
-                Skill matrix
-              </p>
-              <h2 className="mt-1 font-serif text-3xl font-semibold text-foreground">
-                {selectedSkill.label}
-              </h2>
-            </div>
-            <GitBranch className="h-8 w-8 text-primary" aria-hidden="true" />
-          </div>
-
-          <div className="grid gap-4">
-            {selectedSkill.bars.map(({ label, value }, index) => (
-              <motion.div
-                key={label}
-                className="grid grid-cols-[minmax(0,1fr)_64px] items-center gap-4"
-                initial={
-                  reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: 18 }
-                }
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 + index * 0.08 }}
-              >
-                <div className="h-14 border border-border bg-card p-2 shadow-[inset_8px_8px_16px_rgba(0,0,0,0.22)]">
-                  <div className="mb-1 flex items-center justify-between gap-3">
-                    <span className="truncate text-[11px] font-semibold uppercase text-muted-foreground">
-                      {label}
-                    </span>
-                  </div>
-                  <div className="h-5 bg-secondary shadow-[inset_0_2px_8px_rgba(0,0,0,0.32)]">
-                    <motion.div
-                      key={`${selectedSkill.id}-${label}`}
-                      className="h-full bg-primary shadow-[6px_0_16px_rgba(217,104,70,0.42)]"
-                      initial={{ width: reduceMotion ? `${value}%` : "18%" }}
-                      animate={{ width: `${value}%` }}
-                      transition={{
-                        duration: reduceMotion ? 0 : 0.45,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                    />
-                  </div>
-                </div>
-                <span className="font-mono text-sm text-muted-foreground">
-                  {value}%
-                </span>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <div className="relative grid min-h-[470px] grid-cols-1 md:grid-cols-[220px_minmax(0,1fr)]">
+        <div
+          className="border-b border-border bg-background/55 p-3 md:border-b-0 md:border-r md:p-4"
+          role="group"
+          aria-label="Technical disciplines"
+        >
+          <p className="px-3 pb-3 pt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            Core disciplines
+          </p>
+          <div className="grid grid-cols-2 gap-2 md:grid-cols-1">
             {SKILL_DASHBOARDS.map((skill) => {
               const Icon = skill.icon;
               const isActive = selectedSkill.id === skill.id;
@@ -332,38 +292,106 @@ function HeroArchitecturePanel({ reduceMotion }: { reduceMotion: boolean }) {
                 <button
                   key={skill.id}
                   type="button"
+                  aria-pressed={isActive}
                   onClick={() => setSelectedSkillId(skill.id)}
                   className={cn(
-                    "group/skill button-3d flex min-h-[6.75rem] items-start gap-3 border border-border bg-card p-4 text-left",
-                    "transition-all duration-200 hover:-translate-y-1 hover:border-primary hover:bg-accent hover:text-accent-foreground",
-                    "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background",
-                    isActive &&
-                      "border-primary text-accent-foreground shadow-[0_0_0_2px_var(--primary),12px_12px_0_rgba(217,104,70,0.22)]"
+                    "group/skill relative flex min-h-[5.25rem] items-start gap-3 border px-3 py-3 text-left md:min-h-0 md:py-4",
+                    "transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring",
+                    isActive
+                      ? "border-primary/60 bg-primary/10"
+                      : "border-transparent hover:border-border hover:bg-muted/70"
                   )}
-                  aria-pressed={isActive}
                 >
-                  <Icon
-                    className="mt-0.5 h-6 w-6 shrink-0 text-primary"
-                    aria-hidden="true"
-                  />
+                  <span
+                    className={cn(
+                      "mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center border transition-colors",
+                      isActive
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border bg-card text-muted-foreground group-hover/skill:text-foreground"
+                    )}
+                  >
+                    <Icon className="h-4 w-4" aria-hidden="true" />
+                  </span>
                   <span className="min-w-0">
-                    <span className="block text-sm font-semibold leading-tight text-foreground">
+                    <span className="block text-xs font-semibold leading-snug text-foreground sm:text-sm">
                       {skill.buttonLabel}
                     </span>
-                    <span className="mt-1 block text-[11px] font-medium leading-snug text-muted-foreground transition-colors group-hover/skill:text-accent-foreground/80">
+                    <span className="mt-1 hidden text-[11px] leading-snug text-muted-foreground sm:block">
                       {skill.buttonDescription}
                     </span>
                   </span>
+                  {isActive && (
+                    <motion.span
+                      layoutId="active-skill-rail"
+                      className="absolute -right-px bottom-3 top-3 w-0.5 bg-primary md:-right-[17px]"
+                    />
+                  )}
                 </button>
               );
             })}
           </div>
         </div>
 
-        <div className="side-block-3d relative hidden border-y border-r border-border bg-secondary sm:block">
-          <div className="absolute inset-x-0 top-0 h-1/3 border-b border-border bg-accent" />
-          <div className="absolute inset-x-0 top-1/3 h-1/3 border-b border-border bg-card" />
-          <div className="absolute bottom-8 left-1/2 h-28 w-px -translate-x-1/2 bg-primary" />
+        <div
+          aria-live="polite"
+          className="flex min-w-0 flex-col p-5 sm:p-7 lg:p-8"
+        >
+          <div className="mb-8 flex items-start justify-between gap-5 border-b border-border pb-6">
+            <div>
+              <p className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
+                Current focus
+              </p>
+              <h2 className="font-serif text-3xl font-semibold leading-tight text-foreground sm:text-4xl">
+                {selectedSkill.label}
+              </h2>
+              <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
+                {selectedSkill.buttonDescription} through practical, production-minded work.
+              </p>
+            </div>
+            <span className="hidden h-12 w-12 shrink-0 items-center justify-center border border-primary/40 bg-primary/10 text-primary sm:inline-flex">
+              <SelectedSkillIcon className="h-6 w-6" aria-hidden="true" />
+            </span>
+          </div>
+
+          <div className="grid flex-1 content-start gap-6">
+            {selectedSkill.bars.map(({ label, value }, index) => (
+              <div key={label}>
+                <div className="mb-2.5 flex items-end justify-between gap-4">
+                  <span className="text-xs font-semibold uppercase tracking-[0.08em] text-secondary-foreground">
+                    {label}
+                  </span>
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {value}<span className="text-primary">/100</span>
+                  </span>
+                </div>
+                <div
+                  className="relative h-2 overflow-hidden bg-secondary"
+                  role="progressbar"
+                  aria-label={label}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={value}
+                >
+                  <div className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(90deg,transparent_0,transparent_calc(25%_-_1px),rgba(242,234,223,0.12)_calc(25%_-_1px),rgba(242,234,223,0.12)_25%)]" />
+                  <motion.div
+                    className="h-full bg-primary"
+                    initial={{ width: reduceMotion ? `${value}%` : "0%" }}
+                    animate={{ width: `${value}%` }}
+                    transition={{
+                      duration: reduceMotion ? 0 : 0.55,
+                      delay: reduceMotion ? 0 : index * 0.08,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 flex items-center justify-between border-t border-border pt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+            <span>Applied expertise</span>
+            <span>{String(SKILL_DASHBOARDS.findIndex((skill) => skill.id === selectedSkill.id) + 1).padStart(2, "0")} / {String(SKILL_DASHBOARDS.length).padStart(2, "0")}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -373,9 +401,6 @@ function HeroArchitecturePanel({ reduceMotion }: { reduceMotion: boolean }) {
 export default function Hero() {
   const [imgError, setImgError] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
-  const [isMobile, setIsMobile] = useState<boolean | null>(null);
-  const [isSpinning, setIsSpinning] = useState(false);
-  const [spinVersion, setSpinVersion] = useState(0);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -389,165 +414,88 @@ export default function Hero() {
     return () => mq.removeEventListener("change", handleChange);
   }, []);
 
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
-    setIsMobile(mq.matches);
-
-    const handleChange = (event: MediaQueryListEvent) => {
-      setIsMobile(event.matches);
-    };
-
-    mq.addEventListener("change", handleChange);
-    return () => mq.removeEventListener("change", handleChange);
-  }, []);
-
-  const handleProfileClick = () => {
-    if (reduceMotion || isMobile !== false) return;
-    setSpinVersion((current) => current + 1);
-    setIsSpinning(true);
-  };
-
-  const shouldPauseContinuousMotion = reduceMotion || isMobile !== false;
+  const shouldPauseContinuousMotion = reduceMotion;
 
   return (
     <section
       id="home"
       className={cn(
-        "relative min-h-screen overflow-hidden px-4 pb-16 pt-32 sm:px-6 sm:pt-36 lg:px-8 lg:pt-40"
+        "relative min-h-screen overflow-hidden px-4 pb-16 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pt-36"
       )}
       aria-labelledby="hero-heading"
     >
       <div className="pointer-events-none absolute inset-0 shoji-grid opacity-45" />
       <div className="pointer-events-none absolute right-0 top-56 h-px w-2/3 bg-border" />
       <div className="container-wide relative">
-        <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,0.76fr)_minmax(540px,1.24fr)] lg:gap-10 xl:grid-cols-[minmax(0,0.7fr)_minmax(640px,1.3fr)] xl:gap-14">
-          <motion.div
-            className="relative min-w-0 text-center lg:text-left"
-            initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          >
+        <div className="grid min-w-0 items-start gap-12 lg:grid-cols-[minmax(0,0.82fr)_minmax(560px,1.18fr)] lg:gap-12 xl:grid-cols-[minmax(0,0.78fr)_minmax(620px,1.22fr)] xl:gap-16">
+          <div className="relative min-w-0 text-center lg:text-left">
             <div className="pointer-events-none absolute -left-8 top-0 hidden h-full w-px bg-border lg:block" />
-            <p
-              className="mb-3 text-[11px] uppercase text-muted-foreground"
-              style={{ fontFamily: "'Space Grotesk', ui-sans-serif, system-ui" }}
-            >
-              Portfolio studio
-            </p>
-            <div className="mb-5 flex min-w-0 flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
-              <button
-                type="button"
-                onClick={handleProfileClick}
-                className={cn(
-                  "group relative shrink-0 rounded-full",
-                  "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
+            <div className="mb-7 inline-flex items-center gap-3 border border-border bg-card/80 p-2 pr-4 shadow-[6px_6px_0_rgba(49,82,67,0.13)]">
+              <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-primary bg-secondary ring-2 ring-primary/20">
+                {imgError ? (
+                  <span className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-neutral-600 dark:text-neutral-300">
+                    BA
+                  </span>
+                ) : (
+                  <Image
+                    src={bornaPortrait}
+                    alt="Borna B. Afraz"
+                    fill
+                    quality={85}
+                    className="object-cover object-[center_32%]"
+                    sizes="56px"
+                    priority
+                    onError={() => setImgError(true)}
+                  />
                 )}
-                aria-label="Spin the Borna profile coin"
-              >
-                <div className="relative h-[5.25rem] w-[5.25rem] [perspective:1200px] sm:h-[5.5rem] sm:w-[5.5rem]">
-                  <span className="absolute -inset-2 border border-primary" />
-                  <div
-                    key={spinVersion}
-                    className="relative h-full w-full rounded-full [transform-style:preserve-3d] [will-change:transform]"
-                    style={
-                      isSpinning && !shouldPauseContinuousMotion
-                        ? coinSpinStyle
-                        : undefined
-                    }
-                    onAnimationEnd={() => setIsSpinning(false)}
-                  >
-                    <div
-                      className={cn(
-                        "absolute inset-0 overflow-hidden rounded-full border border-white/10 bg-secondary shadow-[0_0_28px_rgba(183,65,46,0.22)] ring-2 ring-primary",
-                        "[backface-visibility:hidden]"
-                      )}
-                    >
-                      {imgError ? (
-                        <span className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-neutral-600 dark:text-neutral-300">
-                          BA
-                        </span>
-                      ) : (
-                        <Image
-                          src={bornaPortrait}
-                          alt="Borna B. Afraz"
-                          fill
-                          quality={85}
-                          className="object-cover object-[center_32%]"
-                          sizes="(min-width: 640px) 88px, 84px"
-                          priority
-                          onError={() => setImgError(true)}
-                        />
-                      )}
-                    </div>
-                    <div
-                      className={cn(
-                        "absolute inset-0 rounded-full border border-white/10 shadow-[0_0_28px_rgba(183,65,46,0.22)] ring-2 ring-primary",
-                        "bg-[radial-gradient(circle_at_30%_28%,rgba(255,250,214,0.98)_0%,rgba(217,104,70,0.96)_34%,rgba(126,63,47,0.94)_72%,rgba(54,32,24,0.98)_100%)]",
-                        "[backface-visibility:hidden] [transform:rotateY(180deg)]"
-                      )}
-                    >
-                      <span className="absolute inset-[12%] rounded-full border border-white/35" />
-                      <span className="absolute inset-[22%] rounded-full border border-amber-950/15" />
-                      <span className="absolute inset-0 rounded-full bg-[linear-gradient(140deg,rgba(255,255,255,0.62),transparent_34%,rgba(120,53,15,0.18)_74%,rgba(255,255,255,0.16)_100%)]" />
-                      <span className="absolute left-[16%] top-[14%] h-[22%] w-[42%] rounded-full bg-white/30 blur-[7px]" />
-                      <span className="absolute inset-0 rounded-full shadow-[inset_0_2px_10px_rgba(255,255,255,0.35),inset_0_-10px_14px_rgba(120,53,15,0.3)]" />
-                      <span className="absolute inset-0 flex items-center justify-center text-xl font-black tracking-normal text-amber-950 drop-shadow-[0_1px_1px_rgba(255,255,255,0.45)] sm:text-2xl">
-                        BA
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </button>
-              <h1
-                id="hero-heading"
-                className="max-w-full font-serif text-4xl font-semibold leading-[1.05] tracking-normal text-foreground sm:text-5xl lg:text-6xl xl:text-[4.3rem]"
-              >
-                Borna B. Afraz
-              </h1>
+              </div>
+              <div className="text-left">
+                <p className="text-sm font-semibold text-foreground">Borna B. Afraz</p>
+                <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                  Software developer
+                </p>
+              </div>
             </div>
-            <div className="mb-5 h-1 w-32 timber-rule mx-auto lg:mx-0" />
-            <p className="mb-5 text-xl font-medium tracking-normal text-secondary-foreground sm:text-2xl">
-              Python Developer | Machine Learning • Game Development • Algorithms
+            <p className="mb-3 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-primary">
+              Python · Machine learning · Game development
             </p>
-            <p className="mx-auto mb-9 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg lg:mx-0">
-              Software developer building practical software with Python.
-              Machine learning experiments, games, and tools that solve real
-              problems. VibeCoding meets algorithmic thinking.
-            </p>
-            <motion.div
-              className="flex flex-col justify-center gap-4 sm:flex-row lg:justify-start"
-              initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
+            <h1
+              id="hero-heading"
+              className="max-w-2xl font-serif text-5xl font-semibold leading-[0.98] tracking-[-0.035em] text-foreground sm:text-6xl lg:text-[4rem] xl:text-[4.6rem]"
             >
+              Practical software,
+              <span className="mt-1 block text-muted-foreground">built with curiosity.</span>
+            </h1>
+            <p className="mx-auto mb-8 mt-6 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg lg:mx-0">
+              I turn machine-learning experiments, game mechanics, and
+              algorithmic ideas into focused software people can actually use.
+            </p>
+            <div className="flex flex-col justify-center gap-4 sm:flex-row lg:justify-start">
               <a
                 href="#projects"
                 className={cn(
-                  "inline-flex w-full items-center justify-center border border-primary px-8 py-3.5 text-lg font-medium sm:w-auto",
+                  "inline-flex w-full items-center justify-center whitespace-nowrap border border-primary px-5 py-3.5 text-base font-semibold sm:w-auto",
                   "bg-primary text-primary-foreground shadow-[6px_6px_0_rgba(49,82,67,0.18)]",
                   "transition-colors hover:brightness-95",
                   "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
                 )}
               >
-                View Projects
+                Explore my work
                 <ChevronDown className="ml-2 h-5 w-5" />
               </a>
               <a
                 href="#contact"
                 className={cn(
-                  "inline-flex w-full items-center justify-center border border-border bg-secondary px-8 py-3.5 text-lg font-medium text-secondary-foreground sm:w-auto",
+                  "inline-flex w-full items-center justify-center whitespace-nowrap border border-border bg-secondary px-5 py-3.5 text-base font-semibold text-secondary-foreground sm:w-auto",
                   "transition-colors hover:bg-accent hover:text-accent-foreground",
                   "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
                 )}
               >
-                Contact Me
+                Start a conversation
               </a>
-            </motion.div>
-            <motion.div
+            </div>
+            <div
               className="mt-6 flex items-center justify-center gap-2 lg:justify-start"
-              initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.38 }}
               aria-label="Social links"
             >
               {socialLinks.map(({ href, icon: Icon, label }) => (
@@ -563,32 +511,22 @@ export default function Hero() {
                   <Icon className="h-5 w-5" />
                 </a>
               ))}
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
-          <motion.div
-            className="relative min-w-0 w-full"
-            initial={
-              reduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.96 }
-            }
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div className="pointer-events-none absolute -left-5 -top-5 h-20 w-20 border-l-8 border-t-8 border-primary" />
-            <div className="pointer-events-none absolute -bottom-5 right-6 h-24 w-2 bg-[#315243] dark:bg-[#8fb08e]" />
+          <div className="relative min-w-0 w-full">
+            <div className="pointer-events-none absolute -left-3 -top-3 h-16 w-16 border-l-2 border-t-2 border-primary" />
+            <div className="pointer-events-none absolute -bottom-3 -right-3 h-24 w-24 border-b-2 border-r-2 border-[#315243] dark:border-[#8fb08e]" />
             <HeroArchitecturePanel reduceMotion={shouldPauseContinuousMotion} />
-          </motion.div>
+          </div>
         </div>
 
-        <motion.div
+        <div
           className="mx-auto mt-14 grid w-full max-w-2xl gap-6 lg:ml-0 lg:mt-16"
-          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
           aria-label="Featured project updates"
         >
           <HeroProjectCard project={latestProject} />
-        </motion.div>
+        </div>
       </div>
 
       <motion.a
