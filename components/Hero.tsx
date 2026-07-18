@@ -318,7 +318,7 @@ function HeroArchitecturePanel({ reduceMotion }: { reduceMotion: boolean }) {
             ))}
           </div>
 
-          <div className="mt-10 grid gap-3 sm:grid-cols-4">
+          <div className="mt-10 grid grid-cols-2 gap-3 xl:grid-cols-4">
             {SKILL_DASHBOARDS.map((skill) => {
               const Icon = skill.icon;
               const isActive = selectedSkill.id === skill.id;
@@ -338,7 +338,7 @@ function HeroArchitecturePanel({ reduceMotion }: { reduceMotion: boolean }) {
                   aria-pressed={isActive}
                 >
                   <Icon className="h-6 w-6 text-primary" aria-hidden="true" />
-                  <span className="text-sm font-semibold text-foreground">
+                  <span className="block max-w-full break-words text-xs font-semibold leading-tight text-foreground sm:text-sm">
                     {skill.shortLabel}
                   </span>
                 </button>
@@ -405,7 +405,6 @@ export default function Hero() {
       aria-labelledby="hero-heading"
     >
       <div className="pointer-events-none absolute inset-0 shoji-grid opacity-45" />
-      <div className="pointer-events-none absolute inset-x-0 top-28 h-3 bg-primary" />
       <div className="pointer-events-none absolute right-0 top-56 h-px w-2/3 bg-border" />
       <div className="container-wide relative">
         <div className="grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(380px,1fr)] lg:gap-16">
