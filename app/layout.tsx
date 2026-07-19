@@ -57,10 +57,12 @@ export default function RootLayout({
         <ThemeProvider>
           <AlwaysMovingBackground />
           <ParticleNetworkBackground />
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-          <BackToTop />
+          <div className="relative z-10">
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+            <BackToTop />
+          </div>
         </ThemeProvider>
       </body>
     </html>

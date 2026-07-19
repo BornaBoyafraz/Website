@@ -520,7 +520,7 @@ export default function ParticleNetworkBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 -z-10 pointer-events-none"
+      className="pointer-events-none fixed inset-0 z-0"
       style={{ width: "100%", height: "100%" }}
       aria-hidden
     />
