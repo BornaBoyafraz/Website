@@ -4,9 +4,6 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, RefreshCw, ChevronDown } from "lucide-react";
 import { ProjectCard, type ProjectData } from "./ProjectCard";
-import { Input } from "./ui/Input";
-import { Button } from "./ui/Button";
-import { Card } from "./ui/card";
 import { cn } from "@/lib/cn";
 import {
   FILTER_CATEGORIES,
@@ -131,11 +128,9 @@ export default function Projects({
   const [categoryFilter, setCategoryFilter] = useState<ProjectFilter>("All");
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
-  const [hoveredProjectKey, setHoveredProjectKey] = useState<string | null>(
-    null
-  );
   const [reduceMotion, setReduceMotion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [hoveredKey, setHoveredKey] = useState<string | null>(null);
   const sortDropdownRef = useRef<HTMLDivElement>(null);
 
   const projects = useMemo(() => {
@@ -183,19 +178,17 @@ export default function Projects({
 
   useEffect(() => {
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const mobileQuery = window.matchMedia("(max-width: 767px)");
-    const syncMotion = () => {
+    const mobileQuery = window.matchMedia("(max-width: 1023px)");
+    const sync = () => {
       setReduceMotion(motionQuery.matches);
       setIsMobile(mobileQuery.matches);
     };
-
-    syncMotion();
-    motionQuery.addEventListener("change", syncMotion);
-    mobileQuery.addEventListener("change", syncMotion);
-
+    sync();
+    motionQuery.addEventListener("change", sync);
+    mobileQuery.addEventListener("change", sync);
     return () => {
-      motionQuery.removeEventListener("change", syncMotion);
-      mobileQuery.removeEventListener("change", syncMotion);
+      motionQuery.removeEventListener("change", sync);
+      mobileQuery.removeEventListener("change", sync);
     };
   }, []);
 
@@ -208,11 +201,8 @@ export default function Projects({
       if (sortDropdownRef.current?.contains(target)) return;
       setIsSortMenuOpen(false);
     };
-
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsSortMenuOpen(false);
-      }
+      if (event.key === "Escape") setIsSortMenuOpen(false);
     };
 
     document.addEventListener("mousedown", onPointerDown);
@@ -244,21 +234,12 @@ export default function Projects({
       .sort((a, b) => {
         const aDate = getSortDate(a);
         const bDate = getSortDate(b);
-
         if (aDate === null && bDate === null) return 0;
         if (aDate === null) return 1;
         if (bDate === null) return -1;
-
         return sortOrder === "newest" ? bDate - aDate : aDate - bDate;
       });
   }, [projects, search, categoryFilter, sortOrder]);
-
-  const shouldReduceMotion = reduceMotion || isMobile;
-  const hoveredProjectIndex = hoveredProjectKey
-    ? filteredAndSorted.findIndex(
-        (project) => getProjectRenderKey(project) === hoveredProjectKey
-      )
-    : -1;
 
   const retry = async () => {
     setError(null);
@@ -279,29 +260,28 @@ export default function Projects({
     return (
       <section
         id="projects"
-        className="section-padding bg-transparent"
+        className="section-padding"
         aria-labelledby="projects-heading"
       >
         <div className="container-wide">
+          <p className="mono-label mb-3"><span className="mint">//</span> 02 — Selected Work</p>
           <h2
             id="projects-heading"
-            className="mb-8 font-serif text-3xl font-semibold tracking-normal text-foreground sm:text-4xl"
+            className="mb-10 text-4xl font-semibold lowercase tracking-tight text-foreground sm:text-5xl"
           >
             Projects
           </h2>
-          <Card className="washi-panel border-border p-12 text-center shadow-none">
-            <p className="text-muted-foreground mb-6">{error}</p>
-            <Button
+          <div className="rounded-xl border border-border bg-surface p-14 text-center">
+            <p className="mb-8 text-muted-foreground">{error}</p>
+            <button
               onClick={retry}
               disabled={loading}
-              variant="primary"
-              size="lg"
-              className="inline-flex items-center gap-2"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-mint px-5 py-3 font-mono text-xs lowercase text-[#05231d] transition-colors hover:bg-mint-bright focus:outline-none focus-visible:ring-1 focus-visible:ring-mint disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <RefreshCw size={20} className={loading ? "animate-spin" : ""} />
+              <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
               Retry
-            </Button>
-          </Card>
+            </button>
+          </div>
         </div>
       </section>
     );
@@ -310,53 +290,43 @@ export default function Projects({
   return (
     <section
       id="projects"
-      className="section-padding relative bg-transparent"
+      className="section-padding relative"
       aria-labelledby="projects-heading"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-10 h-px bg-border" />
       <div className="container-wide relative">
+        {/* header */}
         <motion.div
-          className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"
-          initial={
-            shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
-          }
+          className="mb-10 flex flex-col gap-6 border-b border-border pb-7 sm:flex-row sm:items-end sm:justify-between"
+          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
           <div>
-            <p className="mb-2 text-xs font-semibold uppercase text-muted-foreground">
-              Project archive
-            </p>
+            <p className="mono-label mb-3"><span className="mint">//</span> 02 — Selected Work</p>
             <h2
               id="projects-heading"
-              className="font-serif text-3xl font-semibold tracking-normal text-foreground sm:text-4xl"
+              className="text-4xl font-semibold lowercase leading-none tracking-tight text-foreground sm:text-5xl lg:text-6xl"
             >
               Projects
             </h2>
           </div>
-          {error && (
-            <button
-              onClick={retry}
-              disabled={loading}
-              className="flex items-center gap-1.5 border border-border bg-card px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
-            >
-              <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
-              Retry fetch
-            </button>
-          )}
+          <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
+            A living archive of builds, pitches and research — pulled from GitHub
+            and curated by hand.
+          </p>
         </motion.div>
 
+        {/* toolbar */}
         <motion.div
-          className="washi-panel mb-14 flex flex-col gap-4 border border-border p-3 shadow-[10px_10px_0_rgba(49,82,67,0.12)] lg:flex-row lg:items-center lg:justify-between dark:shadow-[10px_10px_0_rgba(217,104,70,0.10)]"
-          initial={
-            shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
-          }
+          className="mb-10 flex flex-col gap-5 rounded-xl border border-border bg-surface p-3 lg:flex-row lg:items-center lg:justify-between"
+          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.05 }}
         >
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="flex flex-wrap items-center gap-1 border border-border bg-background p-1">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+            {/* filters */}
+            <div className="flex flex-wrap items-center gap-1">
               {FILTER_OPTIONS.map((option) => {
                 const isActive = categoryFilter === option;
                 return (
@@ -365,49 +335,45 @@ export default function Projects({
                     type="button"
                     onClick={() => setCategoryFilter(option)}
                     className={cn(
-                      "relative px-4 py-2.5 text-sm font-medium transition-colors",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                      "relative cursor-pointer rounded-lg px-3 py-2 font-mono text-xs lowercase transition-colors",
+                      "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-mint",
                       isActive
-                        ? "text-foreground"
-                        : "text-muted-foreground hover:text-foreground"
+                        ? "bg-accent text-mint"
+                        : "text-muted-foreground hover:bg-surface-2 hover:text-foreground"
                     )}
                     aria-pressed={isActive}
                   >
+                    {option}
                     {isActive && (
                       <motion.span
-                        layoutId="project-category-pill"
-                        className="absolute inset-0 border border-primary bg-accent shadow-sm"
+                        layoutId="project-filter-underline"
+                        className="absolute inset-x-3 bottom-0 h-px bg-mint"
                         transition={{ type: "spring", stiffness: 380, damping: 30 }}
                       />
                     )}
-                    <span className="relative z-10">{option}</span>
                   </button>
                 );
               })}
             </div>
 
+            {/* sort */}
             <div ref={sortDropdownRef} className="relative">
               <button
                 type="button"
                 onClick={() => setIsSortMenuOpen((prev) => !prev)}
-                className={cn(
-                  "inline-flex h-11 items-center gap-2 border px-4 shadow-sm dark:shadow-black/20 md:backdrop-blur-md",
-                  "text-sm transition-colors text-secondary-foreground hover:text-foreground",
-                  "border-border bg-background shadow-none md:backdrop-blur-sm",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                )}
+                className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-surface-2 px-4 py-2.5 font-mono text-xs lowercase text-muted-foreground transition-colors hover:border-mint hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-mint"
                 aria-haspopup="menu"
                 aria-expanded={isSortMenuOpen}
                 aria-controls="projects-sort-menu"
               >
-                <span className="font-medium">Sort</span>
-                <span className="text-xs text-muted-foreground">
+                <span>Sort</span>
+                <span className="text-mint">
                   {sortOrder === "newest" ? "Newest" : "Oldest"}
                 </span>
                 <ChevronDown
-                  size={16}
+                  size={14}
                   className={cn(
-                    "text-muted-foreground transition-transform duration-200",
+                    "transition-transform duration-200",
                     isSortMenuOpen && "rotate-180"
                   )}
                 />
@@ -419,22 +385,17 @@ export default function Projects({
                     id="projects-sort-menu"
                     role="menu"
                     initial={
-                      shouldReduceMotion
-                        ? { opacity: 1, y: 0 }
-                        : { opacity: 0, y: 4 }
+                      reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 4 }
                     }
                     animate={{ opacity: 1, y: 0 }}
                     exit={
-                      shouldReduceMotion
-                        ? { opacity: 1, y: 0 }
-                        : { opacity: 0, y: 4 }
+                      reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 4 }
                     }
                     transition={{ duration: 0.16, ease: "easeOut" }}
-                    className="absolute left-0 z-20 mt-2 w-40 border border-border bg-card p-1 shadow-sm md:shadow-lg md:shadow-black/10 md:backdrop-blur-md dark:md:shadow-black/30"
+                    className="absolute left-0 z-20 mt-2 w-44 rounded-lg border border-border bg-elevated p-1 shadow-2xl"
                   >
                     {SORT_OPTIONS.map((option) => {
                       const isActive = sortOrder === option.value;
-
                       return (
                         <button
                           key={option.value}
@@ -446,19 +407,15 @@ export default function Projects({
                             setIsSortMenuOpen(false);
                           }}
                           className={cn(
-                            "flex w-full items-center justify-between px-3 py-2 text-sm transition-colors",
-                            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                            "flex w-full cursor-pointer items-center justify-between rounded-md px-3 py-2.5 font-mono text-xs lowercase transition-colors",
+                            "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-mint",
                             isActive
-                              ? "bg-accent text-accent-foreground"
-                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                              ? "bg-accent text-mint"
+                              : "text-muted-foreground hover:text-foreground"
                           )}
                         >
                           {option.label}
-                          {isActive && (
-                            <span className="text-xs text-accent-foreground">
-                              Selected
-                            </span>
-                          )}
+                          {isActive && <span className="text-mint">•</span>}
                         </button>
                       );
                     })}
@@ -468,51 +425,58 @@ export default function Projects({
             </div>
           </div>
 
-          <div className="relative w-full lg:max-w-sm">
+          {/* search */}
+          <div className="relative w-full lg:max-w-xs">
             <Search
               className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
               aria-hidden="true"
             />
-            <Input
+            <input
               type="search"
-              placeholder="Search projects..."
+              placeholder="Search projects"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="h-11 border-border bg-card pl-10 pr-4 text-foreground placeholder:text-muted-foreground transition-colors hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary"
+              className="w-full rounded-lg border border-border bg-surface-2 py-2.5 pl-10 pr-3 font-mono text-xs text-foreground outline-none transition-colors placeholder:text-faint focus:border-mint focus:ring-1 focus:ring-mint"
               aria-label="Search projects"
             />
           </div>
         </motion.div>
 
         {filteredAndSorted.length > 0 ? (
-          <div className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:[perspective:1600px]">
             {filteredAndSorted.map((project, i) => {
-              const projectKey = getProjectRenderKey(project);
-              const isHovered = hoveredProjectKey === projectKey;
-              const pushDirection =
-                hoveredProjectIndex === -1 || isHovered
+              const key = getProjectRenderKey(project);
+              const hoveredIndex = hoveredKey
+                ? filteredAndSorted.findIndex(
+                    (p) => getProjectRenderKey(p) === hoveredKey
+                  )
+                : -1;
+              const isHovered = hoveredKey === key;
+              const pushDirection: "left" | "right" | "none" =
+                hoveredIndex === -1 || isHovered
                   ? "none"
-                  : i < hoveredProjectIndex
+                  : i < hoveredIndex
                     ? "left"
                     : "right";
-
               return (
                 <ProjectCard
-                  key={projectKey}
+                  key={key}
                   project={project}
                   index={i}
-                  reduceMotion={shouldReduceMotion}
+                  reduceMotion={reduceMotion || isMobile}
                   isHovered={isHovered}
-                  isAnyHovered={hoveredProjectKey !== null}
+                  isAnyHovered={hoveredKey !== null}
                   pushDirection={pushDirection}
-                  onHoverStart={() => setHoveredProjectKey(projectKey)}
-                  onHoverEnd={() => setHoveredProjectKey(null)}
+                  onHoverStart={() => setHoveredKey(key)}
+                  onHoverEnd={() =>
+                    setHoveredKey((current) => (current === key ? null : current))
+                  }
                 />
               );
             })}
           </div>
         ) : (
-          <p className="text-center text-muted-foreground py-16">
+          <p className="py-20 text-center text-muted-foreground">
             No projects match your filters.
           </p>
         )}

@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
-import AlwaysMovingBackground from "@/components/AlwaysMovingBackground";
-import ParticleNetworkBackground from "@/components/ParticleNetworkBackground";
 import "./globals.css";
 
 const SITE_URL = "https://bornaba.com";
-const SITE_TITLE = "Hi, I am Borna";
+const SITE_TITLE = "Borna B. Afraz — Software Developer";
 const SITE_DESCRIPTION =
   "Python Developer specializing in Machine Learning, Game Development, and Algorithms. Building practical software with a VibeCoding approach.";
 
@@ -52,11 +52,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${GeistSans.variable} ${GeistMono.variable} dark`}
+      suppressHydrationWarning
+    >
       <body className="antialiased">
         <ThemeProvider>
-          <AlwaysMovingBackground />
-          <ParticleNetworkBackground />
+          <div className="grain-overlay" aria-hidden="true" />
           <div className="relative z-10">
             <Navbar />
             <main>{children}</main>

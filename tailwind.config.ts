@@ -10,6 +10,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        mint: {
+          DEFAULT: "var(--mint)",
+          bright: "var(--mint-bright)",
+          dim: "var(--mint-dim)",
+        },
+        surface: "var(--surface)",
+        "surface-2": "var(--surface-2)",
+        elevated: "var(--elevated)",
+        faint: "var(--faint)",
         background: "var(--background)",
         foreground: "var(--foreground)",
         border: "var(--border)",
@@ -70,6 +79,7 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-sans)"],
         serif: ["var(--font-serif)"],
+        display: ["var(--font-display)"],
         mono: ["var(--font-mono)"],
       },
       spacing: {

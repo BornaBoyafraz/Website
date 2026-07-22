@@ -42,10 +42,10 @@ export default function BackToTop() {
           href="#home"
           onClick={scrollToTop}
           className={cn(
-            "fixed bottom-8 right-8 z-40 p-3 rounded-full",
-            "bg-primary text-primary-foreground",
-            "shadow-lg transition-colors hover:brightness-95",
-            "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
+            "fixed bottom-6 right-6 z-40 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full sm:bottom-8 sm:right-8",
+            "border border-border bg-surface text-mint backdrop-blur-md",
+            "transition-colors hover:border-mint hover:bg-mint hover:text-[#05231d]",
+            "focus:outline-none focus-visible:ring-1 focus-visible:ring-mint"
           )}
           initial={reduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}

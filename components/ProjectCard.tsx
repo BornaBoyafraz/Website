@@ -2,21 +2,20 @@
 
 import { useId, useState } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
-import { BookOpen, ExternalLink, Github, PlayCircle } from "lucide-react";
-import { Card } from "./ui/card";
-import { GlowingShadow } from "./ui/glowing-shadow";
+import {
+  ArrowUpRight,
+  BookOpen,
+  ExternalLink,
+  Github,
+  PlayCircle,
+} from "lucide-react";
 import { cn } from "@/lib/cn";
 import type { ProjectLink } from "@/lib/manualProjects";
 import LoomIcon from "@/components/icons/LoomIcon";
-import {
-  getCategoryBadgeClass,
-  getProjectCategories,
-  type Category,
-} from "@/lib/projectCategory";
-import { getProjectImage } from "@/lib/projectImages";
+import { ProjectCover } from "@/components/ProjectCover";
+import { getProjectCategories, type Category } from "@/lib/projectCategory";
 
-const DESCRIPTION_TOGGLE_CHAR_THRESHOLD = 140;
+const DESCRIPTION_TOGGLE_CHAR_THRESHOLD = 150;
 
 export interface ProjectData {
   id?: string;
@@ -49,11 +48,10 @@ interface ProjectCardProps {
 }
 
 function formatMonthYear(date: string): string {
-  const normalizedDate = /^\d{4}-\d{2}-\d{2}$/.test(date)
+  const normalized = /^\d{4}-\d{2}-\d{2}$/.test(date)
     ? `${date}T12:00:00`
     : date;
-
-  return new Date(normalizedDate).toLocaleDateString("en-US", {
+  return new Date(normalized).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
   });
@@ -63,7 +61,7 @@ function getProjectDateLabel(project: ProjectData): string | null {
   const startDate = project.startDate;
   if (!startDate) return null;
   if (project.endDate) {
-    return `${formatMonthYear(startDate)} – ${formatMonthYear(project.endDate)}`;
+    return `${formatMonthYear(startDate)} — ${formatMonthYear(project.endDate)}`;
   }
   return formatMonthYear(startDate);
 }
@@ -81,7 +79,6 @@ function isLoomLink(link: ProjectLink): boolean {
 
 function getProjectLinkIcon(link: ProjectLink) {
   if (isLoomLink(link)) return LoomIcon;
-
   switch (link.kind) {
     case "article":
       return BookOpen;
@@ -94,6 +91,9 @@ function getProjectLinkIcon(link: ProjectLink) {
       return ExternalLink;
   }
 }
+
+const chip =
+  "inline-flex items-center rounded-full border border-border bg-background px-2.5 py-1 font-mono text-[0.65rem] lowercase text-mint";
 
 export function ProjectCard({
   project,
@@ -120,6 +120,7 @@ export function ProjectCard({
       ? project.homepage
       : `https://${project.homepage}`
     : null;
+
   const projectLinks =
     project.links && project.links.length > 0
       ? project.links
@@ -151,20 +152,14 @@ export function ProjectCard({
               ]
             : []),
         ];
-  const offsetClass =
-    index % 3 === 1
-      ? "lg:translate-y-8"
-      : index % 3 === 2
-        ? "lg:-translate-y-2"
-        : "";
-  const shouldShiftCards = isAnyHovered && !isHovered && !reduceMotion;
+
+  const shouldShift = isAnyHovered && !isHovered && !reduceMotion;
 
   return (
     <motion.article
       className={cn(
-        "h-full [perspective:1400px]",
-        offsetClass,
-        isHovered ? "relative z-30" : "relative z-0"
+        "group relative h-full [perspective:1400px]",
+        isHovered ? "z-30" : "z-0"
       )}
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
@@ -174,135 +169,113 @@ export function ProjectCard({
           onHoverEnd?.();
         }
       }}
-      initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+      initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
+      viewport={{ once: true, margin: "-60px" }}
       transition={{
-        duration: 0.4,
-        delay: Math.min(index * 0.08, 0.32),
+        duration: 0.6,
+        delay: Math.min(index * 0.05, 0.3),
         ease: [0.22, 1, 0.36, 1],
       }}
     >
       <div
         className={cn(
-          "h-full transition-all duration-300 ease-out",
+          "flex h-full flex-col overflow-hidden rounded-xl border bg-surface transition-all duration-500 ease-out will-change-transform",
+          isHovered ? "border-mint" : "border-border",
           isHovered &&
             !reduceMotion &&
-            "lg:-translate-y-10 lg:scale-[1.1] lg:[transform:translateY(-2.5rem)_scale(1.1)_rotateX(4deg)_translateZ(80px)]",
-          shouldShiftCards &&
+            "lg:-translate-y-2 lg:scale-[1.07] lg:shadow-[0_28px_70px_-24px_rgba(0,0,0,0.85),0_0_0_1px_rgba(45,212,191,0.35),0_0_44px_-10px_rgba(45,212,191,0.35)]",
+          shouldShift &&
             pushDirection === "left" &&
-            "lg:-translate-x-14 lg:scale-[0.92] lg:opacity-45 lg:[transform:translateX(-3.5rem)_scale(0.92)_rotateY(7deg)]",
-          shouldShiftCards &&
+            "lg:-translate-x-6 lg:scale-[0.93] lg:opacity-45",
+          shouldShift &&
             pushDirection === "right" &&
-            "lg:translate-x-14 lg:scale-[0.92] lg:opacity-45 lg:[transform:translateX(3.5rem)_scale(0.92)_rotateY(-7deg)]"
+            "lg:translate-x-6 lg:scale-[0.93] lg:opacity-45"
         )}
       >
-        <GlowingShadow className="h-full">
-          <Card
-            className={cn(
-              "washi-panel group relative flex h-full flex-col overflow-hidden border-border transition-shadow duration-300 [transform-style:preserve-3d]",
-              isHovered
-                ? "shadow-[18px_18px_0_rgba(217,104,70,0.24),0_34px_110px_rgba(0,0,0,0.55)]"
-                : "shadow-[8px_8px_0_rgba(0,0,0,0.2)] md:hover:shadow-[12px_12px_0_rgba(217,104,70,0.14),0_22px_70px_rgba(0,0,0,0.34)]"
-            )}
-          >
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-1.5 bg-primary" />
-          <div className="relative mx-4 mt-4 h-48 overflow-hidden border border-border bg-muted">
-            <div className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(135deg,rgba(32,28,23,0.12),transparent_34%,rgba(183,65,46,0.10))] opacity-80" />
-            <Image
-              src={project.thumbnail ?? getProjectImage(project.name)}
-              alt={project.name}
-              fill
-              sizes="(max-width: 768px) 100vw, 33vw"
-              className="object-cover scale-[1.02] transition-transform duration-500 group-hover:scale-[1.06]"
-              priority={false}
+        {/* thumbnail — fully visible, 16:10 */}
+        <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-border bg-elevated">
+          <div className="cover-media absolute inset-0">
+            <ProjectCover
+              name={project.name}
+              categories={categories}
+              className="h-full w-full"
             />
           </div>
-          <div className="flex min-h-0 flex-1 flex-col p-6 pl-7">
-            <div className="mb-4 flex flex-col gap-3">
-              <div className="min-w-0">
-                <h3 className="font-serif text-xl font-semibold leading-tight text-foreground">
-                  {project.name}
-                </h3>
-                {projectDateLabel && (
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {projectDateLabel}
-                  </p>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {categories.map((category) => (
-                  <span
-                    key={category}
-                    className={cn(
-                      "inline-flex max-w-full items-center border px-2.5 py-1 text-xs font-semibold leading-tight",
-                      getCategoryBadgeClass(category)
-                    )}
-                  >
-                    {category}
-                  </span>
-                ))}
-              </div>
-            </div>
+          <span className="absolute right-3 top-3 rounded-md border border-border bg-background/80 px-2 py-0.5 font-mono text-[0.65rem] text-muted-foreground backdrop-blur-sm">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+        </div>
 
-            <div className="mb-4 flex-1">
-              <div className="relative">
-                <p
-                  id={descriptionId}
+        {/* caption */}
+        <div className="flex flex-1 flex-col p-5">
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            {categories.map((category) => (
+              <span key={category} className={chip}>
+                {category}
+              </span>
+            ))}
+            {projectDateLabel && (
+              <span className="ml-auto font-mono text-[0.65rem] lowercase text-faint">
+                {projectDateLabel}
+              </span>
+            )}
+          </div>
+
+          <h3 className="text-xl font-semibold leading-tight tracking-tight text-foreground transition-colors group-hover:text-mint">
+            {project.name}
+          </h3>
+
+          <div className="mb-5 mt-2 flex-1">
+            <p
+              id={descriptionId}
+              className={cn(
+                "text-sm leading-relaxed text-muted-foreground",
+                !expanded && canToggleDescription && "line-clamp-2"
+              )}
+            >
+              {description}
+            </p>
+            {canToggleDescription && (
+              <button
+                type="button"
+                onClick={() => setExpanded((prev) => !prev)}
+                className="mt-1.5 cursor-pointer font-mono text-[0.65rem] lowercase text-mint transition-opacity hover:opacity-70 focus:outline-none focus-visible:ring-1 focus-visible:ring-mint"
+                aria-expanded={expanded}
+                aria-controls={descriptionId}
+              >
+                {expanded ? "show less" : "read more"}
+              </button>
+            )}
+          </div>
+
+          <div className="mt-auto flex flex-wrap gap-2 border-t border-border pt-4">
+            {projectLinks.map((link, linkIndex) => {
+              const Icon = getProjectLinkIcon(link);
+              const isPrimary =
+                link.variant === "primary" || (!link.variant && linkIndex === 0);
+              return (
+                <a
+                  key={`${link.label}-${link.href}`}
+                  href={normalizeExternalUrl(link.href)}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={cn(
-                    "text-muted-foreground text-sm leading-relaxed overflow-hidden transition-all duration-300",
-                    !expanded && "line-clamp-3"
+                    "inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-2 font-mono text-[0.7rem] lowercase transition-colors",
+                    "focus:outline-none focus-visible:ring-1 focus-visible:ring-mint",
+                    isPrimary
+                      ? "border-mint bg-mint text-[#05231d] hover:bg-mint-bright"
+                      : "border-border bg-background text-foreground hover:border-mint hover:text-mint"
                   )}
                 >
-                  {description}
-                </p>
-                {!expanded && canToggleDescription && (
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-card to-transparent" />
-                )}
-              </div>
-              {canToggleDescription && (
-                <button
-                  type="button"
-                  onClick={() => setExpanded((prev) => !prev)}
-                  className="mt-1 text-sm font-medium text-accent-foreground hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
-                  aria-expanded={expanded}
-                  aria-controls={descriptionId}
-                >
-                  {expanded ? "Less" : "More"}
-                </button>
-              )}
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {projectLinks.map((link, linkIndex) => {
-                const Icon = getProjectLinkIcon(link);
-                const isPrimary =
-                  link.variant === "primary" ||
-                  (!link.variant && linkIndex === 0);
-
-                return (
-                  <a
-                    key={`${link.label}-${link.href}`}
-                    href={normalizeExternalUrl(link.href)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cn(
-                      "inline-flex items-center gap-2 border px-4 py-2 text-sm font-medium",
-                      "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background",
-                      isPrimary
-                        ? "border-primary bg-primary text-primary-foreground transition-colors hover:brightness-95"
-                        : "border-border bg-secondary text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-                    )}
-                  >
-                    <Icon size={16} />
-                    {link.label}
-                  </a>
-                );
-              })}
-            </div>
+                  <Icon size={13} />
+                  {link.label}
+                  {isPrimary && <ArrowUpRight size={12} />}
+                </a>
+              );
+            })}
           </div>
-          </Card>
-        </GlowingShadow>
+        </div>
       </div>
     </motion.article>
   );

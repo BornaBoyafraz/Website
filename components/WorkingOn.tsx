@@ -1,10 +1,12 @@
-import { Github } from "lucide-react";
+"use client";
 
-import { Card } from "@/components/ui/card";
-import { GlowingShadow } from "@/components/ui/glowing-shadow";
+import { motion } from "framer-motion";
+import { ArrowUpRight, Github } from "lucide-react";
 import { WORKING_ON_PROJECTS } from "@/lib/workingOn";
 import { cn } from "@/lib/cn";
-import { getCategoryBadgeClass } from "@/lib/projectCategory";
+
+const chip =
+  "inline-flex items-center rounded-full border border-border bg-accent px-2.5 py-1 font-mono text-xs lowercase text-mint";
 
 export default function WorkingOn() {
   if (WORKING_ON_PROJECTS.length === 0) return null;
@@ -12,82 +14,88 @@ export default function WorkingOn() {
   return (
     <section
       id="working-on"
-      className="section-padding relative bg-transparent"
+      className="section-padding relative"
       aria-labelledby="working-on-heading"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-border" />
       <div className="container-wide relative">
-        <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mb-10 flex flex-col gap-6 border-b border-border pb-7 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="mb-2 text-xs font-semibold uppercase text-muted-foreground">
-              Workshop shelf
-            </p>
-            <div className="h-1 w-28 timber-rule" />
+            <p className="mono-label mb-3"><span className="mint">//</span> On the bench</p>
+            <h2
+              id="working-on-heading"
+              className="text-4xl font-semibold lowercase leading-none tracking-tight text-foreground sm:text-5xl"
+            >
+              Working On
+            </h2>
           </div>
-          <h2
-            id="working-on-heading"
-            className="font-serif text-3xl font-semibold tracking-normal text-foreground sm:text-4xl"
-          >
-            Working On
-          </h2>
+          <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
+            Projects currently in motion — rough edges, active commits, real
+            experiments.
+          </p>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {WORKING_ON_PROJECTS.map((project, index) => (
-            <article
-              key={project.id}
-              className={cn("h-full", index % 2 === 1 && "lg:translate-y-8")}
-            >
-              <GlowingShadow className="h-full">
-                <Card className="washi-panel relative flex h-full flex-col overflow-hidden border-border p-6 transition-transform md:hover:-translate-y-1">
-                  <span className="pointer-events-none absolute left-0 top-0 h-full w-1.5 bg-primary" />
-                  <span className="pointer-events-none absolute right-5 top-5 h-12 w-12 border-r border-t border-border" />
-                  <div className="mb-4 flex flex-col gap-3 pl-2">
-                    <h3 className="font-serif text-xl font-semibold leading-tight text-foreground">
+        <ul className="grid gap-3">
+          {WORKING_ON_PROJECTS.map((project, index) => {
+            const primaryLink = project.links[0];
+            return (
+              <motion.li
+                key={project.id}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{
+                  duration: 0.6,
+                  delay: Math.min(index * 0.08, 0.24),
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="group overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:border-mint hover:bg-surface-2"
+              >
+                <a
+                  href={primaryLink?.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="grid cursor-pointer grid-cols-[auto_1fr] items-start gap-x-5 gap-y-4 p-6 transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-mint sm:grid-cols-[auto_minmax(0,0.9fr)_minmax(0,1.1fr)_auto] sm:items-center sm:gap-x-8 sm:p-7"
+                >
+                  <span className="font-mono text-xs text-faint">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+
+                  <div className="min-w-0">
+                    <h3 className="text-2xl font-semibold leading-tight tracking-tight text-foreground transition-colors group-hover:text-mint sm:text-3xl">
                       {project.title}
                     </h3>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="mt-3 flex flex-wrap gap-2">
                       {project.categories.map((category) => (
-                        <span
-                          key={category}
-                          className={cn(
-                            "inline-flex max-w-full items-center border px-2.5 py-1 text-xs font-semibold leading-tight",
-                            getCategoryBadgeClass(category)
-                          )}
-                        >
+                        <span key={category} className={chip}>
                           {category}
                         </span>
                       ))}
                     </div>
                   </div>
 
-                  <p className="mb-5 flex-1 pl-2 text-sm leading-relaxed text-muted-foreground">
+                  <p className="col-span-2 max-w-xl text-sm leading-relaxed text-muted-foreground sm:col-span-1">
                     {project.description}
                   </p>
 
-                  <div className="flex flex-wrap gap-2 pl-2">
-                    {project.links.map((link) => (
-                      <a
-                        key={`${link.label}-${link.href}`}
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={cn(
-                          "inline-flex items-center gap-2 border border-primary px-4 py-2 text-sm font-medium",
-                          "bg-primary text-primary-foreground transition-colors hover:brightness-95",
-                          "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
-                        )}
-                      >
-                        <Github size={16} />
-                        {link.label}
-                      </a>
-                    ))}
-                  </div>
-                </Card>
-              </GlowingShadow>
-            </article>
-          ))}
-        </div>
+                  {primaryLink && (
+                    <span
+                      className={cn(
+                        "col-span-2 inline-flex items-center gap-2 font-mono text-xs lowercase text-muted-foreground transition-colors group-hover:text-mint sm:col-span-1 sm:justify-self-end"
+                      )}
+                    >
+                      <Github size={14} />
+                      {primaryLink.label}
+                      <ArrowUpRight
+                        size={14}
+                        className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                      />
+                    </span>
+                  )}
+                </a>
+              </motion.li>
+            );
+          })}
+        </ul>
       </div>
     </section>
   );
