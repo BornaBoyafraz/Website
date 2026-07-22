@@ -20,7 +20,7 @@ export default function WorkingOn() {
       <div className="container-wide relative">
         <div className="mb-10 flex flex-col gap-6 border-b border-border pb-7 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="mono-label mb-3"><span className="mint">//</span> On the bench</p>
+            <p className="mono-label mb-3"><span className="mint">{"//"}</span> On the bench</p>
             <h2
               id="working-on-heading"
               className="text-4xl font-semibold lowercase leading-none tracking-tight text-foreground sm:text-5xl"

@@ -22,7 +22,7 @@ export default function Contact() {
 
       <div className="container-wide relative">
         <div className="mb-12 flex items-center gap-5">
-          <span className="mono-label"><span className="mint">//</span> 03 — Contact</span>
+          <span className="mono-label"><span className="mint">{"//"}</span> 03 — Contact</span>
           <span className="h-px flex-1 bg-border" />
           <span className="font-mono text-xs lowercase text-faint">
             Let&rsquo;s talk

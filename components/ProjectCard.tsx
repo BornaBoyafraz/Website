@@ -180,7 +180,7 @@ export function ProjectCard({
     >
       <div
         className={cn(
-          "flex h-full flex-col overflow-hidden rounded-xl border bg-surface transition-all duration-500 ease-out will-change-transform",
+          "relative flex min-h-[30rem] h-full flex-col overflow-hidden rounded-xl border bg-surface transition-all duration-500 ease-out will-change-transform",
           isHovered ? "border-mint" : "border-border",
           isHovered &&
             !reduceMotion &&
@@ -193,87 +193,94 @@ export function ProjectCard({
             "lg:translate-x-6 lg:scale-[0.93] lg:opacity-45"
         )}
       >
-        {/* thumbnail — fully visible, 16:10 */}
-        <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-border bg-elevated">
-          <div className="cover-media absolute inset-0">
-            <ProjectCover
-              name={project.name}
-              categories={categories}
-              className="h-full w-full"
-            />
-          </div>
-          <span className="absolute right-3 top-3 rounded-md border border-border bg-background/80 px-2 py-0.5 font-mono text-[0.65rem] text-muted-foreground backdrop-blur-sm">
-            {String(index + 1).padStart(2, "0")}
-          </span>
+        <div className="cover-media absolute inset-0">
+          <ProjectCover
+            name={project.name}
+            categories={categories}
+            className="h-full w-full"
+          />
         </div>
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(10,10,11,0.84)_0%,rgba(10,10,11,0.08)_34%,rgba(10,10,11,0.34)_58%,rgba(10,10,11,0.98)_100%)]" />
 
-        {/* caption */}
-        <div className="flex flex-1 flex-col p-5">
-          <div className="mb-3 flex flex-wrap items-center gap-2">
+        <div className="relative z-10 flex h-full flex-1 flex-col justify-between p-5 sm:p-6">
+          <div className="flex flex-wrap items-start gap-2">
             {categories.map((category) => (
               <span key={category} className={chip}>
                 {category}
               </span>
             ))}
-            {projectDateLabel && (
-              <span className="ml-auto font-mono text-[0.65rem] lowercase text-faint">
-                {projectDateLabel}
-              </span>
-            )}
+            <span className="ml-auto rounded-md border border-border bg-background px-2 py-0.5 font-mono text-[0.65rem] text-muted-foreground">
+              {String(index + 1).padStart(2, "0")}
+            </span>
           </div>
 
-          <h3 className="text-xl font-semibold leading-tight tracking-tight text-foreground transition-colors group-hover:text-mint">
-            {project.name}
-          </h3>
-
-          <div className="mb-5 mt-2 flex-1">
-            <p
-              id={descriptionId}
-              className={cn(
-                "text-sm leading-relaxed text-muted-foreground",
-                !expanded && canToggleDescription && "line-clamp-2"
-              )}
-            >
-              {description}
+          <div className="mt-28">
+            <p className="font-mono text-[0.68rem] lowercase tracking-wide text-mint">
+              {projectDateLabel ?? categories.join(" / ")}
             </p>
-            {canToggleDescription && (
-              <button
-                type="button"
-                onClick={() => setExpanded((prev) => !prev)}
-                className="mt-1.5 cursor-pointer font-mono text-[0.65rem] lowercase text-mint transition-opacity hover:opacity-70 focus:outline-none focus-visible:ring-1 focus-visible:ring-mint"
-                aria-expanded={expanded}
-                aria-controls={descriptionId}
-              >
-                {expanded ? "show less" : "read more"}
-              </button>
-            )}
-          </div>
+            <h3 className="mt-2 text-2xl font-semibold leading-tight tracking-tight text-foreground transition-colors group-hover:text-mint">
+              {project.name}
+            </h3>
 
-          <div className="mt-auto flex flex-wrap gap-2 border-t border-border pt-4">
-            {projectLinks.map((link, linkIndex) => {
-              const Icon = getProjectLinkIcon(link);
-              const isPrimary =
-                link.variant === "primary" || (!link.variant && linkIndex === 0);
-              return (
-                <a
-                  key={`${link.label}-${link.href}`}
-                  href={normalizeExternalUrl(link.href)}
-                  target="_blank"
-                  rel="noopener noreferrer"
+            <div
+              className="reveal-row"
+              style={{
+                gridTemplateRows: reduceMotion || expanded ? "1fr" : undefined,
+              }}
+            >
+              <div className="mt-4 min-h-0 overflow-hidden border-t border-border pt-4">
+                <p
+                  id={descriptionId}
                   className={cn(
-                    "inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-2 font-mono text-[0.7rem] lowercase transition-colors",
-                    "focus:outline-none focus-visible:ring-1 focus-visible:ring-mint",
-                    isPrimary
-                      ? "border-mint bg-mint text-[#05231d] hover:bg-mint-bright"
-                      : "border-border bg-background text-foreground hover:border-mint hover:text-mint"
+                    "text-sm leading-relaxed text-muted-foreground",
+                    !expanded && canToggleDescription && "line-clamp-2"
                   )}
                 >
-                  <Icon size={13} />
-                  {link.label}
-                  {isPrimary && <ArrowUpRight size={12} />}
-                </a>
-              );
-            })}
+                  {description}
+                </p>
+                {canToggleDescription && (
+                  <button
+                    type="button"
+                    onClick={() => setExpanded((prev) => !prev)}
+                    className="mt-1.5 cursor-pointer rounded-sm font-mono text-[0.65rem] lowercase text-mint transition-opacity hover:opacity-70 focus:outline-none focus-visible:ring-1 focus-visible:ring-mint"
+                    aria-expanded={expanded}
+                    aria-controls={descriptionId}
+                  >
+                    {expanded ? "show less" : "read more"}
+                  </button>
+                )}
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {projectLinks.map((link, linkIndex) => {
+                    const Icon = getProjectLinkIcon(link);
+                    const isPrimary =
+                      link.variant === "primary" ||
+                      (!link.variant && linkIndex === 0);
+                    return (
+                      <a
+                        key={`${link.label}-${link.href}`}
+                        href={normalizeExternalUrl(link.href)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cn(
+                          "inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-2 font-mono text-[0.7rem] lowercase transition-colors",
+                          "focus:outline-none focus-visible:ring-1 focus-visible:ring-mint",
+                          isPrimary
+                            ? "border-mint bg-mint text-[#05231d] hover:bg-mint-bright"
+                            : "border-border bg-background text-foreground hover:border-mint hover:text-mint"
+                        )}
+                      >
+                        <Icon size={13} aria-hidden="true" />
+                        {link.label}
+                        {isPrimary && (
+                          <ArrowUpRight size={12} aria-hidden="true" />
+                        )}
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

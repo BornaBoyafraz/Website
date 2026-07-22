@@ -178,7 +178,7 @@ function Capabilities({ reduceMotion }: { reduceMotion: boolean }) {
     <div className="relative border-t border-border pt-16">
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="mono-label"><span className="mint">//</span> capabilities</p>
+          <p className="mono-label"><span className="mint">{"//"}</span> capabilities</p>
           <h2 className="mt-3 text-3xl font-semibold lowercase tracking-tight text-foreground sm:text-4xl">
             A working range
           </h2>
@@ -254,7 +254,7 @@ function Capabilities({ reduceMotion }: { reduceMotion: boolean }) {
         <div aria-live="polite" className="dot-grid bg-surface-2 p-7 sm:p-10">
           <div className="mb-9 flex items-start justify-between gap-6 border-b border-border pb-6">
             <div>
-              <p className="mono-label mb-3"><span className="mint">//</span> current focus</p>
+              <p className="mono-label mb-3"><span className="mint">{"//"}</span> current focus</p>
               <h3 className="text-3xl font-semibold leading-none tracking-tight text-foreground sm:text-4xl">
                 {selected.label}
               </h3>
@@ -334,7 +334,7 @@ function LatestFeature() {
 
         <div className="order-1 lg:order-2">
           <div className="mb-5 flex items-center gap-4">
-            <span className="mono-label"><span className="mint">//</span> {latestProject.label}</span>
+            <span className="mono-label"><span className="mint">{"//"}</span> {latestProject.label}</span>
             <span className="h-px flex-1 bg-border" />
             {dateLabel && (
               <span className="font-mono text-xs text-muted-foreground">
@@ -418,7 +418,7 @@ export default function Hero() {
           className="mb-12 flex items-center justify-between border-b border-border pb-4"
         >
           <span className="mono-label">
-            <span className="mint">//</span> Portfolio — MMXXVI
+            <span className="mint">{"//"}</span> Portfolio — MMXXVI
           </span>
           <span className="hidden font-mono text-xs lowercase text-faint sm:block">
             Software · Python · ML
@@ -436,7 +436,7 @@ export default function Hero() {
               {...rise(0.05)}
               className="mono-label mb-5"
             >
-              <span className="mint">//</span> portfolio
+              <span className="mint">{"//"}</span> portfolio
             </motion.p>
 
             <motion.h1
@@ -532,7 +532,7 @@ export default function Hero() {
               </div>
               <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between border-t border-border bg-background p-4">
                 <p className="font-mono text-xs lowercase text-muted-foreground">
-                  <span className="text-mint">//</span> wireframe.obj
+                  <span className="text-mint">{"//"}</span> wireframe.obj
                 </p>
                 <span className="hidden items-center gap-2 font-mono text-xs lowercase text-muted-foreground sm:inline-flex">
                   <span className="h-1.5 w-1.5 rounded-full bg-mint" />

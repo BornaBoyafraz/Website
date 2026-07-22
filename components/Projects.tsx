@@ -264,7 +264,7 @@ export default function Projects({
         aria-labelledby="projects-heading"
       >
         <div className="container-wide">
-          <p className="mono-label mb-3"><span className="mint">//</span> 02 — Selected Work</p>
+          <p className="mono-label mb-3"><span className="mint">{"//"}</span> 02 — Selected Work</p>
           <h2
             id="projects-heading"
             className="mb-10 text-4xl font-semibold lowercase tracking-tight text-foreground sm:text-5xl"
@@ -302,7 +302,7 @@ export default function Projects({
           viewport={{ once: true }}
         >
           <div>
-            <p className="mono-label mb-3"><span className="mint">//</span> 02 — Selected Work</p>
+            <p className="mono-label mb-3"><span className="mint">{"//"}</span> 02 — Selected Work</p>
             <h2
               id="projects-heading"
               className="text-4xl font-semibold lowercase leading-none tracking-tight text-foreground sm:text-5xl lg:text-6xl"

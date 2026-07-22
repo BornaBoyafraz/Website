@@ -25,6 +25,7 @@ type Artwork = {
   lines: Line[];
   paths: string[];
   polylines: string[];
+  ticks: Line[];
 };
 
 function hashString(input: string): number {
@@ -85,6 +86,16 @@ function generateArtwork(
   const lines: Line[] = [];
   const paths: string[] = [];
   const polylines: string[] = [];
+  const ticks: Line[] = [
+    { x1: 20, y1: 20, x2: 42, y2: 20, opacity: 0.68, width: 1.25 },
+    { x1: 20, y1: 20, x2: 20, y2: 42, opacity: 0.68, width: 1.25 },
+    { x1: 598, y1: 20, x2: 620, y2: 20, opacity: 0.68, width: 1.25 },
+    { x1: 620, y1: 20, x2: 620, y2: 42, opacity: 0.68, width: 1.25 },
+    { x1: 20, y1: 380, x2: 42, y2: 380, opacity: 0.68, width: 1.25 },
+    { x1: 20, y1: 358, x2: 20, y2: 380, opacity: 0.68, width: 1.25 },
+    { x1: 598, y1: 380, x2: 620, y2: 380, opacity: 0.68, width: 1.25 },
+    { x1: 620, y1: 358, x2: 620, y2: 380, opacity: 0.68, width: 1.25 },
+  ];
 
   switch (category) {
     case "Project": {
@@ -213,7 +224,7 @@ function generateArtwork(
     }
   }
 
-  return { seed, circles, lines, paths, polylines };
+  return { seed, circles, lines, paths, polylines, ticks };
 }
 
 export function ProjectCover({
@@ -366,17 +377,18 @@ export function ProjectCover({
         </g>
       )}
 
-      <g
-        aria-hidden="true"
-        fill="none"
-        stroke={MINT}
-        strokeWidth="1.25"
-        opacity="0.68"
-      >
-        <path d="M 20 42 L 20 20 L 42 20" />
-        <path d="M 598 20 L 620 20 L 620 42" />
-        <path d="M 20 358 L 20 380 L 42 380" />
-        <path d="M 598 380 L 620 380 L 620 358" />
+      <g aria-hidden="true" stroke={MINT}>
+        {artwork.ticks.map((tick, index) => (
+          <line
+            key={`tick-${index}`}
+            x1={tick.x1}
+            y1={tick.y1}
+            x2={tick.x2}
+            y2={tick.y2}
+            strokeWidth={tick.width}
+            opacity={tick.opacity}
+          />
+        ))}
       </g>
     </svg>
   );
