@@ -7,6 +7,7 @@ import { ProjectCard, type ProjectData } from "./ProjectCard";
 import { cn } from "@/lib/cn";
 import {
   FILTER_CATEGORIES,
+  getCategoryAccent,
   getProjectCategories,
   type Category,
 } from "@/lib/projectCategory";
@@ -329,25 +330,50 @@ export default function Projects({
             <div className="flex flex-wrap items-center gap-1">
               {FILTER_OPTIONS.map((option) => {
                 const isActive = categoryFilter === option;
+                const optionAccent =
+                  option === "All" ? null : getCategoryAccent(option);
                 return (
                   <button
                     key={option}
                     type="button"
                     onClick={() => setCategoryFilter(option)}
                     className={cn(
-                      "relative cursor-pointer rounded-lg px-3 py-2 font-mono text-xs lowercase transition-colors",
+                      "relative flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 font-mono text-xs lowercase transition-colors",
                       "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-mint",
                       isActive
-                        ? "bg-accent text-mint"
+                        ? "bg-accent text-foreground"
                         : "text-muted-foreground hover:bg-surface-2 hover:text-foreground"
                     )}
+                    style={
+                      isActive && optionAccent
+                        ? { color: optionAccent }
+                        : undefined
+                    }
                     aria-pressed={isActive}
                   >
+                    <span
+                      className={cn(
+                        "inline-block h-1.5 w-1.5 shrink-0 rounded-full",
+                        option === "All" && "grad-rule"
+                      )}
+                      style={
+                        optionAccent ? { backgroundColor: optionAccent } : undefined
+                      }
+                      aria-hidden="true"
+                    />
                     {option}
                     {isActive && (
                       <motion.span
                         layoutId="project-filter-underline"
-                        className="absolute inset-x-3 bottom-0 h-px bg-mint"
+                        className={cn(
+                          "absolute inset-x-3 bottom-0 h-px",
+                          option === "All" && "grad-rule"
+                        )}
+                        style={
+                          optionAccent
+                            ? { backgroundColor: optionAccent }
+                            : undefined
+                        }
                         transition={{ type: "spring", stiffness: 380, damping: 30 }}
                       />
                     )}

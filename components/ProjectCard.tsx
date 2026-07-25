@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useState, type CSSProperties } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowUpRight,
@@ -13,7 +13,11 @@ import { cn } from "@/lib/cn";
 import type { ProjectLink } from "@/lib/manualProjects";
 import LoomIcon from "@/components/icons/LoomIcon";
 import { ProjectCover } from "@/components/ProjectCover";
-import { getProjectCategories, type Category } from "@/lib/projectCategory";
+import {
+  getCategoryAccent,
+  getProjectCategories,
+  type Category,
+} from "@/lib/projectCategory";
 
 const DESCRIPTION_TOGGLE_CHAR_THRESHOLD = 150;
 
@@ -92,8 +96,8 @@ function getProjectLinkIcon(link: ProjectLink) {
   }
 }
 
-const chip =
-  "inline-flex items-center rounded-full border border-border bg-background px-2.5 py-1 font-mono text-[0.65rem] lowercase text-mint";
+const chipBase =
+  "inline-flex items-center rounded-full border px-2.5 py-1 font-mono text-[0.65rem] lowercase";
 
 export function ProjectCard({
   project,
@@ -108,6 +112,7 @@ export function ProjectCard({
   const [expanded, setExpanded] = useState(false);
   const descriptionId = useId();
   const categories = getProjectCategories(project);
+  const accent = getCategoryAccent(categories[0]);
   const primaryCtaLabel = project.primaryCtaLabel ?? "Source Code";
   const secondaryCtaLabel = project.secondaryCtaLabel ?? "Live Demo";
   const description = project.description;
@@ -161,6 +166,13 @@ export function ProjectCard({
         "group relative h-full [perspective:1400px]",
         isHovered ? "z-30" : "z-0"
       )}
+      style={
+        {
+          "--accent": accent,
+          "--accent-ring": `${accent}80`,
+          "--accent-glow": `${accent}55`,
+        } as CSSProperties
+      }
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
       onFocus={onHoverStart}
@@ -180,11 +192,11 @@ export function ProjectCard({
     >
       <div
         className={cn(
-          "relative flex min-h-[30rem] h-full flex-col overflow-hidden rounded-xl border bg-surface transition-all duration-500 ease-out will-change-transform",
-          isHovered ? "border-mint" : "border-border",
+          "flex h-full flex-col overflow-hidden rounded-xl border bg-surface transition-all duration-500 ease-out will-change-transform",
+          isHovered ? "border-[var(--accent)]" : "border-border",
           isHovered &&
             !reduceMotion &&
-            "lg:-translate-y-2 lg:scale-[1.07] lg:shadow-[0_28px_70px_-24px_rgba(0,0,0,0.85),0_0_0_1px_rgba(45,212,191,0.35),0_0_44px_-10px_rgba(45,212,191,0.35)]",
+            "lg:-translate-y-2 lg:scale-[1.07] lg:shadow-[0_28px_70px_-24px_rgba(0,0,0,0.85),0_0_0_1px_var(--accent-ring),0_0_46px_-8px_var(--accent-glow)]",
           shouldShift &&
             pushDirection === "left" &&
             "lg:-translate-x-6 lg:scale-[0.93] lg:opacity-45",
@@ -193,94 +205,103 @@ export function ProjectCard({
             "lg:translate-x-6 lg:scale-[0.93] lg:opacity-45"
         )}
       >
-        <div className="cover-media absolute inset-0">
-          <ProjectCover
-            name={project.name}
-            categories={categories}
-            className="h-full w-full"
-          />
+        {/* thumbnail — full cover shown, 16:10, no crop */}
+        <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden border-b border-border bg-elevated">
+          <div className="cover-media absolute inset-0">
+            <ProjectCover
+              name={project.name}
+              categories={categories}
+              className="h-full w-full"
+            />
+          </div>
+          <span className="absolute right-3 top-3 rounded-md border border-border bg-background/85 px-2 py-0.5 font-mono text-[0.65rem] text-muted-foreground backdrop-blur-sm">
+            {String(index + 1).padStart(2, "0")}
+          </span>
         </div>
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(10,10,11,0.84)_0%,rgba(10,10,11,0.08)_34%,rgba(10,10,11,0.34)_58%,rgba(10,10,11,0.98)_100%)]" />
 
-        <div className="relative z-10 flex h-full flex-1 flex-col justify-between p-5 sm:p-6">
-          <div className="flex flex-wrap items-start gap-2">
-            {categories.map((category) => (
-              <span key={category} className={chip}>
-                {category}
+        {/* caption */}
+        <div className="flex flex-1 flex-col p-5">
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            {categories.map((category) => {
+              const catAccent = getCategoryAccent(category);
+              return (
+                <span
+                  key={category}
+                  className={chipBase}
+                  style={{
+                    color: catAccent,
+                    borderColor: `${catAccent}59`,
+                    backgroundColor: `${catAccent}14`,
+                  }}
+                >
+                  {category}
+                </span>
+              );
+            })}
+            {projectDateLabel && (
+              <span className="ml-auto font-mono text-[0.65rem] lowercase text-faint">
+                {projectDateLabel}
               </span>
-            ))}
-            <span className="ml-auto rounded-md border border-border bg-background px-2 py-0.5 font-mono text-[0.65rem] text-muted-foreground">
-              {String(index + 1).padStart(2, "0")}
-            </span>
+            )}
           </div>
 
-          <div className="mt-28">
-            <p className="font-mono text-[0.68rem] lowercase tracking-wide text-mint">
-              {projectDateLabel ?? categories.join(" / ")}
-            </p>
-            <h3 className="mt-2 text-2xl font-semibold leading-tight tracking-tight text-foreground transition-colors group-hover:text-mint">
-              {project.name}
-            </h3>
+          <h3 className="text-xl font-semibold leading-tight tracking-tight text-foreground transition-colors group-hover:text-[var(--accent)]">
+            {project.name}
+          </h3>
 
-            <div
-              className="reveal-row"
-              style={{
-                gridTemplateRows: reduceMotion || expanded ? "1fr" : undefined,
-              }}
+          <div className="mb-5 mt-2 flex-1">
+            <p
+              id={descriptionId}
+              className={cn(
+                "text-sm leading-relaxed text-muted-foreground",
+                !expanded && canToggleDescription && "line-clamp-2"
+              )}
             >
-              <div className="mt-4 min-h-0 overflow-hidden border-t border-border pt-4">
-                <p
-                  id={descriptionId}
-                  className={cn(
-                    "text-sm leading-relaxed text-muted-foreground",
-                    !expanded && canToggleDescription && "line-clamp-2"
-                  )}
-                >
-                  {description}
-                </p>
-                {canToggleDescription && (
-                  <button
-                    type="button"
-                    onClick={() => setExpanded((prev) => !prev)}
-                    className="mt-1.5 cursor-pointer rounded-sm font-mono text-[0.65rem] lowercase text-mint transition-opacity hover:opacity-70 focus:outline-none focus-visible:ring-1 focus-visible:ring-mint"
-                    aria-expanded={expanded}
-                    aria-controls={descriptionId}
-                  >
-                    {expanded ? "show less" : "read more"}
-                  </button>
-                )}
+              {description}
+            </p>
+            {canToggleDescription && (
+              <button
+                type="button"
+                onClick={() => setExpanded((prev) => !prev)}
+                className="mt-1.5 cursor-pointer rounded-sm font-mono text-[0.65rem] lowercase text-[var(--accent)] transition-opacity hover:opacity-70 focus:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent)]"
+                aria-expanded={expanded}
+                aria-controls={descriptionId}
+              >
+                {expanded ? "show less" : "read more"}
+              </button>
+            )}
+          </div>
 
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {projectLinks.map((link, linkIndex) => {
-                    const Icon = getProjectLinkIcon(link);
-                    const isPrimary =
-                      link.variant === "primary" ||
-                      (!link.variant && linkIndex === 0);
-                    return (
-                      <a
-                        key={`${link.label}-${link.href}`}
-                        href={normalizeExternalUrl(link.href)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={cn(
-                          "inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-2 font-mono text-[0.7rem] lowercase transition-colors",
-                          "focus:outline-none focus-visible:ring-1 focus-visible:ring-mint",
-                          isPrimary
-                            ? "border-mint bg-mint text-[#05231d] hover:bg-mint-bright"
-                            : "border-border bg-background text-foreground hover:border-mint hover:text-mint"
-                        )}
-                      >
-                        <Icon size={13} aria-hidden="true" />
-                        {link.label}
-                        {isPrimary && (
-                          <ArrowUpRight size={12} aria-hidden="true" />
-                        )}
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
+          <div className="mt-auto flex flex-wrap gap-2 border-t border-border pt-4">
+            {projectLinks.map((link, linkIndex) => {
+              const Icon = getProjectLinkIcon(link);
+              const isPrimary =
+                link.variant === "primary" || (!link.variant && linkIndex === 0);
+              return (
+                <a
+                  key={`${link.label}-${link.href}`}
+                  href={normalizeExternalUrl(link.href)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(
+                    "inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-2 font-mono text-[0.7rem] lowercase transition-[filter,color,border-color] hover:brightness-110",
+                    "focus:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent)]",
+                    isPrimary
+                      ? "text-[#0a0a0b]"
+                      : "border-border bg-background text-foreground hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                  )}
+                  style={
+                    isPrimary
+                      ? { backgroundColor: accent, borderColor: accent }
+                      : undefined
+                  }
+                >
+                  <Icon size={13} aria-hidden="true" />
+                  {link.label}
+                  {isPrimary && <ArrowUpRight size={12} aria-hidden="true" />}
+                </a>
+              );
+            })}
           </div>
         </div>
       </div>

@@ -48,7 +48,7 @@ export default function About() {
           className="max-w-4xl text-[2.7rem] font-semibold leading-[0.98] tracking-tight text-foreground sm:text-6xl lg:text-[4.2rem]"
         >
           Turning ideas into
-          <span className="text-mint"> working systems.</span>
+          <span className="text-gradient"> working systems.</span>
         </motion.h2>
 
         <div className="mt-14 grid gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:items-center lg:gap-20">

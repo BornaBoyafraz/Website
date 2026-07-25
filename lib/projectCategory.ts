@@ -53,6 +53,21 @@ export function getProjectCategories(project: {
   return Array.from(new Set(categories));
 }
 
+/**
+ * Per-category accent colors. Harmonized on the near-black canvas so the
+ * Projects section reads as a cohesive spectrum rather than one flat blue.
+ */
+export const CATEGORY_ACCENT: Record<Category, string> = {
+  Project: "#2dd4bf", // teal / mint (primary)
+  Pitch: "#f4b740", // amber
+  Fun: "#f472b6", // pink
+  "Researches/Articles": "#a78bfa", // violet
+};
+
+export function getCategoryAccent(category: Category | undefined): string {
+  return (category && CATEGORY_ACCENT[category]) || "#2dd4bf";
+}
+
 export function getCategoryBadgeClass(category: Category): string {
   switch (category) {
     case "Project":

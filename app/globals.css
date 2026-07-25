@@ -15,10 +15,19 @@
   --surface-2: #17171b;
   --elevated: #1c1c21;
 
-  /* Mint / teal accent */
+  /* Mint / teal accent (primary) */
   --mint: #2dd4bf;
   --mint-bright: #5eead4;
   --mint-dim: #14b8a6;
+
+  /* Secondary accents — a cohesive multi-hue set on the dark canvas */
+  --violet: #a78bfa;
+  --amber: #f4b740;
+  --pink: #f472b6;
+  --sky: #38bdf8;
+
+  /* Signature gradient */
+  --grad: linear-gradient(100deg, #2dd4bf 0%, #38bdf8 48%, #a78bfa 100%);
 
   /* Tailwind token bridge */
   --background: #0a0a0b;
@@ -112,6 +121,49 @@ body {
 /* ---------- Accent helpers ---------- */
 .text-mint {
   color: var(--mint);
+}
+
+/* Gradient text (teal → sky → violet) for signature highlights */
+.text-gradient {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Thin gradient rule */
+.grad-rule {
+  background: var(--grad);
+}
+
+/* Animated gradient sheen for the primary accent word */
+.text-gradient-animate {
+  background: linear-gradient(
+    100deg,
+    #2dd4bf 0%,
+    #38bdf8 30%,
+    #a78bfa 55%,
+    #2dd4bf 80%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: sheen 8s ease-in-out infinite;
+}
+@keyframes sheen {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .text-gradient-animate {
+    animation: none;
+  }
 }
 
 /* ---------- Animated underline link ---------- */

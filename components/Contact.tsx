@@ -35,7 +35,7 @@ export default function Contact() {
               id="contact-heading"
               className="max-w-2xl text-[3rem] font-semibold leading-[0.96] tracking-tight text-foreground sm:text-7xl lg:text-[5rem]"
             >
-              Stay in touch with <span className="text-mint">me.</span>
+              Stay in touch with <span className="text-gradient">me.</span>
             </h2>
 
             <a

@@ -443,7 +443,9 @@ export default function Hero() {
               {...rise(0.12)}
               className="text-[3.5rem] font-semibold leading-[0.9] tracking-[-0.065em] text-foreground sm:text-7xl lg:text-[5.75rem]"
             >
-              Borna B. Afraz<span className="caret" aria-hidden="true" />
+              Borna B.{" "}
+              <span className="text-gradient-animate">Afraz</span>
+              <span className="caret" aria-hidden="true" />
             </motion.h1>
 
             <motion.p
@@ -461,7 +463,8 @@ export default function Hero() {
               {...rise(0.22)}
               className="mt-8 max-w-xl text-2xl font-semibold leading-tight tracking-tight text-foreground sm:text-3xl"
             >
-              Practical software, built with curiosity.
+              Practical software, built with{" "}
+              <span className="text-gradient">curiosity.</span>
             </motion.h2>
 
             <motion.p

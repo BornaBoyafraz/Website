@@ -1,6 +1,4 @@
-import type { Category } from "@/lib/projectCategory";
-
-const MINT = "#2dd4bf";
+import { getCategoryAccent, type Category } from "@/lib/projectCategory";
 
 type Circle = {
   cx: number;
@@ -237,6 +235,7 @@ export function ProjectCover({
   className?: string;
 }) {
   const primaryCategory = categories[0];
+  const accent = getCategoryAccent(primaryCategory);
   const artwork = generateArtwork(name, primaryCategory);
   const initials = getInitials(name);
   const idBase = `project-cover-${sanitizeForId(name)}-${artwork.seed.toString(
@@ -257,9 +256,9 @@ export function ProjectCover({
           <stop offset="1" stopColor="#17171b" />
         </linearGradient>
         <radialGradient id={`${idBase}-glow`} cx="76%" cy="28%" r="72%">
-          <stop offset="0" stopColor={MINT} stopOpacity="0.2" />
-          <stop offset="0.52" stopColor={MINT} stopOpacity="0.06" />
-          <stop offset="1" stopColor={MINT} stopOpacity="0" />
+          <stop offset="0" stopColor={accent} stopOpacity="0.2" />
+          <stop offset="0.52" stopColor={accent} stopOpacity="0.06" />
+          <stop offset="1" stopColor={accent} stopOpacity="0" />
         </radialGradient>
         <pattern
           id={`${idBase}-dots`}
@@ -283,7 +282,7 @@ export function ProjectCover({
             y1={line.y1}
             x2={line.x2}
             y2={line.y2}
-            stroke={MINT}
+            stroke={accent}
             strokeWidth={line.width}
             opacity={line.opacity}
           />
@@ -293,7 +292,7 @@ export function ProjectCover({
             key={`polyline-${index}`}
             points={points}
             fill="none"
-            stroke={MINT}
+            stroke={accent}
             strokeWidth="1.2"
             strokeLinejoin="round"
             opacity="0.42"
@@ -304,7 +303,7 @@ export function ProjectCover({
             key={`path-${index}`}
             d={path}
             fill="none"
-            stroke={MINT}
+            stroke={accent}
             strokeWidth="1.25"
             strokeLinejoin="round"
             opacity="0.56"
@@ -316,8 +315,8 @@ export function ProjectCover({
             cx={circle.cx}
             cy={circle.cy}
             r={circle.radius}
-            fill={circle.filled ? MINT : "none"}
-            stroke={circle.filled ? "none" : MINT}
+            fill={circle.filled ? accent : "none"}
+            stroke={circle.filled ? "none" : accent}
             strokeWidth="0.9"
             opacity={circle.opacity}
           />
@@ -327,9 +326,9 @@ export function ProjectCover({
       <text
         x="40"
         y="252"
-        fill={MINT}
+        fill={accent}
         fillOpacity="0.22"
-        stroke={MINT}
+        stroke={accent}
         strokeOpacity="0.16"
         strokeWidth="0.75"
         fontFamily="var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace"
@@ -342,7 +341,7 @@ export function ProjectCover({
       <text
         x="46"
         y="112"
-        fill={MINT}
+        fill={accent}
         fillOpacity="0.5"
         fontFamily="var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace"
         fontSize="17"
@@ -361,13 +360,13 @@ export function ProjectCover({
             rx="15"
             fill="#0a0a0b"
             fillOpacity="0.76"
-            stroke={MINT}
+            stroke={accent}
             strokeOpacity="0.3"
           />
           <text
             x="16"
             y="20"
-            fill={MINT}
+            fill={accent}
             fontFamily="var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace"
             fontSize="11"
             letterSpacing="0.8"
@@ -377,7 +376,7 @@ export function ProjectCover({
         </g>
       )}
 
-      <g aria-hidden="true" stroke={MINT}>
+      <g aria-hidden="true" stroke={accent}>
         {artwork.ticks.map((tick, index) => (
           <line
             key={`tick-${index}`}
