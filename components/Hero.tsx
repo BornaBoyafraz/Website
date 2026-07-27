@@ -24,6 +24,7 @@ import { type Category } from "@/lib/projectCategory";
 import LoomIcon from "@/components/icons/LoomIcon";
 import XTwitterIcon from "./icons/XTwitterIcon";
 import { ProjectCover } from "@/components/ProjectCover";
+import WelcomeTyper from "@/components/WelcomeTyper";
 
 const HeroObject = dynamic(() => import("@/components/three/HeroObject"), {
   ssr: false,
@@ -432,12 +433,9 @@ export default function Hero() {
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.72fr)] lg:items-center lg:gap-12">
           {/* left — statement */}
           <div className="flex flex-col justify-center">
-            <motion.p
-              {...rise(0.05)}
-              className="mono-label mb-5"
-            >
-              <span className="mint">{"//"}</span> portfolio
-            </motion.p>
+            <div className="mb-5 min-h-[2.5rem] sm:min-h-[3rem]">
+              <WelcomeTyper className="text-[2rem] font-semibold leading-none tracking-tight sm:text-4xl" />
+            </div>
 
             <motion.h1
               {...rise(0.12)}
