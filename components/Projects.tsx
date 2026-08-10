@@ -42,7 +42,15 @@ function normalizeProjectName(value: string): string {
 }
 
 const WORKING_ON_PROJECT_NAMES = new Set(
-  WORKING_ON_PROJECTS.map((project) => normalizeProjectName(project.title))
+  WORKING_ON_PROJECTS.filter((project) => !project.showInProjects).map(
+    (project) => normalizeProjectName(project.title)
+  )
+);
+
+const WORKING_ON_PROJECT_OVERRIDES = new Map(
+  WORKING_ON_PROJECTS.filter((project) => project.showInProjects).map(
+    (project) => [normalizeProjectName(project.title), project]
+  )
 );
 
 function getFixedProjectDates(projectName: string): FixedProjectDates | null {
@@ -142,8 +150,12 @@ export default function Projects({
       )
       .map((project) => {
         const fixedDates = getFixedProjectDates(project.name);
+        const workingOnProject = WORKING_ON_PROJECT_OVERRIDES.get(
+          normalizeProjectName(project.name)
+        );
         return {
           ...project,
+          categories: workingOnProject?.categories ?? project.categories,
           startDate: fixedDates?.startDate,
           endDate: fixedDates?.endDate,
           date: fixedDates
