@@ -27,49 +27,4 @@ export const WORKING_ON_PROJECTS: WorkingOnProject[] = [
       },
     ],
   },
-  {
-    id: "antigen",
-    title: "Antigen",
-    description:
-      "An ML classifier that detects prompt-injection attacks in LLM and agent inputs, benchmarked against real-world adversarial data from Gray Swan Arena.",
-    categories: ["Project"],
-    links: [
-      {
-        label: "Source Code",
-        href: "https://github.com/BornaBoyafraz/Antigen",
-        kind: "source",
-        variant: "primary",
-      },
-    ],
-  },
-  {
-    id: "drake",
-    title: "Drake",
-    description:
-      'A tiny smart compiler that watches how a language model "thinks" step by step, then builds faster shortcuts for it on the fly using LLVM compiler technology.',
-    categories: ["Project"],
-    links: [
-      {
-        label: "Source Code",
-        href: "https://github.com/BornaBoyafraz/DRAKE---",
-        kind: "source",
-        variant: "primary",
-      },
-    ],
-  },
-  {
-    id: "opportunityos",
-    title: "OpportunityOS",
-    description:
-      "A full-stack application that helps students organize opportunities, deadlines, and applications in one place.",
-    categories: ["Project"],
-    links: [
-      {
-        label: "Source Code",
-        href: "https://github.com/BornaBoyafraz/OpportunityOS",
-        kind: "source",
-        variant: "primary",
-      },
-    ],
-  },
 ];

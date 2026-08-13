@@ -93,6 +93,60 @@ export const MANUAL_PROJECTS: ManualProject[] = [
   CODEPULSE_PROJECT,
   SAFEWALK_PROJECT,
   {
+    id: "antigen",
+    title: "Antigen",
+    description:
+      "An ML classifier that detects prompt-injection attacks in LLM and agent inputs, benchmarked against real-world adversarial data from Gray Swan Arena.",
+    href: "https://github.com/BornaBoyafraz/Antigen",
+    categories: ["Project"],
+    startDate: "2026-07-01",
+    endDate: "2026-08-01",
+    links: [
+      {
+        label: "Source Code",
+        href: "https://github.com/BornaBoyafraz/Antigen",
+        kind: "source",
+        variant: "primary",
+      },
+    ],
+  },
+  {
+    id: "drake",
+    title: "Drake",
+    description:
+      'A tiny smart compiler that watches how a language model "thinks" step by step, then builds faster shortcuts for it on the fly using LLVM compiler technology.',
+    href: "https://github.com/BornaBoyafraz/DRAKE---",
+    categories: ["Project"],
+    startDate: "2026-07-01",
+    endDate: "2026-08-01",
+    links: [
+      {
+        label: "Source Code",
+        href: "https://github.com/BornaBoyafraz/DRAKE---",
+        kind: "source",
+        variant: "primary",
+      },
+    ],
+  },
+  {
+    id: "opportunityos",
+    title: "Opportunity OS",
+    description:
+      "A full-stack application that helps students organize opportunities, deadlines, and applications in one place.",
+    href: "https://github.com/BornaBoyafraz/OpportunityOS",
+    categories: ["Project"],
+    startDate: "2026-07-01",
+    endDate: "2026-08-01",
+    links: [
+      {
+        label: "Source Code",
+        href: "https://github.com/BornaBoyafraz/OpportunityOS",
+        kind: "source",
+        variant: "primary",
+      },
+    ],
+  },
+  {
     id: "integrating-deep-reinforcement-learning-dynamic-markets",
     title:
       "Integrating Deep Reinforcement Learning for Operational Discovery in Dynamic Markets",
