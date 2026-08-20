@@ -99,8 +99,8 @@ export const MANUAL_PROJECTS: ManualProject[] = [
       "An ML classifier that detects prompt-injection attacks in LLM and agent inputs, benchmarked against real-world adversarial data from Gray Swan Arena.",
     href: "https://github.com/BornaBoyafraz/Antigen",
     categories: ["Project"],
-    startDate: "2026-07-01",
-    endDate: "2026-08-01",
+    startDate: "2026-07-20",
+    endDate: "2026-08-20",
     links: [
       {
         label: "Source Code",
