@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { SITE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { CODEPULSE_PROJECT, type ProjectLink } from "@/lib/manualProjects";
+import { ANTIGEN_PROJECT, type ProjectLink } from "@/lib/manualProjects";
 import { type Category } from "@/lib/projectCategory";
 import LoomIcon from "@/components/icons/LoomIcon";
 import XTwitterIcon from "./icons/XTwitterIcon";
@@ -101,16 +101,16 @@ const SKILL_DASHBOARDS: SkillDashboard[] = [
 
 const latestProject = {
   label: "Latest",
-  title: CODEPULSE_PROJECT.title,
-  description: CODEPULSE_PROJECT.description,
-  startDate: CODEPULSE_PROJECT.startDate,
-  endDate: CODEPULSE_PROJECT.endDate,
-  categories: CODEPULSE_PROJECT.categories as Category[],
-  thumbnail: CODEPULSE_PROJECT.thumbnail,
-  links: CODEPULSE_PROJECT.links ?? [
+  title: ANTIGEN_PROJECT.title,
+  description: ANTIGEN_PROJECT.description,
+  startDate: ANTIGEN_PROJECT.startDate,
+  endDate: ANTIGEN_PROJECT.endDate,
+  categories: ANTIGEN_PROJECT.categories as Category[],
+  thumbnail: ANTIGEN_PROJECT.thumbnail,
+  links: ANTIGEN_PROJECT.links ?? [
     {
       label: "Source Code",
-      href: CODEPULSE_PROJECT.href,
+      href: ANTIGEN_PROJECT.href,
       kind: "source" as const,
       variant: "primary" as const,
     },

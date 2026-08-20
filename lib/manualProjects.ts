@@ -89,27 +89,29 @@ export const CODEPULSE_PROJECT: ManualProject = {
   ],
 };
 
+export const ANTIGEN_PROJECT: ManualProject = {
+  id: "antigen",
+  title: "Antigen",
+  description:
+    "An ML classifier that detects prompt-injection attacks in LLM and agent inputs, benchmarked against real-world adversarial data from Gray Swan Arena.",
+  href: "https://github.com/BornaBoyafraz/Antigen",
+  categories: ["Project"],
+  startDate: "2026-07-01",
+  endDate: "2026-08-01",
+  links: [
+    {
+      label: "Source Code",
+      href: "https://github.com/BornaBoyafraz/Antigen",
+      kind: "source",
+      variant: "primary",
+    },
+  ],
+};
+
 export const MANUAL_PROJECTS: ManualProject[] = [
   CODEPULSE_PROJECT,
   SAFEWALK_PROJECT,
-  {
-    id: "antigen",
-    title: "Antigen",
-    description:
-      "An ML classifier that detects prompt-injection attacks in LLM and agent inputs, benchmarked against real-world adversarial data from Gray Swan Arena.",
-    href: "https://github.com/BornaBoyafraz/Antigen",
-    categories: ["Project"],
-    startDate: "2026-07-20",
-    endDate: "2026-08-20",
-    links: [
-      {
-        label: "Source Code",
-        href: "https://github.com/BornaBoyafraz/Antigen",
-        kind: "source",
-        variant: "primary",
-      },
-    ],
-  },
+  ANTIGEN_PROJECT,
   {
     id: "drake",
     title: "Drake",
