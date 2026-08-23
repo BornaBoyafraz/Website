@@ -113,6 +113,23 @@ export const MANUAL_PROJECTS: ManualProject[] = [
   SAFEWALK_PROJECT,
   ANTIGEN_PROJECT,
   {
+    id: "foreman",
+    title: "Foreman",
+    description:
+      "Make Claude a manager: Foreman routes your prompt to the best skills and agents, runs them in parallel like coworkers, keeps token spend low, and maintains a CLAUDE.md memory it updates as it works.",
+    href: "https://github.com/BornaBoyafraz/Foreman",
+    categories: ["Fun", "Project"],
+    startDate: "2026-08-01",
+    links: [
+      {
+        label: "Source Code",
+        href: "https://github.com/BornaBoyafraz/Foreman",
+        kind: "source",
+        variant: "primary",
+      },
+    ],
+  },
+  {
     id: "drake",
     title: "Drake",
     description:

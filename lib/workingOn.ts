@@ -10,20 +10,4 @@ export type WorkingOnProject = {
   showInProjects?: boolean;
 };
 
-export const WORKING_ON_PROJECTS: WorkingOnProject[] = [
-  {
-    id: "foreman",
-    title: "Foreman",
-    description:
-      "Make Claude a manager: Foreman routes your prompt to the best skills and agents, runs them in parallel like coworkers, keeps token spend low, and maintains a CLAUDE.md memory it updates as it works.",
-    categories: ["Project", "Fun"],
-    links: [
-      {
-        label: "Source Code",
-        href: "https://github.com/BornaBoyafraz/Foreman",
-        kind: "source",
-        variant: "primary",
-      },
-    ],
-  },
-];
+export const WORKING_ON_PROJECTS: WorkingOnProject[] = [];
