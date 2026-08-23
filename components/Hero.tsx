@@ -19,8 +19,7 @@ import {
 } from "lucide-react";
 import { SITE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { ANTIGEN_PROJECT, type ProjectLink } from "@/lib/manualProjects";
-import { type Category } from "@/lib/projectCategory";
+import { LATEST_PROJECT, type ProjectLink } from "@/lib/manualProjects";
 import LoomIcon from "@/components/icons/LoomIcon";
 import XTwitterIcon from "./icons/XTwitterIcon";
 import { ProjectCover } from "@/components/ProjectCover";
@@ -101,16 +100,16 @@ const SKILL_DASHBOARDS: SkillDashboard[] = [
 
 const latestProject = {
   label: "Latest",
-  title: ANTIGEN_PROJECT.title,
-  description: ANTIGEN_PROJECT.description,
-  startDate: ANTIGEN_PROJECT.startDate,
-  endDate: ANTIGEN_PROJECT.endDate,
-  categories: ANTIGEN_PROJECT.categories as Category[],
-  thumbnail: ANTIGEN_PROJECT.thumbnail,
-  links: ANTIGEN_PROJECT.links ?? [
+  title: LATEST_PROJECT.title,
+  description: LATEST_PROJECT.description,
+  startDate: LATEST_PROJECT.startDate,
+  endDate: LATEST_PROJECT.endDate,
+  categories: LATEST_PROJECT.categories,
+  thumbnail: LATEST_PROJECT.thumbnail,
+  links: LATEST_PROJECT.links ?? [
     {
       label: "Source Code",
-      href: ANTIGEN_PROJECT.href,
+      href: LATEST_PROJECT.href,
       kind: "source" as const,
       variant: "primary" as const,
     },

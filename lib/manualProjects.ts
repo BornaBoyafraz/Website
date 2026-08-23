@@ -118,8 +118,8 @@ export const MANUAL_PROJECTS: ManualProject[] = [
     description:
       "Make Claude a manager: Foreman routes your prompt to the best skills and agents, runs them in parallel like coworkers, keeps token spend low, and maintains a CLAUDE.md memory it updates as it works.",
     href: "https://github.com/BornaBoyafraz/Foreman",
-    categories: ["Fun", "Project"],
-    startDate: "2026-08-01",
+    categories: ["Project", "Fun"],
+    startDate: "2026-08-23",
     links: [
       {
         label: "Source Code",
@@ -220,3 +220,12 @@ export const MANUAL_PROJECTS: ManualProject[] = [
     secondaryCtaLabel: "Watch on Loom",
   },
 ];
+
+export const LATEST_PROJECT = MANUAL_PROJECTS.filter((project) =>
+  project.categories.includes("Project")
+).reduce((latest, project) => {
+  const latestDate = latest.endDate ?? latest.startDate;
+  const projectDate = project.endDate ?? project.startDate;
+
+  return projectDate > latestDate ? project : latest;
+});
