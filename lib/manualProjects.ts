@@ -153,6 +153,7 @@ export const MANUAL_PROJECTS: ManualProject[] = [
     description:
       "A full-stack application that helps students organize opportunities, deadlines, and applications in one place.",
     href: "https://github.com/BornaBoyafraz/OpportunityOS",
+    homepage: "https://opportunity-os-smoky.vercel.app/",
     categories: ["Project"],
     startDate: "2026-07-01",
     endDate: "2026-08-01",
@@ -162,6 +163,12 @@ export const MANUAL_PROJECTS: ManualProject[] = [
         href: "https://github.com/BornaBoyafraz/OpportunityOS",
         kind: "source",
         variant: "primary",
+      },
+      {
+        label: "Live Demo",
+        href: "https://opportunity-os-smoky.vercel.app/",
+        kind: "live",
+        variant: "secondary",
       },
     ],
   },
