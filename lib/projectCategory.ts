@@ -29,10 +29,54 @@ const CATEGORY_BY_REPO_NORMALIZED: Record<string, Category> = Object.fromEntries
   ])
 ) as Record<string, Category>;
 
-export function getCategory(repoName: string): Category {
+/**
+ * GitHub topic keywords → category. Lets a repo describe itself (via its
+ * configured topics) so it lands in the right bucket instead of the generic
+ * fallback. Kept conservative: only confident signals override.
+ */
+const TOPIC_CATEGORY: Record<string, Category> = {
+  game: "Fun",
+  gamedev: "Fun",
+  "game-development": "Fun",
+  pygame: "Fun",
+  unity: "Fun",
+  godot: "Fun",
+  arcade: "Fun",
+  research: "Researches/Articles",
+  paper: "Researches/Articles",
+  arxiv: "Researches/Articles",
+  study: "Researches/Articles",
+  article: "Researches/Articles",
+  pitch: "Pitch",
+  demo: "Pitch",
+  presentation: "Pitch",
+  "machine-learning": "Project",
+  ml: "Project",
+  ai: "Project",
+  "deep-learning": "Project",
+  "data-science": "Project",
+  automation: "Project",
+  tool: "Project",
+  cli: "Project",
+  app: "Project",
+  webapp: "Project",
+  api: "Project",
+};
+
+function inferCategoryFromTopics(topics?: string[]): Category | null {
+  if (!topics || topics.length === 0) return null;
+  for (const topic of topics) {
+    const match = TOPIC_CATEGORY[topic.trim().toLowerCase()];
+    if (match) return match;
+  }
+  return null;
+}
+
+export function getCategory(repoName: string, topics?: string[]): Category {
   return (
     CATEGORY_BY_REPO[repoName] ??
     CATEGORY_BY_REPO_NORMALIZED[normalizeRepoName(repoName)] ??
+    inferCategoryFromTopics(topics) ??
     "Fun"
   );
 }
@@ -41,10 +85,11 @@ export function getProjectCategories(project: {
   name: string;
   categories?: Category[];
   category?: Category;
+  topics?: string[];
 }): Category[] {
   const fallbackCategories = project.category
     ? [project.category]
-    : [getCategory(project.name)];
+    : [getCategory(project.name, project.topics)];
   const categories =
     project.categories && project.categories.length > 0
       ? project.categories
@@ -68,16 +113,13 @@ export function getCategoryAccent(category: Category | undefined): string {
   return (category && CATEGORY_ACCENT[category]) || "#2dd4bf";
 }
 
-export function getCategoryBadgeClass(category: Category): string {
-  switch (category) {
-    case "Project":
-      return "bg-amber-100 text-amber-900 border-amber-200 dark:bg-amber-500/20 dark:text-amber-200 dark:border-amber-500/30";
-    case "Pitch":
-      return "bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-500/20 dark:text-cyan-200 dark:border-cyan-500/30";
-    case "Researches/Articles":
-      return "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-500/20 dark:text-emerald-200 dark:border-emerald-500/30";
-    case "Fun":
-    default:
-      return "bg-neutral-100 text-neutral-800 border-neutral-200 dark:bg-neutral-500/20 dark:text-neutral-200 dark:border-neutral-500/30";
-  }
-}
+/**
+ * Section accent hues. Each page section owns one color from the palette so
+ * the whole site reads as a cohesive spectrum rather than one flat mint.
+ */
+export const SECTION_ACCENT = {
+  about: "#38bdf8", // sky
+  workingOn: "#f4b740", // amber
+  projects: "#2dd4bf", // mint
+  contact: "#a78bfa", // violet
+} as const;

@@ -2,11 +2,13 @@
 
 import { motion } from "framer-motion";
 import { ArrowUpRight, Github } from "lucide-react";
+import type { CSSProperties } from "react";
 import { WORKING_ON_PROJECTS } from "@/lib/workingOn";
+import { SECTION_ACCENT } from "@/lib/projectCategory";
 import { cn } from "@/lib/cn";
 
 const chip =
-  "inline-flex items-center rounded-full border border-border bg-accent px-2.5 py-1 font-mono text-xs lowercase text-mint";
+  "inline-flex items-center rounded-full border border-border bg-accent px-2.5 py-1 font-mono text-xs lowercase text-[color:var(--section-accent)]";
 
 export default function WorkingOn() {
   if (WORKING_ON_PROJECTS.length === 0) return null;
@@ -16,11 +18,12 @@ export default function WorkingOn() {
       id="working-on"
       className="section-padding relative"
       aria-labelledby="working-on-heading"
+      style={{ "--section-accent": SECTION_ACCENT.workingOn } as CSSProperties}
     >
       <div className="container-wide relative">
         <div className="mb-10 flex flex-col gap-6 border-b border-border pb-7 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="mono-label mb-3"><span className="mint">{"//"}</span> On the bench</p>
+            <p className="mono-label mb-3"><span className="accent-mark">{"//"}</span> On the bench</p>
             <h2
               id="working-on-heading"
               className="text-4xl font-semibold lowercase leading-none tracking-tight text-foreground sm:text-5xl"
@@ -48,7 +51,7 @@ export default function WorkingOn() {
                   delay: Math.min(index * 0.08, 0.24),
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="group overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:border-mint hover:bg-surface-2"
+                className="group overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:border-[color:var(--section-accent)] hover:bg-surface-2"
               >
                 <a
                   href={primaryLink?.href}
@@ -61,7 +64,7 @@ export default function WorkingOn() {
                   </span>
 
                   <div className="min-w-0">
-                    <h3 className="text-2xl font-semibold leading-tight tracking-tight text-foreground transition-colors group-hover:text-mint sm:text-3xl">
+                    <h3 className="text-2xl font-semibold leading-tight tracking-tight text-foreground transition-colors group-hover:text-[color:var(--section-accent)] sm:text-3xl">
                       {project.title}
                     </h3>
                     <div className="mt-3 flex flex-wrap gap-2">
@@ -80,7 +83,7 @@ export default function WorkingOn() {
                   {primaryLink && (
                     <span
                       className={cn(
-                        "col-span-2 inline-flex items-center gap-2 font-mono text-xs lowercase text-muted-foreground transition-colors group-hover:text-mint sm:col-span-1 sm:justify-self-end"
+                        "col-span-2 inline-flex items-center gap-2 font-mono text-xs lowercase text-muted-foreground transition-colors group-hover:text-[color:var(--section-accent)] sm:col-span-1 sm:justify-self-end"
                       )}
                     >
                       <Github size={14} />

@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, type CSSProperties } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, RefreshCw, ChevronDown } from "lucide-react";
+import { Search, RefreshCw, ChevronDown, Github } from "lucide-react";
 import { ProjectCard, type ProjectData } from "./ProjectCard";
+import CountUp from "./CountUp";
+import AuroraBackground from "./AuroraBackground";
 import { cn } from "@/lib/cn";
+import { formatCompactNumber } from "@/lib/utils";
 import {
   FILTER_CATEGORIES,
   getCategoryAccent,
@@ -189,6 +192,31 @@ export default function Projects({
     return Array.from(projectsByName.values());
   }, [githubProjects]);
 
+  const stats = useMemo(() => {
+    const githubCount = projects.filter((project) =>
+      project.html_url?.includes("github.com")
+    ).length;
+    const totalStars = projects.reduce(
+      (sum, project) => sum + (project.stars ?? 0),
+      0
+    );
+    const languageCount = new Set(
+      projects
+        .map((project) => project.language)
+        .filter((language): language is string => Boolean(language))
+    ).size;
+
+    const palette = ["#2dd4bf", "#38bdf8", "#a78bfa", "#f4b740"];
+    return [
+      { label: "Projects", value: projects.length, compact: false },
+      { label: "Synced from GitHub", value: githubCount, compact: false },
+      { label: "Languages", value: languageCount, compact: false },
+      { label: "Stars earned", value: totalStars, compact: true },
+    ]
+      .filter((stat) => stat.value > 0)
+      .map((stat, i) => ({ ...stat, accent: palette[i % palette.length] }));
+  }, [projects]);
+
   useEffect(() => {
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     const mobileQuery = window.matchMedia("(max-width: 1023px)");
@@ -303,9 +331,12 @@ export default function Projects({
   return (
     <section
       id="projects"
-      className="section-padding relative"
+      className="section-padding relative overflow-hidden"
       aria-labelledby="projects-heading"
     >
+      <div className="pointer-events-none absolute inset-0">
+        <AuroraBackground className="opacity-40" />
+      </div>
       <div className="container-wide relative">
         {/* header */}
         <motion.div
@@ -328,6 +359,61 @@ export default function Projects({
             and curated by hand.
           </p>
         </motion.div>
+
+        {/* stats strip — a live, at-a-glance summary from GitHub */}
+        {stats.length > 0 && (
+          <motion.div
+            className="mb-10"
+            initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.03 }}
+          >
+            <div className="mb-3 flex items-center gap-2 font-mono text-[0.7rem] lowercase text-faint">
+              <Github size={13} className="text-mint" aria-hidden="true" />
+              <span>
+                live from{" "}
+                <span className="text-muted-foreground">github.com/BornaBoyafraz</span>
+              </span>
+              <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-60" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-mint" />
+              </span>
+            </div>
+            <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {stats.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="group/stat relative overflow-hidden rounded-xl border border-border bg-surface p-5 transition-colors hover:border-[var(--stat-accent)]"
+                  style={{ "--stat-accent": stat.accent } as CSSProperties}
+                >
+                  <span
+                    className="absolute inset-x-0 top-0 h-0.5 opacity-70"
+                    style={{ backgroundColor: stat.accent }}
+                    aria-hidden="true"
+                  />
+                  <dd
+                    className="text-3xl font-semibold tracking-tight sm:text-4xl"
+                    style={{ color: stat.accent }}
+                  >
+                    <CountUp
+                      value={stat.value}
+                      format={stat.compact ? formatCompactNumber : undefined}
+                    />
+                  </dd>
+                  <dt className="mt-1.5 flex items-center gap-1.5 font-mono text-[0.7rem] lowercase text-muted-foreground">
+                    <span
+                      className="inline-block h-1.5 w-1.5 rounded-full"
+                      style={{ backgroundColor: stat.accent }}
+                      aria-hidden="true"
+                    />
+                    {stat.label}
+                  </dt>
+                </div>
+              ))}
+            </dl>
+          </motion.div>
+        )}
 
         {/* toolbar */}
         <motion.div

@@ -1,15 +1,25 @@
 "use client";
 
-import { useId, useState, type CSSProperties } from "react";
-import { motion } from "framer-motion";
+import {
+  useId,
+  useRef,
+  useState,
+  type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
   ArrowUpRight,
   BookOpen,
   ExternalLink,
   Github,
+  History,
   PlayCircle,
+  Star,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { formatCompactNumber, formatRelativeTime } from "@/lib/utils";
+import { getLanguageColor } from "@/lib/languageColors";
 import type { ProjectLink } from "@/lib/manualProjects";
 import LoomIcon from "@/components/icons/LoomIcon";
 import { ProjectCover } from "@/components/ProjectCover";
@@ -20,6 +30,7 @@ import {
 } from "@/lib/projectCategory";
 
 const DESCRIPTION_TOGGLE_CHAR_THRESHOLD = 150;
+const MAX_TILT_DEG = 5;
 
 export interface ProjectData {
   id?: string;
@@ -28,6 +39,11 @@ export interface ProjectData {
   html_url: string;
   homepage: string | null;
   pushed_at?: string;
+  updated_at?: string;
+  language?: string | null;
+  topics?: string[];
+  stars?: number;
+  forks?: number;
   date?: string;
   startDate?: string;
   endDate?: string;
@@ -111,6 +127,7 @@ export function ProjectCard({
 }: ProjectCardProps) {
   const [expanded, setExpanded] = useState(false);
   const descriptionId = useId();
+  const cardRef = useRef<HTMLDivElement>(null);
   const categories = getProjectCategories(project);
   const accent = getCategoryAccent(categories[0]);
   const primaryCtaLabel = project.primaryCtaLabel ?? "Source Code";
@@ -119,6 +136,34 @@ export function ProjectCard({
   const projectDateLabel = getProjectDateLabel(project);
   const canToggleDescription =
     description.length > DESCRIPTION_TOGGLE_CHAR_THRESHOLD;
+
+  // Live GitHub metadata (absent on hand-curated projects).
+  const language = project.language ?? null;
+  const stars = project.stars ?? 0;
+  const updatedLabel = formatRelativeTime(project.pushed_at ?? project.updated_at);
+  const hasMetaRow = Boolean(language || stars > 0 || updatedLabel);
+
+  // Pointer-driven 3D tilt + cursor glow (disabled when motion is reduced).
+  const tiltX = useSpring(useMotionValue(0), { stiffness: 220, damping: 18 });
+  const tiltY = useSpring(useMotionValue(0), { stiffness: 220, damping: 18 });
+  const rotateX = useTransform(tiltX, (v) => `${v}deg`);
+  const rotateY = useTransform(tiltY, (v) => `${v}deg`);
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLElement>) => {
+    if (reduceMotion || !cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const px = (event.clientX - rect.left) / rect.width - 0.5;
+    const py = (event.clientY - rect.top) / rect.height - 0.5;
+    tiltY.set(px * MAX_TILT_DEG * 2);
+    tiltX.set(-py * MAX_TILT_DEG * 2);
+    cardRef.current.style.setProperty("--mx", `${(px + 0.5) * 100}%`);
+    cardRef.current.style.setProperty("--my", `${(py + 0.5) * 100}%`);
+  };
+
+  const resetTilt = () => {
+    tiltX.set(0);
+    tiltY.set(0);
+  };
 
   const homepageUrl = project.homepage
     ? project.homepage.startsWith("http")
@@ -174,10 +219,15 @@ export function ProjectCard({
         } as CSSProperties
       }
       onMouseEnter={onHoverStart}
-      onMouseLeave={onHoverEnd}
+      onMouseLeave={() => {
+        resetTilt();
+        onHoverEnd?.();
+      }}
+      onPointerMove={handlePointerMove}
       onFocus={onHoverStart}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) {
+          resetTilt();
           onHoverEnd?.();
         }
       }}
@@ -190,13 +240,19 @@ export function ProjectCard({
         ease: [0.22, 1, 0.36, 1],
       }}
     >
-      <div
+      <motion.div
+        ref={cardRef}
+        style={
+          reduceMotion
+            ? undefined
+            : { rotateX, rotateY, transformStyle: "preserve-3d" }
+        }
         className={cn(
-          "flex h-full flex-col overflow-hidden rounded-xl border bg-surface transition-all duration-500 ease-out will-change-transform",
+          "flex h-full flex-col overflow-hidden rounded-xl border bg-surface transition-[border-color,transform,box-shadow,opacity] duration-500 ease-out will-change-transform",
           isHovered ? "border-[var(--accent)]" : "border-border",
           isHovered &&
             !reduceMotion &&
-            "lg:-translate-y-2 lg:scale-[1.07] lg:shadow-[0_28px_70px_-24px_rgba(0,0,0,0.85),0_0_0_1px_var(--accent-ring),0_0_46px_-8px_var(--accent-glow)]",
+            "lg:-translate-y-2 lg:scale-[1.05] lg:shadow-[0_28px_70px_-24px_rgba(0,0,0,0.85),0_0_0_1px_var(--accent-ring),0_0_46px_-8px_var(--accent-glow)]",
           shouldShift &&
             pushDirection === "left" &&
             "lg:-translate-x-6 lg:scale-[0.93] lg:opacity-45",
@@ -205,6 +261,19 @@ export function ProjectCard({
             "lg:translate-x-6 lg:scale-[0.93] lg:opacity-45"
         )}
       >
+        {/* cursor-follow glow */}
+        <span
+          aria-hidden="true"
+          className={cn(
+            "pointer-events-none absolute inset-0 z-10 rounded-xl opacity-0 mix-blend-screen transition-opacity duration-300",
+            !reduceMotion && "group-hover:opacity-100"
+          )}
+          style={{
+            background:
+              "radial-gradient(260px circle at var(--mx,50%) var(--my,50%), var(--accent-glow), transparent 60%)",
+          }}
+        />
+
         {/* thumbnail — full cover shown, 16:10, no crop */}
         <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden border-b border-border bg-elevated">
           <div className="cover-media absolute inset-0">
@@ -220,7 +289,7 @@ export function ProjectCard({
         </div>
 
         {/* caption */}
-        <div className="flex flex-1 flex-col p-5">
+        <div className="relative z-20 flex flex-1 flex-col p-5">
           <div className="mb-3 flex flex-wrap items-center gap-2">
             {categories.map((category) => {
               const catAccent = getCategoryAccent(category);
@@ -249,7 +318,35 @@ export function ProjectCard({
             {project.name}
           </h3>
 
-          <div className="mb-5 mt-2 flex-1">
+          {hasMetaRow && (
+            <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 font-mono text-[0.65rem] text-muted-foreground">
+              {language && (
+                <span className="inline-flex items-center gap-1.5">
+                  <span
+                    className="inline-block h-2 w-2 rounded-full"
+                    style={{ backgroundColor: getLanguageColor(language) }}
+                    aria-hidden="true"
+                  />
+                  {language}
+                </span>
+              )}
+              {stars > 0 && (
+                <span className="inline-flex items-center gap-1">
+                  <Star size={11} aria-hidden="true" />
+                  {formatCompactNumber(stars)}
+                  <span className="sr-only"> stars</span>
+                </span>
+              )}
+              {updatedLabel && (
+                <span className="inline-flex items-center gap-1 lowercase">
+                  <History size={11} aria-hidden="true" />
+                  updated {updatedLabel}
+                </span>
+              )}
+            </div>
+          )}
+
+          <div className="mb-5 mt-3 flex-1">
             <p
               id={descriptionId}
               className={cn(
@@ -304,7 +401,7 @@ export function ProjectCard({
             })}
           </div>
         </div>
-      </div>
+      </motion.div>
     </motion.article>
   );
 }

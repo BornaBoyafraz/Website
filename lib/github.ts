@@ -5,7 +5,9 @@ export interface GitHubRepo {
   html_url: string;
   homepage: string | null;
   language: string | null;
+  topics?: string[];
   stargazers_count: number;
+  forks_count: number;
   private: boolean;
   fork: boolean;
   archived: boolean;
@@ -19,9 +21,19 @@ export interface ProjectData {
   html_url: string;
   homepage: string | null;
   pushed_at: string;
+  updated_at: string;
+  language: string | null;
+  topics: string[];
+  stars: number;
+  forks: number;
 }
 
 const GITHUB_API_BASE = "https://api.github.com";
+
+// Cache GitHub responses for an hour. This keeps the homepage fast and,
+// crucially, avoids hammering the unauthenticated 60-req/hr limit on Vercel.
+const REVALIDATE_SECONDS = 3600;
+
 const HIDDEN_REPOS = new Set([
   "website",
   "portfolio",
@@ -42,6 +54,21 @@ function normalizeRepoName(name: string): string {
   return name.trim().toLowerCase().replace(/[\s_-]+/g, "");
 }
 
+function buildHeaders(): HeadersInit {
+  const headers: Record<string, string> = {
+    // `+json` returns `topics` inline, so no preview header is needed.
+    Accept: "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28",
+  };
+  // Optional: set GITHUB_TOKEN in the environment to raise the rate limit
+  // from 60 to 5,000 requests/hour. The site works fine without it.
+  const token = process.env.GITHUB_TOKEN;
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  return headers;
+}
+
 async function fetchReposPage(
   username: string,
   page: number = 1,
@@ -49,10 +76,8 @@ async function fetchReposPage(
 ): Promise<GitHubRepo[]> {
   const url = `${GITHUB_API_BASE}/users/${username}/repos?per_page=${perPage}&page=${page}&sort=pushed`;
   const res = await fetch(url, {
-    cache: "no-store",
-    headers: {
-      Accept: "application/vnd.github.v3+json",
-    },
+    headers: buildHeaders(),
+    next: { revalidate: REVALIDATE_SECONDS },
   });
 
   if (!res.ok) {
@@ -79,8 +104,6 @@ export async function fetchAllRepos(username: string): Promise<ProjectData[]> {
     page++;
   }
 
-  // Intentionally return only repository metadata used by the UI.
-  // No README/content fetch is performed here.
   return allRepos
     .filter((repo) => {
       const name = repo.name.toLowerCase();
@@ -104,5 +127,10 @@ export async function fetchAllRepos(username: string): Promise<ProjectData[]> {
       html_url: repo.html_url,
       homepage: repo.homepage || null,
       pushed_at: repo.pushed_at,
+      updated_at: repo.updated_at,
+      language: repo.language ?? null,
+      topics: Array.isArray(repo.topics) ? repo.topics : [],
+      stars: repo.stargazers_count ?? 0,
+      forks: repo.forks_count ?? 0,
     }));
 }

@@ -1,5 +1,8 @@
+import type { CSSProperties } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { SITE } from "@/lib/constants";
+import { SECTION_ACCENT } from "@/lib/projectCategory";
+import AuroraBackground from "@/components/AuroraBackground";
 
 export default function Contact() {
   const contactLinks = [
@@ -15,14 +18,16 @@ export default function Contact() {
       id="contact"
       className="section-padding relative overflow-hidden border-t border-border bg-surface"
       aria-labelledby="contact-heading"
+      style={{ "--section-accent": SECTION_ACCENT.contact } as CSSProperties}
     >
-      <span className="pointer-events-none absolute inset-x-0 top-8 select-none text-center font-mono text-[20vw] font-semibold leading-none tracking-[-0.08em] text-mint opacity-[0.025]">
+      <AuroraBackground className="opacity-[0.26]" />
+      <span className="pointer-events-none absolute inset-x-0 top-8 select-none text-center font-mono text-[20vw] font-semibold leading-none tracking-[-0.08em] text-[color:var(--section-accent)] opacity-[0.03]">
         HELLO
       </span>
 
       <div className="container-wide relative">
         <div className="mb-12 flex items-center gap-5">
-          <span className="mono-label"><span className="mint">{"//"}</span> 03 — Contact</span>
+          <span className="mono-label"><span className="accent-mark">{"//"}</span> 03 — Contact</span>
           <span className="h-px flex-1 bg-border" />
           <span className="font-mono text-xs lowercase text-faint">
             Let&rsquo;s talk
@@ -35,12 +40,12 @@ export default function Contact() {
               id="contact-heading"
               className="max-w-2xl text-[3rem] font-semibold leading-[0.96] tracking-tight text-foreground sm:text-7xl lg:text-[5rem]"
             >
-              Stay in touch with <span className="text-gradient">me.</span>
+              Stay in touch with <span className="text-grad-warm">me.</span>
             </h2>
 
             <a
               href={SITE.mailto}
-              className="link-underline mt-10 inline-flex cursor-pointer items-center gap-3 font-mono text-base text-foreground transition-colors hover:text-mint focus:outline-none focus-visible:ring-1 focus-visible:ring-mint sm:text-lg"
+              className="link-underline mt-10 inline-flex cursor-pointer items-center gap-3 font-mono text-base text-foreground transition-colors hover:text-[color:var(--section-accent)] focus:outline-none focus-visible:ring-1 focus-visible:ring-mint sm:text-lg"
             >
               {SITE.email}
               <ArrowUpRight className="h-5 w-5" />
@@ -75,10 +80,10 @@ export default function Contact() {
                   }
                   className="group flex cursor-pointer items-center justify-between border-b border-border py-4 transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-mint"
                 >
-                  <span className="text-base font-medium text-foreground transition-colors group-hover:text-mint">
+                  <span className="text-base font-medium text-foreground transition-colors group-hover:text-[color:var(--section-accent)]">
                     {label}
                   </span>
-                  <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-mint" />
+                  <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[color:var(--section-accent)]" />
                 </a>
               ))}
             </div>

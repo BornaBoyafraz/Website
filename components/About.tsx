@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import bornaPortrait from "@/app/assets/Borna.jpeg";
+import { SECTION_ACCENT } from "@/lib/projectCategory";
+import AuroraBackground from "@/components/AuroraBackground";
 
 export default function About() {
   const [reduceMotion, setReduceMotion] = useState(false);
@@ -28,13 +30,15 @@ export default function About() {
       id="about"
       className="section-padding relative overflow-hidden border-y border-border bg-surface"
       aria-labelledby="about-heading"
+      style={{ "--section-accent": SECTION_ACCENT.about } as CSSProperties}
     >
       <div className="pointer-events-none absolute inset-0 dot-grid opacity-50" />
+      <AuroraBackground className="opacity-[0.22]" />
 
       <div className="container-wide relative">
         <div className="mb-12 flex items-center gap-5">
           <span className="mono-label">
-            <span className="mint">{"//"}</span> 01 — About
+            <span className="accent-mark">{"//"}</span> 01 — About
           </span>
           <span className="h-px flex-1 bg-border" />
           <span className="font-mono text-xs lowercase text-faint">
@@ -48,7 +52,7 @@ export default function About() {
           className="max-w-4xl text-[2.7rem] font-semibold leading-[0.98] tracking-tight text-foreground sm:text-6xl lg:text-[4.2rem]"
         >
           Turning ideas into
-          <span className="text-gradient"> working systems.</span>
+          <span className="text-grad-cool"> working systems.</span>
         </motion.h2>
 
         <div className="mt-14 grid gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:items-center lg:gap-20">
@@ -67,10 +71,10 @@ export default function About() {
                 })}
             className="relative mx-auto w-full max-w-sm rotate-[-1.5deg] lg:mx-0"
           >
-            <div className="rounded-xl border border-border bg-surface-2 p-3 shadow-[14px_16px_0_rgba(45,212,191,0.05)]">
+            <div className="rounded-xl border border-border bg-surface-2 p-3 shadow-[14px_16px_0_rgba(56,189,248,0.07)]">
               <div className="relative aspect-[4/5] overflow-hidden rounded-lg bg-elevated">
                 {imgError ? (
-                  <span className="absolute inset-0 flex items-center justify-center font-mono text-6xl text-mint">
+                  <span className="absolute inset-0 flex items-center justify-center font-mono text-6xl text-[color:var(--section-accent)]">
                     BA
                   </span>
                 ) : (
@@ -84,12 +88,12 @@ export default function About() {
                     onError={() => setImgError(true)}
                   />
                 )}
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between bg-[linear-gradient(to_top,rgba(10,10,11,1),rgba(10,10,11,0.7),transparent)] p-5 pt-16">
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between bg-[linear-gradient(to_top,rgba(8,10,18,1),rgba(8,10,18,0.7),transparent)] p-5 pt-16">
                   <div>
                     <p className="text-xl font-semibold leading-none text-foreground">
                       Borna B. Afraz
                     </p>
-                    <p className="mt-1.5 font-mono text-xs text-mint">
+                    <p className="mt-1.5 font-mono text-xs text-[color:var(--section-accent)]">
                       Software Developer
                     </p>
                   </div>
@@ -127,8 +131,11 @@ export default function About() {
                 { k: "Approach", v: "VibeCoding" },
                 { k: "Craft", v: "Practical tools" },
               ].map(({ k, v }) => (
-                <div key={k} className="rounded-lg border border-border bg-surface-2 p-4">
-                  <p className="font-mono text-xs lowercase text-mint">
+                <div
+                  key={k}
+                  className="rounded-lg border border-border bg-surface-2 p-4 transition-colors hover:border-[color:var(--section-accent)]"
+                >
+                  <p className="font-mono text-xs lowercase text-[color:var(--section-accent)]">
                     {k}
                   </p>
                   <p className="mt-2 text-base font-medium text-foreground">{v}</p>

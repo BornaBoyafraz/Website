@@ -9,11 +9,12 @@
 */
 
 :root {
-  /* Core surfaces */
-  --bg: #0a0a0b;
-  --surface: #121215;
-  --surface-2: #17171b;
-  --elevated: #1c1c21;
+  /* Core surfaces — a cool midnight ramp (faint blue/violet) that sits with
+     the teal → sky → violet → pink → amber accent palette. */
+  --bg: #080a12;
+  --surface: #11131d;
+  --surface-2: #171a26;
+  --elevated: #1d2130;
 
   /* Mint / teal accent (primary) */
   --mint: #2dd4bf;
@@ -26,23 +27,29 @@
   --pink: #f472b6;
   --sky: #38bdf8;
 
-  /* Signature gradient */
-  --grad: linear-gradient(100deg, #2dd4bf 0%, #38bdf8 48%, #a78bfa 100%);
+  /* Signature gradient — teal → sky → violet → pink */
+  --grad: linear-gradient(
+    100deg,
+    #2dd4bf 0%,
+    #38bdf8 36%,
+    #a78bfa 68%,
+    #f472b6 100%
+  );
 
   /* Tailwind token bridge */
-  --background: #0a0a0b;
+  --background: #080a12;
   --foreground: #ededf0;
-  --card: #121215;
+  --card: #11131d;
   --card-foreground: #ededf0;
-  --popover: #17171b;
+  --popover: #171a26;
   --popover-foreground: #ededf0;
   --primary: #2dd4bf;
   --primary-foreground: #05231d;
-  --secondary: #17171b;
+  --secondary: #171a26;
   --secondary-foreground: #c9c9d2;
-  --muted: #121215;
-  --muted-foreground: #8b8b95;
-  --accent: #14201d;
+  --muted: #11131d;
+  --muted-foreground: #8f90a0;
+  --accent: #15202a;
   --accent-foreground: #b8f2e6;
   --destructive: #f87171;
   --destructive-foreground: #ffffff;
@@ -123,12 +130,33 @@ body {
   color: var(--mint);
 }
 
-/* Gradient text (teal → sky → violet) for signature highlights */
+/* Gradient text (teal → sky → violet → pink) for signature highlights */
 .text-gradient {
   background: var(--grad);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* Per-section gradient highlights so each section wears its own color. */
+.text-grad-cool,
+.text-grad-warm,
+.text-grad-amber {
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.text-grad-cool {
+  /* sky → cyan → indigo */
+  background-image: linear-gradient(100deg, #5eead4 0%, #38bdf8 48%, #818cf8 100%);
+}
+.text-grad-warm {
+  /* violet → pink → orange */
+  background-image: linear-gradient(105deg, #c4b5fd 0%, #f472b6 52%, #fb923c 100%);
+}
+.text-grad-amber {
+  /* amber → orange */
+  background-image: linear-gradient(100deg, #fbbf24 0%, #fb923c 100%);
 }
 
 /* Thin gradient rule */
@@ -141,15 +169,18 @@ body {
   background: linear-gradient(
     100deg,
     #2dd4bf 0%,
-    #38bdf8 30%,
-    #a78bfa 55%,
-    #2dd4bf 80%
+    #38bdf8 22%,
+    #a78bfa 46%,
+    #f472b6 66%,
+    #fbbf24 84%,
+    #2dd4bf 100%
   );
-  background-size: 220% 100%;
+  background-size: 260% 100%;
+  filter: saturate(1.12);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: sheen 8s ease-in-out infinite;
+  animation: sheen 9s ease-in-out infinite;
 }
 @keyframes sheen {
   0%,
@@ -250,6 +281,94 @@ body {
 .reveal-row > * {
   overflow: hidden;
   min-height: 0;
+}
+
+/* ---------- Section accent marker ---------- */
+/* Each section sets --section-accent; the `//` marker + small accents pick
+   it up so the page reads as a cohesive spectrum rather than one flat mint. */
+.accent-mark {
+  color: var(--section-accent, var(--mint));
+}
+
+/* ---------- Aurora backdrop (vibrant, multi-hue) ---------- */
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(68px) saturate(1.4);
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+.aurora-blob--1 {
+  /* teal */
+  width: 46%;
+  height: 58%;
+  left: -8%;
+  top: -14%;
+  background: radial-gradient(circle, rgba(45, 212, 191, 0.62), transparent 70%);
+  animation: aurora-a 22s ease-in-out infinite;
+}
+.aurora-blob--2 {
+  /* electric sky-blue */
+  width: 42%;
+  height: 54%;
+  right: -10%;
+  top: -10%;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.56), transparent 70%);
+  animation: aurora-b 27s ease-in-out infinite;
+}
+.aurora-blob--3 {
+  /* violet */
+  width: 42%;
+  height: 54%;
+  left: 16%;
+  bottom: -24%;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.55), transparent 70%);
+  animation: aurora-c 31s ease-in-out infinite;
+}
+.aurora-blob--4 {
+  /* amber */
+  width: 32%;
+  height: 42%;
+  right: 6%;
+  bottom: -16%;
+  background: radial-gradient(circle, rgba(244, 183, 64, 0.4), transparent 70%);
+  animation: aurora-a 29s ease-in-out infinite reverse;
+}
+.aurora-blob--5 {
+  /* magenta / pink */
+  width: 34%;
+  height: 44%;
+  left: 38%;
+  top: 2%;
+  background: radial-gradient(circle, rgba(244, 114, 182, 0.42), transparent 70%);
+  animation: aurora-b 25s ease-in-out infinite reverse;
+}
+@keyframes aurora-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(6%, 5%, 0) scale(1.15);
+  }
+}
+@keyframes aurora-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.08);
+  }
+  50% {
+    transform: translate3d(-8%, -4%, 0) scale(0.94);
+  }
+}
+@keyframes aurora-c {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(5%, -6%, 0) scale(1.2);
+  }
 }
 
 /* ---------- Reduced motion ---------- */

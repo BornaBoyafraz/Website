@@ -24,6 +24,8 @@ import LoomIcon from "@/components/icons/LoomIcon";
 import XTwitterIcon from "./icons/XTwitterIcon";
 import { ProjectCover } from "@/components/ProjectCover";
 import WelcomeTyper from "@/components/WelcomeTyper";
+import AuroraBackground from "@/components/AuroraBackground";
+import Magnetic from "@/components/Magnetic";
 
 const HeroObject = dynamic(() => import("@/components/three/HeroObject"), {
   ssr: false,
@@ -326,7 +328,7 @@ function LatestFeature() {
               className="h-full w-full"
             />
           </div>
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(10,10,11,0.82),rgba(10,10,11,0.1),transparent)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(8,10,18,0.82),rgba(8,10,18,0.1),transparent)]" />
           <span className="absolute bottom-4 left-4 rounded-full border border-border bg-background px-3 py-1 font-mono text-xs lowercase text-mint backdrop-blur-md">
             recently shipped
           </span>
@@ -409,7 +411,9 @@ export default function Hero() {
 
   return (
     <section id="home" className="dot-grid relative overflow-hidden bg-background">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[44rem] bg-[radial-gradient(circle_at_72%_22%,rgba(45,212,191,0.10),transparent_38%)]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[52rem]">
+        <AuroraBackground className="opacity-90" />
+      </div>
 
       <div className="hero-in container-wide relative px-5 pb-24 pt-32 sm:px-8 sm:pt-36 lg:px-0 lg:pb-28 lg:pt-40">
         {/* meta line */}
@@ -461,7 +465,7 @@ export default function Hero() {
               className="mt-8 max-w-xl text-2xl font-semibold leading-tight tracking-tight text-foreground sm:text-3xl"
             >
               Practical software, built with{" "}
-              <span className="text-gradient">curiosity.</span>
+              <span className="text-grad-warm">curiosity.</span>
             </motion.h2>
 
             <motion.p
@@ -473,19 +477,23 @@ export default function Hero() {
             </motion.p>
 
             <motion.div {...rise(0.31)} className="mt-9 flex flex-wrap gap-3">
-              <a
-                href="#projects"
-                className="group inline-flex cursor-pointer items-center gap-2 rounded-lg bg-mint px-5 py-3 font-mono text-xs lowercase text-[#05231d] transition-colors hover:bg-mint-bright focus:outline-none focus-visible:ring-1 focus-visible:ring-mint focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              >
-                Explore my work
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </a>
-              <a
-                href="#contact"
-                className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border px-5 py-3 font-mono text-xs lowercase text-foreground transition-colors hover:border-mint hover:text-mint focus:outline-none focus-visible:ring-1 focus-visible:ring-mint"
-              >
-                Start a conversation
-              </a>
+              <Magnetic>
+                <a
+                  href="#projects"
+                  className="group inline-flex cursor-pointer items-center gap-2 rounded-lg bg-mint px-5 py-3 font-mono text-xs lowercase text-[#05231d] shadow-[0_8px_30px_-8px_rgba(45,212,191,0.5)] transition-colors hover:bg-mint-bright focus:outline-none focus-visible:ring-1 focus-visible:ring-mint focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                >
+                  Explore my work
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
+              </Magnetic>
+              <Magnetic>
+                <a
+                  href="#contact"
+                  className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border px-5 py-3 font-mono text-xs lowercase text-foreground transition-colors hover:border-mint hover:text-mint focus:outline-none focus-visible:ring-1 focus-visible:ring-mint"
+                >
+                  Start a conversation
+                </a>
+              </Magnetic>
             </motion.div>
 
             <motion.div
@@ -526,7 +534,7 @@ export default function Hero() {
           >
             <div className="relative aspect-square w-full overflow-hidden rounded-xl border border-border bg-surface">
               <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:28px_28px]" />
-              <div className="pointer-events-none absolute inset-0 [background:radial-gradient(58%_54%_at_50%_46%,rgba(45,212,191,0.12),transparent_70%)]" />
+              <div className="pointer-events-none absolute inset-0 [background:radial-gradient(60%_55%_at_36%_38%,rgba(45,212,191,0.17),transparent_70%),radial-gradient(55%_52%_at_74%_70%,rgba(167,139,250,0.17),transparent_72%),radial-gradient(44%_44%_at_62%_28%,rgba(244,114,182,0.11),transparent_70%)]" />
               <div className="absolute inset-0">
                 <HeroObject />
               </div>

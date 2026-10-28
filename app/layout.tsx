@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
+import ScrollProgress from "@/components/ScrollProgress";
 import "./globals.css";
 
 const SITE_URL = "https://bornaba.com";
@@ -59,6 +60,7 @@ export default function RootLayout({
     >
       <body className="antialiased">
         <ThemeProvider>
+          <ScrollProgress />
           <div className="grain-overlay" aria-hidden="true" />
           <div className="relative z-10">
             <Navbar />

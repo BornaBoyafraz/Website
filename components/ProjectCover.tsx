@@ -1,5 +1,18 @@
 import { getCategoryAccent, type Category } from "@/lib/projectCategory";
 
+/* A complementary second hue per category so each cover reads multi-color,
+   echoing the page's teal → sky → violet → pink → amber palette. */
+const CATEGORY_SECONDARY_ACCENT: Record<Category, string> = {
+  Project: "#a78bfa", // teal + violet
+  Pitch: "#f472b6", // amber + pink
+  Fun: "#38bdf8", // pink + sky
+  "Researches/Articles": "#2dd4bf", // violet + teal
+};
+
+function getCategorySecondaryAccent(category: Category | undefined): string {
+  return (category && CATEGORY_SECONDARY_ACCENT[category]) || "#38bdf8";
+}
+
 type Circle = {
   cx: number;
   cy: number;
@@ -236,6 +249,7 @@ export function ProjectCover({
 }) {
   const primaryCategory = categories[0];
   const accent = getCategoryAccent(primaryCategory);
+  const secondary = getCategorySecondaryAccent(primaryCategory);
   const artwork = generateArtwork(name, primaryCategory);
   const initials = getInitials(name);
   const idBase = `project-cover-${sanitizeForId(name)}-${artwork.seed.toString(
@@ -252,13 +266,18 @@ export function ProjectCover({
     >
       <defs>
         <linearGradient id={`${idBase}-background`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#0d0e11" />
-          <stop offset="1" stopColor="#17171b" />
+          <stop offset="0" stopColor="#0a0c15" />
+          <stop offset="1" stopColor="#171a26" />
         </linearGradient>
-        <radialGradient id={`${idBase}-glow`} cx="76%" cy="28%" r="72%">
-          <stop offset="0" stopColor={accent} stopOpacity="0.2" />
-          <stop offset="0.52" stopColor={accent} stopOpacity="0.06" />
+        <radialGradient id={`${idBase}-glow`} cx="76%" cy="26%" r="74%">
+          <stop offset="0" stopColor={accent} stopOpacity="0.26" />
+          <stop offset="0.52" stopColor={accent} stopOpacity="0.08" />
           <stop offset="1" stopColor={accent} stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id={`${idBase}-glow2`} cx="16%" cy="86%" r="70%">
+          <stop offset="0" stopColor={secondary} stopOpacity="0.22" />
+          <stop offset="0.55" stopColor={secondary} stopOpacity="0.06" />
+          <stop offset="1" stopColor={secondary} stopOpacity="0" />
         </radialGradient>
         <pattern
           id={`${idBase}-dots`}
@@ -273,6 +292,7 @@ export function ProjectCover({
       <rect width="640" height="400" fill={`url(#${idBase}-background)`} />
       <rect width="640" height="400" fill={`url(#${idBase}-dots)`} />
       <rect width="640" height="400" fill={`url(#${idBase}-glow)`} />
+      <rect width="640" height="400" fill={`url(#${idBase}-glow2)`} />
 
       <g aria-hidden="true">
         {artwork.lines.map((line, index) => (
@@ -358,7 +378,7 @@ export function ProjectCover({
             width={round(44 + primaryCategory.length * 8.2)}
             height="30"
             rx="15"
-            fill="#0a0a0b"
+            fill="#0a0c15"
             fillOpacity="0.76"
             stroke={accent}
             strokeOpacity="0.3"
